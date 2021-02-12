@@ -25,6 +25,8 @@ Description: Power analysis for regression models which test the interaction
     variables are continuous and normally distributed, and may be correlated.
     Power analysis is done via simulation. Includes tools for simulating 
     single data sets and visualizing power analysis results. 
+URL: https://github.com/dbaranger/InteractionPoweR
+BugReports: https://github.com/dbaranger/InteractionPoweR/issues
 License: `use_gpl3_license()`
 Encoding: UTF-8
 LazyData: true
