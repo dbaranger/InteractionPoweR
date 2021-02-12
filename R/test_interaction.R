@@ -5,14 +5,18 @@
 #'
 #' @param data Simulated data set. Output of 'generate_interaction()'.
 #' @param alpha The alpha. At what p-value is the interaction deemed significant? Default is 0.05.
-#' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
+#' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
+#'          Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.
+#'          If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
 #'
 #' @return A data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' test_interaction(data = dataset, alpha=0.05, q=2)
+#' }
 test_interaction<-function(data,alpha=0.05,q=2){
 
   mod<-stats::lm(y ~ x1 + x2 + x1x2, data = data)
@@ -26,13 +30,13 @@ test_interaction<-function(data,alpha=0.05,q=2){
                         paste(rownames(results)[3], colnames(results),sep="_"))
   rownames(results2)<-NULL
   results2$sig_int <- (results2$x1x2_p < alpha)*1
-  # data.correlation<-cor(data)[lower.tri(cor(data))]
+  # data.correlation<-stats::cor(data)[lower.tri(stats::cor(data))]
 
 
-  dd = data.frame(cor = as.vector(cor(data)),
+  dd = data.frame(cor = as.vector(stats::cor(data)),
                   v1=colnames(data),
                   v2=rep(colnames(data), each=ncol(data)))
-  dd = dd[as.vector(upper.tri(cor(data))),]
+  dd = dd[as.vector(upper.tri(stats::cor(data))),]
 
   cols_dd<-paste("r_",dd$v1,"_",dd$v2,sep="")
   dd<-t(dd[,-c(2,3)])
@@ -44,7 +48,7 @@ test_interaction<-function(data,alpha=0.05,q=2){
 
   data$groups<-as.numeric(cut(data$x2,
                               include.lowest = T,
-                              breaks = quantile(data$x2,probs = seq(0,1,by = 1/q))))
+                              breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q))))
 
   g1<-dplyr::filter(data,groups == min(data$groups))
   g2<-dplyr::filter(data,groups == max(data$groups))

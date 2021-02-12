@@ -12,8 +12,9 @@
 #' @export
 #'
 #' @examples
-#' #'\dontrun{
-#' dataset <- generate_interaction(N = seq(100,300,by=10),r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
+#' \dontrun{
+#' dataset <- generate_interaction(N = seq(100,300,by=10),
+#' r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' power_curve(dataset)
 #' }
 plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target=.8){

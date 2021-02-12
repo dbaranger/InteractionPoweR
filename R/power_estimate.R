@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' ' #'\dontrun{
+#' \dontrun{
 #' power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 #' power_estimate(power_data = simulation_results, x = "N", power_target = .8)
 #' }
@@ -59,7 +59,7 @@ power_estimate<-function(power_data,x,power_target){
       power_test$lnx<-log(power_test$x)
 
       power_test[power_test=="-Inf"]<-NA
-      power_test<-na.omit(power_test)
+      power_test<-stats::na.omit(power_test)
 
       fit1=chngpt::chngptm (formula.1=pwr~1, formula.2=~x+x2, data = power_test, type="M20", ncpus = 1,
                     family="gaussian",ci.bootstrap.size = 0)
@@ -75,23 +75,23 @@ power_estimate<-function(power_data,x,power_target){
 
       power_test2<-dplyr::filter(power_test, x<= changepoint)
 
-      fit2<-lm(pwr~x + x2,data = power_test2)
-      fit3<-lm(pwr~x + x2 + x3,data = power_test2)
-      fit4<-lm(pwr~lnx,data = power_test2)
+      fit2<-stats::lm(pwr~x + x2,data = power_test2)
+      fit3<-stats::lm(pwr~x + x2 + x3,data = power_test2)
+      fit4<-stats::lm(pwr~lnx,data = power_test2)
 
-      compare<-anova(fit4,fit2,fit3)
-      #compare<-anova(fit4,fit2,fit3)
+      compare<-stats::anova(fit4,fit2,fit3)
+      #compare<-stats::anova(fit4,fit2,fit3)
 
       if(!is.na(compare$`Pr(>F)`[2]) && compare$`Pr(>F)`[2]<0.05){
-        j<-polynom::polynomial(coefficients(fit2))
+        j<-polynom::polynomial(stats::coefficients(fit2))
         pwr_line<-(solve(j,b = power_target))
 
         if(compare$`Pr(>F)`[3]<0.05){
-          j<-polynom::polynomial(coefficients(fit3))
+          j<-polynom::polynomial(stats::coefficients(fit3))
           pwr_line<-(solve(j,b = power_target))
 
           if(is.complex(pwr_line)){
-            j<-polynom::polynomial(coefficients(fit2))
+            j<-polynom::polynomial(stats::coefficients(fit2))
             pwr_line<-(solve(j,b = power_target)) }
 
         }
@@ -99,11 +99,11 @@ power_estimate<-function(power_data,x,power_target){
 
 
         if(is.complex(pwr_line)){
-          j<-polynom::polynomial(coefficients(fit4))
+          j<-polynom::polynomial(stats::coefficients(fit4))
           pwr_line<-exp(solve(j,b = power_target))}
 
       } else {
-        j<-polynom::polynomial(coefficients(fit4))
+        j<-polynom::polynomial(stats::coefficients(fit4))
         pwr_line<-exp(solve(j,b = power_target))
       }
 

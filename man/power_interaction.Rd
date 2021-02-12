@@ -69,7 +69,7 @@ A data frame containing the power (\% significant results) for each unique setti
 Power analysis for interaction models, by simulation. A set of n.iter simulations is run for each unique combination of model settings.
 }
 \examples{
-' #'\dontrun{
+\dontrun{
 power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 }
 

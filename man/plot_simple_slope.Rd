@@ -20,8 +20,9 @@ A ggplot2 object
 Plots the simple slope min and max estimates from power_interaction().
 }
 \examples{
-' #'\dontrun{
-dataset <- generate_interaction(N = seq(100,300,by=10),r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
+\dontrun{
+dataset <- generate_interaction(N = seq(100,300,by=10),
+r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 simple_slope_plot(dataset)
 }
 }

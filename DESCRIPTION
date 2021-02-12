@@ -27,11 +27,12 @@ Description: Power analysis for regression models which test the interaction
     single data sets and visualizing power analysis results. 
 URL: https://github.com/dbaranger/InteractionPoweR
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues
-License: `use_gpl3_license()`
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends: R (>= 3.5.0)
 Imports:
 	dplyr,
 	MASS,
@@ -42,4 +43,5 @@ Imports:
 	polynom,
 	chngpt,
   rlang,
-  tidyr
+  tidyr,
+  stats

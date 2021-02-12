@@ -19,8 +19,9 @@
 #' @export
 #'
 #' @examples
-#' dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
+#' \dontrun{dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' cor(dataset)
+#' }
 generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=1,sd.y=1,mean.x1=0,mean.x2=0,mean.y=0) {
 
   # compute sd of x1x2 (interaction term) using x1 and x2

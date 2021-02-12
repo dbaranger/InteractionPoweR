@@ -11,7 +11,9 @@ test_interaction(data, alpha = 0.05, q = 2)
 
 \item{alpha}{The alpha. At what p-value is the interaction deemed significant? Default is 0.05.}
 
-\item{q}{Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33\% of x2, and the top 33\% of x2.}
+\item{q}{Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
+Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.
+If q=3 then the two slopes are y~x1 for the bottom 33\% of x2, and the top 33\% of x2.}
 }
 \value{
 A data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.
@@ -20,6 +22,8 @@ A data frame containing the results of the regression y~x1+x2+x1*x2, the pearson
 Test the interaction from a single simulated data set.
 }
 \examples{
+\dontrun{
 dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 test_interaction(data = dataset, alpha=0.05, q=2)
+}
 }

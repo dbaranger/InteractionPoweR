@@ -23,12 +23,14 @@
 #'
 #' @importFrom dplyr "%>%"
 #' @importFrom foreach "%dopar%"
+#' @importFrom stats "lm"
+
 #'
 #' @return A data frame containing the power (% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.
 #' @export
 #'
 #' @examples
-#' ' #'\dontrun{
+#' \dontrun{
 #' power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 #'}
 #'
@@ -172,10 +174,10 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
     dplyr::filter(sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
-                     min.lwr = quantile(est_min)[3]- (diff(quantile(est_min)[c(2,4)])*ss.IQR)  ,
-                     min.upr = quantile(est_min)[3]+ (diff(quantile(est_min)[c(2,4)])*ss.IQR)  ,
-                     max.lwr = quantile(est_max)[3]- (diff(quantile(est_max)[c(2,4)])*ss.IQR)  ,
-                     max.upr = quantile(est_max)[3]+ (diff(quantile(est_max)[c(2,4)])*ss.IQR)  )
+                     min.lwr = stats::quantile(est_min)[3]- (diff(stats::quantile(est_min)[c(2,4)])*ss.IQR)  ,
+                     min.upr = stats::quantile(est_min)[3]+ (diff(stats::quantile(est_min)[c(2,4)])*ss.IQR)  ,
+                     max.lwr = stats::quantile(est_max)[3]- (diff(stats::quantile(est_max)[c(2,4)])*ss.IQR)  ,
+                     max.upr = stats::quantile(est_max)[3]+ (diff(stats::quantile(est_max)[c(2,4)])*ss.IQR)  )
 
   power_results3<-power_test %>%
     # dplyr::filter(sig_int == 1) %>%
