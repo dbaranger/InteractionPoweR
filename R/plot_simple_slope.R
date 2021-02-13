@@ -60,9 +60,9 @@ plot_simple_slope<-function(power_data,x=NULL,facets=NULL){
     power_data2$bound3<-paste(as.matrix(power_data2[,1]),power_data2$bound2,sep="_")
 
     slope_plot<-ggplot2::ggplot(data = power_data2,ggplot2::aes(x =as.matrix(power_data2[,1]),
-                                                                y = slopes,
-                                                                fill= bound2,
-                                                                group=bound3))+
+                                                                y = .data$slopes,
+                                                                fill= .data$bound2,
+                                                                group=.data$bound3))+
       ggplot2::scale_fill_viridis_d()+
       ggplot2::geom_hline(yintercept = 0,color="darkgrey")+
       ggplot2::geom_line(linetype="solid",size=.5,color = "black")+
@@ -105,8 +105,8 @@ plot_simple_slope<-function(power_data,x=NULL,facets=NULL){
                                     color=as.factor(as.matrix(power_data2[,2])),
                                     fill=as.factor(as.matrix(power_data2[,2])),
 
-                                    y = slopes,
-                                    group=bound3))+
+                                    y = .data$slopes,
+                                    group=.data$bound3))+
       ggplot2::geom_hline(yintercept = 0,color="black")+
       ggplot2::scale_color_viridis_d(option = c("C"),end = .95)+
       ggplot2::scale_fill_viridis_d(option = c("C"),end = .95)+

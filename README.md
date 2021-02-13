@@ -12,7 +12,7 @@ interactions between continuous variables (also known as a moderation
 analysis). The main function is `power_interaction()`, which performs
 the power analysis. This is done via Monte Carlo simulation.
 `power_estimate()` helps to interpret the results of the power
-simulation, and `plot_power_curve()` and `plot_simple_sploe()` generate
+simulation, and `plot_power_curve()` and `plot_simple_slope()` generate
 plots to visualize the results. The function `generate_interaction()`
 simulates a single data set drawn from the specified population-level
 effects and `plot_interaction()` can be used to visualize the simulated
@@ -53,8 +53,8 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 1000 tests"
 test_power
-#>     pwr     min.lwr   min.upr   max.lwr   max.upr
-#> 1 0.822 -0.07767766 0.2013109 0.1825631 0.4779925
+#>    pwr     min.lwr   min.upr   max.lwr  max.upr
+#> 1 0.79 -0.09180522 0.2078051 0.1956069 0.461098
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -97,7 +97,7 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 60000 tests"
 toc()
-#> 194.25 sec elapsed
+#> 162.89 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -117,10 +117,71 @@ power\_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x = "N")
 #>   r.x1x2.y estimate
-#> 1     0.18 317.6146
-#> 2     0.20 245.1963
-#> 3     0.22 208.2832
+#> 1     0.18 307.6380
+#> 2     0.20 239.8541
+#> 3     0.22 207.7671
 ```
 
 We can see that depending on the specific effect size we hope to detect,
 we would need between N\~200 and N\~300 participants.
+
+### Example 3
+
+In this example, we know the population-level correlation between each
+of our predictors (x1 and x2) and our outcome (y), as well as the
+correlation between the two predictors. We know our sample size (perhaps
+we are doing some secondary data analysis) and we want to know what’s
+the smallest effect size we can detect. Using that information, we can
+decide whether that effect would be plausible, which in turn can help
+inform our decision of whether or not to run the analysis.
+
+``` r
+library(tictoc)
+tic()
+
+test_power<-power_interaction(
+  n.iter = 1000,                  # number of simulations per unique combination of input parameters
+  cl = 6,                   # number of cores for parallel processing (strongly recommended)
+  alpha = 0.05,             # alpha, for the power analysis
+  N = 450,                  # sample size
+  r.x1x2.y = seq(0.04,0.3,by=.02), # range of interaction effects to test
+  r.x1.y = .2,              # correlation between x1 and y
+  r.x2.y = .1,              # correlation between x2 and y
+  r.x1.x2 = .2              # correlation between x1 and x2
+)
+#> [1] "Performing 14000 tests"
+toc()
+#> 57.64 sec elapsed
+```
+
+As with the previous example, the results of this analysis can be hard
+to interpret just by looking at the output. With this example, we can
+use the function `plot_power_curve()` to visualize the power curve.
+
+``` r
+plot_power_curve(test_power,power_target = .9)
+```
+
+<img src="man/figures/README-example7-1.png" width="100%" /> The
+function `power_estimate()` can be used to estimate where the
+power\_curve for each interaction effect size crosses our 90% line:
+
+``` r
+power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
+#> [1] 0.1476728
+```
+
+We can use the function `plot_simple_slope()` to visualize the
+distribution of the simple slopes across the different interaction
+effect sizes.
+
+``` r
+plot_simple_slope(test_power)
+```
+
+<img src="man/figures/README-example9-1.png" width="100%" />
+
+From this we can see that we have 90% power to detect effects as small
+as r.x1x2.y \~ .15, which is a ‘knock-out’ interaction where the
+association between y and x1 is close to 0 at one end of the x2
+distribution.

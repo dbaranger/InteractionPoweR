@@ -24,7 +24,8 @@
 #' @importFrom dplyr "%>%"
 #' @importFrom foreach "%dopar%"
 #' @importFrom stats "lm"
-
+#' @importFrom rlang ".data"
+#' @importFrom rlang ".env"
 #'
 #' @return A data frame containing the power (% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.
 #' @export
@@ -68,8 +69,8 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
   clus <- parallel::makeCluster(cl)
   doParallel::registerDoParallel(clus)
   }
-
-  if(dim(settings)[1] > 1){
+i<-NULL
+    if(dim(settings)[1] > 1){
 
     power_test<-foreach::foreach(i = 1: dim(settings)[1],
                         .combine = 'rbind',
@@ -166,32 +167,32 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
   #grouping_variables<-colnames(results(power_test)[grep("+test", colnames(results(power_test)))])
 
   power_results<-power_test %>%
-    dplyr::group_by_at(.vars = dplyr::vars(all_of(grouping_variables))) %>%
+    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups  = "drop_last",
-                     pwr = mean(sig_int ))
+                     pwr = mean(.data$sig_int ))
 
   power_results2<-power_test %>%
-    dplyr::filter(sig_int == 1) %>%
-    dplyr::group_by_at(.vars = dplyr::vars(all_of(grouping_variables))) %>%
+    dplyr::filter(.data$sig_int == 1) %>%
+    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
-                     min.lwr = stats::quantile(est_min)[3]- (diff(stats::quantile(est_min)[c(2,4)])*ss.IQR)  ,
-                     min.upr = stats::quantile(est_min)[3]+ (diff(stats::quantile(est_min)[c(2,4)])*ss.IQR)  ,
-                     max.lwr = stats::quantile(est_max)[3]- (diff(stats::quantile(est_max)[c(2,4)])*ss.IQR)  ,
-                     max.upr = stats::quantile(est_max)[3]+ (diff(stats::quantile(est_max)[c(2,4)])*ss.IQR)  )
+                     min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                     min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                     max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
+                     max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
 
   power_results3<-power_test %>%
     # dplyr::filter(sig_int == 1) %>%
-    dplyr::group_by_at(.vars = dplyr::vars(all_of(grouping_variables))) %>%
+    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
-                     x1_est_mean   =mean(x1_est),
-                     x2_est_mean = mean(x2_est),
-                     x1x2_est_mean = mean(x1x2_est),
-                     r_x1_y_mean = mean(r_x1_y),
-                     r_x2_y_mean = mean(r_x2_y),
-                     r_x1_x2_mean = mean(r_x1_x2),
-                     r_y_x1x2_mean = mean(r_y_x1x2),
-                     r_x1_x1x2_mean = mean(r_x1_x1x2),
-                     r_x2_x1x2_mean = mean(r_x2_x1x2)
+                     x1_est_mean   =mean(.data$x1_est),
+                     x2_est_mean = mean(.data$x2_est),
+                     x1x2_est_mean = mean(.data$x1x2_est),
+                     r_x1_y_mean = mean(.data$r_x1_y),
+                     r_x2_y_mean = mean(.data$r_x2_y),
+                     r_x1_x2_mean = mean(.data$r_x1_x2),
+                     r_y_x1x2_mean = mean(.data$r_y_x1x2),
+                     r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
+                     r_x2_x1x2_mean = mean(.data$r_x2_x1x2)
 
 
     )

@@ -50,8 +50,8 @@ test_interaction<-function(data,alpha=0.05,q=2){
                               include.lowest = T,
                               breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q))))
 
-  g1<-dplyr::filter(data,groups == min(data$groups))
-  g2<-dplyr::filter(data,groups == max(data$groups))
+  g1<-dplyr::filter(data,data$groups == min(data$groups))
+  g2<-dplyr::filter(data,data$groups == max(data$groups))
 
   mod1<-stats::lm(y~x1,data = g1)
   mod2<-stats::lm(y~x1,data = g2)
