@@ -51,6 +51,52 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
                               alpha = alpha,
                               q = q))
 
+
+  omit<-NA
+  i<-NULL
+  for(i in 1: dim(settings)[1]){
+    out<-base::tryCatch(expr = {
+      data<-generate_interaction(N = settings$N[i],
+                                 r.x1.y = settings$r.x1.y[i],
+                                 r.x2.y = settings$r.x2.y[i],
+                                 r.x1x2.y= settings$r.x1x2.y [i],
+                                 r.x1.x2  = settings$r.x1.x2[i],
+                                 mean.x1 = settings$mean.x1[i],
+                                 sd.x1 = settings$sd.x1[i],
+                                 mean.x2 = settings$mean.x2[i],
+                                 sd.x2 = settings$sd.x2[i],
+                                 mean.y = settings$mean.y[i],
+                                 sd.y = settings$sd.y[i]
+                                 #sd.x1x2 = settings$sd.x1x2[i],
+                                 #r.x1.x1x2=settings$r.x1.x1x2[i],
+                                 #r.x2.x1x2=settings$r.x2.x1x2[i],
+                                 #binary.x1 = settings$ binary.x1[i],
+                                 #binary.x2 = settings$ binary.x2[i]
+
+      )
+
+    },
+    warning = function(cond){i},
+    error = function(cond){i}
+    )
+    omit<-c(omit,out)
+  }
+
+
+    l<-base::lapply(omit, base::is.integer)
+    bad_ones<-stats::na.omit(base::unlist(omit[l==TRUE]))
+
+    print(paste(round(length(bad_ones)/dim(settings)[1]*100,2)," % of requested simulations are invalid, n=",length(bad_ones),
+                ". Removing from list.",sep=""))
+
+    settings<-settings[-bad_ones,]
+
+
+    if(dim(settings)[1] == 0){
+      #print()
+      stop("No valid settings")
+    }
+
   print(paste("Performing",(dim(settings)[1]*n.iter) ,"tests",sep=" "))
   #
   # defaults<-data.frame(alpha=0.05,q=2,#binary.x1=0,binary.x2=0,

@@ -50,8 +50,8 @@ generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=
                          ncol = 4, byrow = TRUE)
 
   if(base::max(base::abs(cormat[lower.tri(cormat)]))>1){
-    print("All correlations must be within [-1,1]")
-    stop()
+   # print()
+    stop("All correlations must be within [-1,1]")
   }
   sd = c(sd.x1,sd.x2,sd.x1x2,sd.y   )
   #covmat<- cor2cov_1(cor.mat =cormat,)
@@ -83,13 +83,18 @@ generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=
   # simulate y
   # sqrt because rnorm() takes SD, not variance
 
-  ysd <- base::sqrt(var.y -
+  yvar <-              var.y -
                       ((b1^2)*var.x1) -
                       ((b2^2)*var.x2) -
                       ((b3^2)*( (var.x1*var.x2) + (covmat[1,2])^2) ) -
                       (2*(b1*b2)* covmat[1,2] )
-  )
 
+  if(yvar < 0){
+    #print()
+    stop("Settings produce a negative y-variance")
+  }
+
+  ysd <- base::sqrt(yvar)
   ymean <- (mean.y + b1*x1 + b2*x2 + b3*x1*x2)
 
   y <- stats::rnorm(N, ymean , ysd)
