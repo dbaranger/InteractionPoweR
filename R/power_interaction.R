@@ -85,7 +85,7 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
 
     l<-base::lapply(omit, base::is.integer)
     bad_ones<-stats::na.omit(base::unlist(omit[l==TRUE]))
-
+if(length(bad_ones) >0){
     print(paste(round(length(bad_ones)/dim(settings)[1]*100,2)," % of requested simulations are invalid, n=",length(bad_ones),
                 ". Removing from list.",sep=""))
 
@@ -96,6 +96,7 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
       #print()
       stop("No valid settings")
     }
+}
 
   print(paste("Performing",(dim(settings)[1]*n.iter) ,"tests",sep=" "))
   #

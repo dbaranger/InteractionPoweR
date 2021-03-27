@@ -27,6 +27,14 @@ install.packages("devtools")
 devtools::install_github("dbaranger/InteractionPoweR")
 ```
 
+Sometimes there will be a minor installation error, which can be
+resolved by using:
+
+``` r
+install.packages("devtools")
+devtools::install_github("dbaranger/InteractionPoweR/@HEAD")
+```
+
 ## Examples
 
 ### Example 1
@@ -53,8 +61,8 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 1000 tests"
 test_power
-#>    pwr     min.lwr   min.upr   max.lwr  max.upr
-#> 1 0.79 -0.09180522 0.2078051 0.1956069 0.461098
+#>     pwr     min.lwr   min.upr   max.lwr   max.upr
+#> 1 0.806 -0.07910145 0.1913635 0.2013804 0.4560657
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -67,8 +75,9 @@ provide a simple interface for simulating single data sets and plotting
 them.
 
 ``` r
+set.seed(2020)
 sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2)
-plot_interaction(data = sample_data)
+plot_interaction(data = sample_data,q = 2)
 ```
 
 <img src="man/figures/README-example2-1.png" width="100%" />
@@ -84,7 +93,7 @@ we would need to detect those interactions.
 ``` r
 library(tictoc)
 tic()
-
+  
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
   cl = 6,                   # number of cores for parallel processing (strongly recommended)
@@ -97,7 +106,7 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 60000 tests"
 toc()
-#> 162.89 sec elapsed
+#> 261.08 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -117,9 +126,9 @@ power\_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x = "N")
 #>   r.x1x2.y estimate
-#> 1     0.18 307.6380
-#> 2     0.20 239.8541
-#> 3     0.22 207.7671
+#> 1     0.18 310.0378
+#> 2     0.20 247.4470
+#> 3     0.22 204.6025
 ```
 
 We can see that depending on the specific effect size we hope to detect,
@@ -151,7 +160,7 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 14000 tests"
 toc()
-#> 57.64 sec elapsed
+#> 73.63 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -168,7 +177,7 @@ power\_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.1476728
+#> [1] 0.1468017
 ```
 
 We can use the function `plot_simple_slope()` to visualize the

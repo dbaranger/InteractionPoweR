@@ -29,6 +29,13 @@ install.packages("devtools")
 devtools::install_github("dbaranger/InteractionPoweR")
 ```
 
+Sometimes there will be a minor installation error, which can be resolved by using: 
+
+``` r
+install.packages("devtools")
+devtools::install_github("dbaranger/InteractionPoweR/@HEAD")
+```
+
 ## Examples
 ### Example 1
 
@@ -56,8 +63,9 @@ We see that we have ~80% power to detect the effect of interest. `min.lwr`, `min
 It can be hard to know what interaction correlations mean in terms of how the data will look. To help users interpret interaction effects, we provide a simple interface for simulating single data sets and plotting them.
 
 ```{r example2}
+set.seed(2020)
 sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2)
-plot_interaction(data = sample_data)
+plot_interaction(data = sample_data,q = 2)
 ```
 
 ### Example 2
@@ -68,7 +76,7 @@ In this example, we know the population-level correlation between each of our pr
 ```{r example3}
 library(tictoc)
 tic()
-
+  
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
   cl = 6,                   # number of cores for parallel processing (strongly recommended)
