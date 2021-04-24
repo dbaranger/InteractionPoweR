@@ -143,3 +143,31 @@ plot_simple_slope(test_power)
 ```
 
 From this we can see that we have 90% power to detect effects as small as r.x1x2.y ~ .15, which is a 'knock-out' interaction where the association between y and x1 is close to 0 at one end of the x2 distribution. 
+
+### Example 4
+
+In this example, we're going to explore how the reliability of x1 and x2 impacts our power. We know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We know our sample size (perhaps we are doing some secondary data analysis).
+
+
+```{r example10}
+library(tictoc)
+tic()
+
+test_power<-power_interaction(
+  n.iter = 10000,                  # number of simulations per unique combination of input parameters
+  cl = 6,                   # number of cores for parallel processing (strongly recommended)
+  alpha = 0.05,             # alpha, for the power analysis
+  N = 450,                  # sample size
+  r.x1x2.y = .15,           # range of interaction effects to test
+  r.x1.y = .2,              # correlation between x1 and y
+  r.x2.y = .1,              # correlation between x2 and y
+  r.x1.x2 = .2,             # correlation between x1 and x2
+  rel_x1 = seq(.4,1,.1),    # x1 reliability
+  rel_x2 = seq(.4,1,.1)     # x2 reliability
+)
+toc()
+plot_power_curve(test_power,power_target = .9)
+
+```
+
+We can see that even with good reliability of both x1 and x2 (say x1 & x2 reliability  = .8) we have less than 80% power (74% powere here), while a power analysis that assumes perfect reliability would estimate that we have 90% power.  

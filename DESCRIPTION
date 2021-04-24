@@ -18,7 +18,15 @@ Authors@R:
     person(given = "Thomas",
            family = "Olino",
            role = "ctb",
-           email = "thomas.olino@gmail.com")  
+           email = "thomas.olino@gmail.com")  ,
+    person(given = "Colin",
+           family = "Vize",
+           role = "ctb",
+           email = "vizece@upmc.edu")  ,
+    person(given = "Don",
+           family = "Lynam",
+           role = "ctb",
+           email = "dlynam@purdue.edu")  
            )
 Description: Power analysis for regression models which test the interaction 
     of two independent variables on a single dependent variable. All 

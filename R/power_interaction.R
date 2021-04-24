@@ -8,12 +8,9 @@
 #' @param r.x2.y Pearson's correlation between x2 and y. Must be between -1 and 1.. Assumed to be the 'moderator' in some functions. Has no default value. Can be a single value or a vector of values.
 #' @param r.x1x2.y Pearson's correlation between the interaction term x1x2 (x1 * x2) and y. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.
 #' @param r.x1.x2 Pearson's correlation between x1 and x2. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.
-#' @param sd.x1 Standard deviation of x1. Defaults to 1. Can be a single value or a vector of values.
-#' @param sd.x2 Standard deviation of x2. Defaults to 1. Can be a single value or a vector of values.
-#' @param sd.y Standard deviation of y. Defaults to 1. Can be a single value or a vector of values.
-#' @param mean.x1 Mean of x1. Defaults to 0. Can be a single value or a vector of values.
-#' @param mean.x2 Mean of x2. Defaults to 0. Can be a single value or a vector of values.
-#' @param mean.y Mean of y. Defaults to 0. Can be a single value or a vector of values.
+#' @param rel_x1 Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
+#' @param rel_x2 Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
+#' @param rel_y Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #' @param alpha The alpha. At what p-value is the interaction deemed significant? Default is 0.05.
 #' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
 #' @param ss.IQR Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.
@@ -35,19 +32,22 @@
 #' power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 #'}
 #'
-power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=1,sd.y=1,mean.x1=0,mean.x2=0,mean.y=0,alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,detailed_results=FALSE,full_simulation=FALSE){
+power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,rel_x1=1,rel_x2=1,rel_y=1,alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,detailed_results=FALSE,full_simulation=FALSE){
 
   settings<-expand.grid(list( N=N,
                               r.x1.y = r.x1.y,
                               r.x2.y = r.x2.y,
                               r.x1x2.y = r.x1x2.y,
                               r.x1.x2 = r.x1.x2,
-                              sd.x1 = sd.x1,
-                              sd.x2 = sd.x2,
-                              sd.y = sd.y,
-                              mean.x1 = mean.x1,
-                              mean.x2 = mean.x2,
-                              mean.y = mean.y,
+                              rel_x1=rel_x1,
+                              rel_x2=rel_x2,
+                              rel_y=rel_y,
+                              # sd.x1 = sd.x1,
+                              # sd.x2 = sd.x2,
+                              # sd.y = sd.y,
+                              # mean.x1 = mean.x1,
+                              # mean.x2 = mean.x2,
+                              # mean.y = mean.y,
                               alpha = alpha,
                               q = q))
 
@@ -61,12 +61,15 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x
                                  r.x2.y = settings$r.x2.y[i],
                                  r.x1x2.y= settings$r.x1x2.y [i],
                                  r.x1.x2  = settings$r.x1.x2[i],
-                                 mean.x1 = settings$mean.x1[i],
-                                 sd.x1 = settings$sd.x1[i],
-                                 mean.x2 = settings$mean.x2[i],
-                                 sd.x2 = settings$sd.x2[i],
-                                 mean.y = settings$mean.y[i],
-                                 sd.y = settings$sd.y[i]
+                                 rel_x1=settings$rel_x1[i],
+                                 rel_x2=settings$rel_x2[i],
+                                 rel_y=settings$rel_y[i]
+                                 # mean.x1 = settings$mean.x1[i],
+                                 # sd.x1 = settings$sd.x1[i],
+                                 # mean.x2 = settings$mean.x2[i],
+                                 # sd.x2 = settings$sd.x2[i],
+                                 # mean.y = settings$mean.y[i],
+                                 # sd.y = settings$sd.y[i]
                                  #sd.x1x2 = settings$sd.x1x2[i],
                                  #r.x1.x1x2=settings$r.x1.x1x2[i],
                                  #r.x2.x1x2=settings$r.x2.x1x2[i],
@@ -129,12 +132,15 @@ i<-NULL
                                                                                                                     r.x2.y = settings$r.x2.y[i],
                                                                                                                     r.x1x2.y= settings$r.x1x2.y [i],
                                                                                                                     r.x1.x2  = settings$r.x1.x2[i],
-                                                                                                                    mean.x1 = settings$mean.x1[i],
-                                                                                                                    sd.x1 = settings$sd.x1[i],
-                                                                                                                    mean.x2 = settings$mean.x2[i],
-                                                                                                                    sd.x2 = settings$sd.x2[i],
-                                                                                                                    mean.y = settings$mean.y[i],
-                                                                                                                    sd.y = settings$sd.y[i]
+                                                                                                                    rel_x1=settings$rel_x1[i],
+                                                                                                                    rel_x2=settings$rel_x2[i],
+                                                                                                                    rel_y=settings$rel_y[i]
+                                                                                                                    # mean.x1 = settings$mean.x1[i],
+                                                                                                                    # sd.x1 = settings$sd.x1[i],
+                                                                                                                    # mean.x2 = settings$mean.x2[i],
+                                                                                                                    # sd.x2 = settings$sd.x2[i],
+                                                                                                                    # mean.y = settings$mean.y[i],
+                                                                                                                    # sd.y = settings$sd.y[i]
                                                                                                                     #sd.x1x2 = settings$sd.x1x2[i],
                                                                                                                     #r.x1.x1x2=settings$r.x1.x1x2[i],
                                                                                                                     #r.x2.x1x2=settings$r.x2.x1x2[i],
@@ -171,12 +177,15 @@ i<-NULL
                                                                              r.x2.y = settings$r.x2.y[1],
                                                                              r.x1x2.y= settings$r.x1x2.y [1],
                                                                              r.x1.x2  = settings$r.x1.x2[1],
-                                                                             mean.x1 = settings$mean.x1[1],
-                                                                             sd.x1 = settings$sd.x1[1],
-                                                                             mean.x2 = settings$mean.x2[1],
-                                                                             sd.x2 = settings$sd.x2[1],
-                                                                             mean.y = settings$mean.y[1],
-                                                                             sd.y = settings$sd.y[1]
+                                                                             rel_x1=settings$rel_x1[1],
+                                                                             rel_x2=settings$rel_x2[1],
+                                                                             rel_y=settings$rel_y[1]
+                                                                             # mean.x1 = settings$mean.x1[1],
+                                                                             # sd.x1 = settings$sd.x1[1],
+                                                                             # mean.x2 = settings$mean.x2[1],
+                                                                             # sd.x2 = settings$sd.x2[1],
+                                                                             # mean.y = settings$mean.y[1],
+                                                                             # sd.y = settings$sd.y[1]
                                                                              #sd.x1x2 = settings$sd.x1x2[1],
                                                                              #r.x1.x1x2=settings$r.x1.x1x2[1],
                                                                              #r.x2.x1x2=settings$r.x2.x1x2[1],
@@ -208,7 +217,7 @@ i<-NULL
   }
 
 
-  settings<-power_test[,c(22:34)]
+  settings<-power_test[,c(22:29)]
   dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
   grouping_variables<-colnames(settings)[dimnum>1]
   #grouping_variables<-colnames(results(power_test)[grep("+test", colnames(results(power_test)))])

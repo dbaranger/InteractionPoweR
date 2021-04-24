@@ -11,12 +11,9 @@ power_interaction(
   r.x2.y,
   r.x1x2.y,
   r.x1.x2,
-  sd.x1 = 1,
-  sd.x2 = 1,
-  sd.y = 1,
-  mean.x1 = 0,
-  mean.x2 = 0,
-  mean.y = 0,
+  rel_x1 = 1,
+  rel_x2 = 1,
+  rel_y = 1,
   alpha = 0.05,
   q = 2,
   cl = NULL,
@@ -38,17 +35,11 @@ power_interaction(
 
 \item{r.x1.x2}{Pearson's correlation between x1 and x2. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.}
 
-\item{sd.x1}{Standard deviation of x1. Defaults to 1. Can be a single value or a vector of values.}
+\item{rel_x1}{Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{sd.x2}{Standard deviation of x2. Defaults to 1. Can be a single value or a vector of values.}
+\item{rel_x2}{Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{sd.y}{Standard deviation of y. Defaults to 1. Can be a single value or a vector of values.}
-
-\item{mean.x1}{Mean of x1. Defaults to 0. Can be a single value or a vector of values.}
-
-\item{mean.x2}{Mean of x2. Defaults to 0. Can be a single value or a vector of values.}
-
-\item{mean.y}{Mean of y. Defaults to 0. Can be a single value or a vector of values.}
+\item{rel_y}{Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
 \item{alpha}{The alpha. At what p-value is the interaction deemed significant? Default is 0.05.}
 

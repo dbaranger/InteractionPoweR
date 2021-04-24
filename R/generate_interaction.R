@@ -8,12 +8,9 @@
 #' @param r.x2.y Pearson's correlation between x2 and y. Must be between -1 and 1.. Assumed to be the 'moderator' in some functions. Has no default value.
 #' @param r.x1x2.y Pearson's correlation between the interaction term x1x2 (x1 * x2) and y. Must be between -1 and 1.. Has no default value.
 #' @param r.x1.x2 Pearson's correlation between x1 and x2. Must be between -1 and 1.. Has no default value.
-#' @param sd.x1 Standard deviation of x1. Defaults to 1.
-#' @param sd.x2 Standard deviation of x2. Defaults to 1.
-#' @param sd.y Standard deviation of y. Defaults to 1.
-#' @param mean.x1 Mean of x1. Defaults to 0.
-#' @param mean.x2 Mean of x2. Defaults to 0.
-#' @param mean.y Mean of y. Defaults to 0.
+#' @param rel_x1 Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
+#' @param rel_x2 Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
+#' @param rel_y Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #'
 #' @return A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values.
 #' @export
@@ -22,7 +19,26 @@
 #' \dontrun{dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' cor(dataset)
 #' }
-generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=1,sd.y=1,mean.x1=0,mean.x2=0,mean.y=0) {
+generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,rel_x1=1,rel_x2=1,rel_y=1) {
+
+  sd.x1=1
+  sd.x2=1
+  sd.y =1
+  mean.x1 = 0
+  mean.x2 = 0
+  mean.y  = 0
+
+  if(rel_x1 <= 0 | rel_x1 >1 |rel_x2 <= 0 | rel_x2 >1 | rel_y <= 0 | rel_y >1){
+    stop("All reliabilities must be greater than 0 and less than or equal to 1")
+  }
+
+
+  std_x1_err=sqrt((1-rel_x1)/rel_x1)
+  std_x2_err=sqrt((1-rel_x2)/rel_x2)
+  std_y_err=sqrt((1-rel_y)/rel_y)
+  error_x1=stats::rnorm(N, 0, std_x1_err)
+  error_x2=stats::rnorm(N, 0, std_x2_err)
+  error_y=stats::rnorm(N, 0, std_y_err)
 
   # compute sd of x1x2 (interaction term) using x1 and x2
 
@@ -81,7 +97,7 @@ generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=
   var.x2<-covmat[2,2]
 
   # simulate y
-  # sqrt because rnorm() takes SD, not variance
+  # add y noise to variance?
 
   yvar <-              var.y -
                       ((b1^2)*var.x1) -
@@ -98,6 +114,15 @@ generate_interaction <- function(N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,sd.x1=1,sd.x2=
   ymean <- (mean.y + b1*x1 + b2*x2 + b3*x1*x2)
 
   y <- stats::rnorm(N, ymean , ysd)
+
+  # Add x1/x2 noise here?
+
+  y<- base::scale(x = (y+error_y),center = T,scale = T)
+  x1<- base::scale(x = (x1+error_x1),center = T,scale = T)
+  x2<- base::scale(x = (x2+error_x2),center = T,scale = T)
+
+
+
 
   x1x2<-x1*x2
 

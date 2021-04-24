@@ -61,8 +61,8 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 1000 tests"
 test_power
-#>     pwr     min.lwr   min.upr   max.lwr   max.upr
-#> 1 0.806 -0.07910145 0.1913635 0.2013804 0.4560657
+#>     pwr     min.lwr   min.upr  max.lwr   max.upr
+#> 1 0.809 -0.08653004 0.2012318 0.193686 0.4587132
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -106,7 +106,7 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 60000 tests"
 toc()
-#> 261.08 sec elapsed
+#> 161.3 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -126,9 +126,9 @@ power\_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x = "N")
 #>   r.x1x2.y estimate
-#> 1     0.18 310.0378
-#> 2     0.20 247.4470
-#> 3     0.22 204.6025
+#> 1     0.18 309.3990
+#> 2     0.20 248.4765
+#> 3     0.22 205.9720
 ```
 
 We can see that depending on the specific effect size we hope to detect,
@@ -160,7 +160,7 @@ test_power<-power_interaction(
 )
 #> [1] "Performing 14000 tests"
 toc()
-#> 73.63 sec elapsed
+#> 50.31 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -177,7 +177,7 @@ power\_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.1468017
+#> [1] 0.1474658
 ```
 
 We can use the function `plot_simple_slope()` to visualize the
@@ -194,3 +194,40 @@ From this we can see that we have 90% power to detect effects as small
 as r.x1x2.y \~ .15, which is a ‘knock-out’ interaction where the
 association between y and x1 is close to 0 at one end of the x2
 distribution.
+
+### Example 4
+
+In this example, we’re going to explore how the reliability of x1 and x2
+impacts our power. We know the population-level correlation between each
+of our predictors (x1 and x2) and our outcome (y), as well as the
+correlation between the two predictors. We know our sample size (perhaps
+we are doing some secondary data analysis).
+
+``` r
+library(tictoc)
+tic()
+
+test_power<-power_interaction(
+  n.iter = 10000,                  # number of simulations per unique combination of input parameters
+  cl = 6,                   # number of cores for parallel processing (strongly recommended)
+  alpha = 0.05,             # alpha, for the power analysis
+  N = 450,                  # sample size
+  r.x1x2.y = .15,           # range of interaction effects to test
+  r.x1.y = .2,              # correlation between x1 and y
+  r.x2.y = .1,              # correlation between x2 and y
+  r.x1.x2 = .2,             # correlation between x1 and x2
+  rel_x1 = seq(.4,1,.1),    # x1 reliability
+  rel_x2 = seq(.4,1,.1)     # x2 reliability
+)
+#> [1] "Performing 490000 tests"
+toc()
+#> 2313.76 sec elapsed
+plot_power_curve(test_power,power_target = .9)
+```
+
+<img src="man/figures/README-example10-1.png" width="100%" />
+
+We can see that even with good reliability of both x1 and x2 (say x1 &
+x2 reliability = .8) we have less than 80% power (74% powere here),
+while a power analysis that assumes perfect reliability would estimate
+that we have 90% power.
