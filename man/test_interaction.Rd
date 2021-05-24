@@ -4,7 +4,7 @@
 \alias{test_interaction}
 \title{Test interaction}
 \usage{
-test_interaction(data, alpha = 0.05, q = 2)
+test_interaction(data, alpha = 0.05, q = 2, simple = F)
 }
 \arguments{
 \item{data}{Simulated data set. Output of 'generate_interaction()'.}
@@ -14,9 +14,11 @@ test_interaction(data, alpha = 0.05, q = 2)
 \item{q}{Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
 Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.
 If q=3 then the two slopes are y~x1 for the bottom 33\% of x2, and the top 33\% of x2.}
+
+\item{simple}{For internal use. Default is FALSE.}
 }
 \value{
-A data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.
+Either a named list or a data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.
 }
 \description{
 Test the interaction from a single simulated data set.

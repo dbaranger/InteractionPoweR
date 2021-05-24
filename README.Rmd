@@ -44,10 +44,11 @@ The simplest use-case is when all the input parameters are known. We know the po
 
 ```{r example1}
 library(InteractionPoweR)
-
+library(tictoc)
+tic()
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
-  cl = 6,                   # number of cores for parallel processing (strongly recommended)
+ # cl = 6,                   # number of cores for parallel processing (strongly recommended)
   alpha = 0.05,             # alpha, for the power analysis
   N = 350,                  # sample size
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
@@ -55,6 +56,7 @@ test_power<-power_interaction(
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2              # correlation between x1 and x2
 )
+toc()
 test_power
 ```
 
@@ -66,6 +68,13 @@ It can be hard to know what interaction correlations mean in terms of how the da
 set.seed(2020)
 sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2)
 plot_interaction(data = sample_data,q = 2)
+```
+
+
+The `test_interaction()` function can be used to see the results of the regression `y ~ x1 + x2 + x1x2`, the correlation between the variables, and find the simple slopes from the plot above. In this case, the 'lower slope', Moderator Group = 1, is roughly 0, while the 'upper slope', Moderator Group = 1, is 0.38.
+
+```{r example222}
+test_interaction(data = sample_data,q = 2)
 ```
 
 ### Example 2
@@ -162,8 +171,8 @@ test_power<-power_interaction(
   r.x1.y = .2,              # correlation between x1 and y
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2,             # correlation between x1 and x2
-  rel_x1 = seq(.4,1,.1),    # x1 reliability
-  rel_x2 = seq(.4,1,.1)     # x2 reliability
+  rel.x1 = seq(.4,1,.1),    # x1 reliability
+  rel.x2 = seq(.4,1,.1)     # x2 reliability
 )
 toc()
 plot_power_curve(test_power,power_target = .9)
@@ -171,3 +180,46 @@ plot_power_curve(test_power,power_target = .9)
 ```
 
 We can see that even with good reliability of both x1 and x2 (say x1 & x2 reliability  = .8) we have less than 80% power (74% powere here), while a power analysis that assumes perfect reliability would estimate that we have 90% power.  
+
+### Example 5
+
+So far, these examples have assumed that all variables are normally distributed. It is also possible to specify that a variable is binary (i.e. dichotomous), and variables can be skewed as well. By default, it is assumed that the specified correlations between variables are the population-level correlations of the *skewed* or *binary* variables (i.e. `adjust.correlations = T`). The 'adjustment' here is how much each correlation needs to be changed, so that the resulting correlation matrix post-variable-transformation matches the input correlation matrix (transforming a variable typically attenuates correlations with other variables, which can result in the analysis confounding *skew* and decreasing effect sizes). This is run prior to the main power analysis, and depending on the severity of the changes and size of the analysis, can be relatively time-consuming. If, on the other hand, the correlations between continuous normal variables is known, but in the analysis one or both variables are artificially dichotomized, set `adjust.correlations = F`. In the case where `y` is binary, all analyses and plots are run as logistic regressions. 
+
+```{r example11}
+library(tictoc)
+tic()
+
+test_power<-power_interaction(
+  n.iter = 1000,            # number of simulations per unique combination of input parameters
+  cl = 6,                   # number of cores for parallel processing (strongly recommended)
+  alpha = 0.05,             # alpha, for the power analysis
+  N = 450,                  # sample size
+  r.x1x2.y = .15,           #  interaction effect
+  r.x1.y = .2,              # correlation between x1 and y
+  r.x2.y = .1,              # correlation between x2 and y
+  r.x1.x2 = .2           ,  # correlation between x1 and x2
+  skew.x1 = seq(0,2,by=.25),# x1 skew
+  adjust.correlations = T   # Default, adjust correlations
+
+)
+toc()
+plot_power_curve(test_power,power_target = .9,x = "skew.x1",group = "skew.x2",facets = "r.x1.x2")
+
+```
+
+We can see that in this example, our power decreases as the x1 skew increases. 
+
+### Example 6
+
+*Any* variable can be skewed and/or binary in these simulations. If a variable is binary, the skew can be computed from the proportion of 1:0 using the `binary.p2skew` convenience function. Here is an example of a single data set where all variables are binary and x2 & y are skewed (the x1 0:1 ratio of 0.5 corresponds to a skew of 0). 
+
+```{r example12}
+set.seed(2020)
+sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2,
+                                  transform.x1 = "binary",transform.x2 = "binary",transform.y = "binary",
+                                  skew.x1 = binary.p2skew(.5),skew.x2 = binary.p2skew(.7),skew.y = binary.p2skew(.4),
+                                  adjust.correlations = T
+                                    )
+plot_interaction(data = sample_data)
+test_interaction(data = sample_data)
+```

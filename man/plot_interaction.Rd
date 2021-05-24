@@ -9,7 +9,7 @@ plot_interaction(data, q = 2)
 \arguments{
 \item{data}{Output of generate_interaction().}
 
-\item{q}{Simple slope quantiles. Default is 2. X2 is the moderator. Must be a positive integer > 1.}
+\item{q}{Simple slope quantiles. Default is 2. X2 is the default moderator, unless X1 is already binary. Must be a positive integer > 1.}
 }
 \value{
 A ggplot2 object

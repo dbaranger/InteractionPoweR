@@ -11,9 +11,16 @@ power_interaction(
   r.x2.y,
   r.x1x2.y,
   r.x1.x2,
-  rel_x1 = 1,
-  rel_x2 = 1,
-  rel_y = 1,
+  rel.x1 = 1,
+  rel.x2 = 1,
+  rel.y = 1,
+  skew.x1 = 0,
+  skew.x2 = 0,
+  skew.y = 0,
+  transform.x1 = "default",
+  transform.x2 = "default",
+  transform.y = "default",
+  adjust.correlations = T,
   alpha = 0.05,
   q = 2,
   cl = NULL,
@@ -35,11 +42,25 @@ power_interaction(
 
 \item{r.x1.x2}{Pearson's correlation between x1 and x2. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.}
 
-\item{rel_x1}{Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
+\item{rel.x1}{Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{rel_x2}{Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
+\item{rel.x2}{Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{rel_y}{Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
+\item{rel.y}{Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
+
+\item{skew.x1}{Skew of x1. Default is 0 (normally distributed).}
+
+\item{skew.x2}{Skew of x2. Default is 0 (normally distributed).}
+
+\item{skew.y}{Skew of y. Default is 0 (normally distributed).}
+
+\item{transform.x1}{Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.}
+
+\item{transform.x2}{Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.}
+
+\item{transform.y}{Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.}
+
+\item{adjust.correlations}{If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.}
 
 \item{alpha}{The alpha. At what p-value is the interaction deemed significant? Default is 0.05.}
 

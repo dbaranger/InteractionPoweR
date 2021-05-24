@@ -1,6 +1,6 @@
 Package: InteractionPoweR
 Title: Power analysis for interactions via simulation
-Version: 0.1.0.1
+Version: 0.1.0.3
 Authors@R: 
     c(person(given = "David",
            family = "Baranger",
@@ -29,10 +29,12 @@ Authors@R:
            email = "dlynam@purdue.edu")  
            )
 Description: Power analysis for regression models which test the interaction 
-    of two independent variables on a single dependent variable. All 
-    variables are continuous and normally distributed, and may be correlated.
-    Power analysis is done via simulation. Includes tools for simulating 
-    single data sets and visualizing power analysis results. 
+    of two independent variables on a single dependent variable. Includes 
+    options for continuous, binary, and/or skewed variables, as well as 
+    correlated interacting variables. Also includes options to specify 
+    variable reliability. Power analysis is done via simulation. 
+    Includes tools for simulating single data sets and 
+    visualizing power analysis results. 
 URL: https://github.com/dbaranger/InteractionPoweR
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues
 License: GPL (>= 3)
@@ -52,4 +54,7 @@ Imports:
 	chngpt,
   rlang,
   tidyr,
-  stats
+  stats,
+  e1071,
+  betafunctions,
+  ggbeeswarm
