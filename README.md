@@ -52,7 +52,6 @@ library(tictoc)
 tic()
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
- # cl = 6,                   # number of cores for parallel processing (strongly recommended)
   alpha = 0.05,             # alpha, for the power analysis
   N = 350,                  # sample size
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
@@ -62,24 +61,11 @@ test_power<-power_interaction(
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-#> 
-#> Attaching package: 'MASS'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     select
 toc()
-#> 17.08 sec elapsed
+#> 15.2 sec elapsed
 test_power
 #>     pwr     min.lwr   min.upr   max.lwr   max.upr
-#> 1 0.802 -0.07739429 0.1942745 0.1966897 0.4550815
+#> 1 0.828 -0.08363714 0.2013017 0.1936626 0.4681784
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -152,7 +138,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 60000 simulations"
 toc()
-#> 237.32 sec elapsed
+#> 218.79 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -172,9 +158,9 @@ power\_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x = "N")
 #>   r.x1x2.y estimate
-#> 1     0.18 313.3005
-#> 2     0.20 248.2695
-#> 3     0.22 208.0945
+#> 1     0.18 309.3075
+#> 2     0.20 249.6749
+#> 3     0.22 206.3517
 ```
 
 We can see that depending on the specific effect size we hope to detect,
@@ -207,7 +193,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 14000 simulations"
 toc()
-#> 78.61 sec elapsed
+#> 86.05 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -224,7 +210,7 @@ power\_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.1488084
+#> [1] 0.1478414
 ```
 
 We can use the function `plot_simple_slope()` to visualize the
@@ -255,7 +241,7 @@ library(tictoc)
 tic()
 
 test_power<-power_interaction(
-  n.iter = 10000,                  # number of simulations per unique combination of input parameters
+  n.iter = 1000,                  # number of simulations per unique combination of input parameters
   cl = 6,                   # number of cores for parallel processing (strongly recommended)
   alpha = 0.05,             # alpha, for the power analysis
   N = 450,                  # sample size
@@ -264,12 +250,12 @@ test_power<-power_interaction(
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2,             # correlation between x1 and x2
   rel.x1 = seq(.4,1,.1),    # x1 reliability
-  rel.x2 = seq(.4,1,.1)     # x2 reliability
+  rel.x2 = seq(.4,1,.2)     # x2 reliability
 )
 #> [1] "Checking for errors in inputs..."
-#> [1] "Performing 490000 simulations"
+#> [1] "Performing 28000 simulations"
 toc()
-#> 2920.34 sec elapsed
+#> 157.92 sec elapsed
 plot_power_curve(test_power,power_target = .9)
 ```
 
@@ -284,21 +270,22 @@ that we have 90% power.
 
 So far, these examples have assumed that all variables are normally
 distributed. It is also possible to specify that a variable is binary
-(i.e. dichotomous), and variables can be skewed as well. By default, it
-is assumed that the specified correlations between variables are the
-population-level correlations of the *skewed* or *binary* variables
-(i.e. `adjust.correlations = T`). The ‘adjustment’ here is how much each
-correlation needs to be changed, so that the resulting correlation
-matrix post-variable-transformation matches the input correlation matrix
-(transforming a variable typically attenuates correlations with other
-variables, which can result in the analysis confounding *skew* and
-decreasing effect sizes). This is run prior to the main power analysis,
-and depending on the severity of the changes and size of the analysis,
-can be relatively time-consuming. If, on the other hand, the
-correlations between continuous normal variables is known, but in the
-analysis one or both variables are artificially dichotomized, set
-`adjust.correlations = F`. In the case where `y` is binary, all analyses
-and plots are run as logistic regressions.
+(i.e. dichotomous) and/or skewed. By default, it is assumed that the
+specified correlations between all variables are the population-level
+correlations of the *skewed* or *binary* variables. If this is the case,
+retain the defaul setting of `adjust.correlations = T`. The ‘adjustment’
+here is how much each correlation needs to be changed, so that the
+resulting correlation matrix post-variable-transformation matches the
+input correlation matrix. Transforming a variable typically attenuates
+correlations with other variables, which can result in the analysis
+confounding *skew* and decreasing effect sizes. The correlation
+adjustment is run prior to the main power analysis, and depending on the
+severity of the changes and size of the analysis, can be relatively
+time-consuming. If, on the other hand, the correlations between
+continuous normal variables is known, but in the analysis one or both
+variables are artificially skewed/dichotomized, set `adjust.correlations
+= F`. In the case where `y` is binary, all analyses and plots are run as
+logistic regressions.
 
 ``` r
 library(tictoc)
@@ -321,8 +308,8 @@ test_power<-power_interaction(
 #> [1] "Adjusting correlations for variable transformations..."
 #> [1] "Performing 9000 simulations"
 toc()
-#> 80.94 sec elapsed
-plot_power_curve(test_power,power_target = .9,x = "skew.x1",group = "skew.x2",facets = "r.x1.x2")
+#> 79.05 sec elapsed
+plot_power_curve(test_power,power_target = .9,x = "skew.x1")
 ```
 
 <img src="man/figures/README-example11-1.png" width="100%" />
@@ -333,10 +320,10 @@ increases.
 ### Example 6
 
 *Any* variable can be skewed and/or binary in these simulations. If a
-variable is binary, the skew can be computed from the proportion of 1:0
-using the `binary.p2skew` convenience function. Here is an example of a
-single data set where all variables are binary and x2 & y are skewed
-(the x1 0:1 ratio of 0.5 corresponds to a skew of 0).
+variable is binary, the skew can be computed from the probability of 1
+vs 0 using the `binary.p2skew` convenience function. Here is an example
+of a single data set where all variables are binary and x2 & y are
+skewed (the x1 probability of 0.5 corresponds to a skew of 0).
 
 ``` r
 set.seed(2020)
