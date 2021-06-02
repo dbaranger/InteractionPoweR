@@ -244,6 +244,12 @@ if( sum(base::is.na(settings$r.x1x2.y.adjust)) > 0){
 print(error_out)
 print(base::unique(settings[base::is.na(settings$r.x1x2.y.adjust),c(1:7)]))
 settings = stats::na.omit(settings)
+
+if(dim(settings)[1] == 0){
+  #print()
+  stop("No valid settings")
+}
+
 }
 
 
