@@ -188,19 +188,14 @@ i=NULL
                                              "compute_adjustment"  )) %dopar% {
 
 
-                                               #settingsc<-chunks[[i]]
-                                              # settingsc<-settingsc[,-which(colnames(settingsc) == "chunk")]
 
-                                              # adjustments_chunk<- sapply(X = c(1:dim(settingsc)[1]),FUN = function(X){
-                                                 #  print(X)
                                                  settingsb<-settingsa[i,]
-                                                 #settingsb<-settingsb[,-which(colnames(settingsb) == "chunk")]
 
 
                                                  if(settingsb$skew.x1 != 0 | settingsb$skew.x2 != 0 | settingsb$skew.y != 0 |
                                                     transform.x1 != "default" | transform.x2 != "default" | transform.y != "default"){
 
-
+                                                   adjustments<-base::tryCatch(expr = {
                                                    adjustments<-compute_adjustment(r.x1.y = settingsb$r.x1.y,
                                                                                    r.x2.y = settingsb$r.x2.y,
                                                                                    r.x1x2.y = settingsb$r.x1x2.y,
@@ -211,6 +206,8 @@ i=NULL
                                                                                    transform.x1 = transform.x1,
                                                                                    transform.x2 = transform.x2,
                                                                                    transform.y =  transform.y)
+                                                   },
+                                                   error = function(cond){adjustments<-rep(NA,6) })
 
                                                  }else{adjustments<-rep(0,6)}
 
@@ -239,6 +236,16 @@ i=NULL
     settings<-base::merge(settings,new_settings,all.x=T)
 
   }
+
+if( sum(base::is.na(settings$r.x1x2.y.adjust)) > 0){
+  error_out = paste(sum(base::is.na(settings$r.x1x2.y.adjust))," correlations cannot be adjusted as adjusting results in |r|>1, ",
+                    sum(base::is.na(settings$r.x1x2.y.adjust))/dim(settings)[1],"% of settings. These will be removed from simulations" ,sep="")
+
+print(error_out)
+print(base::unique(settings[base::is.na(settings$r.x1x2.y.adjust),c(1:7)]))
+settings = stats::na.omit(settings)
+}
+
 
 
 
