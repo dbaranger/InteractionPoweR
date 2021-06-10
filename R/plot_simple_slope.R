@@ -42,7 +42,11 @@ plot_simple_slope<-function(power_data,x=NULL,facets=NULL){
   col_keep<- c(unname(cbind(x_col,facets_col)))
   power_data2<-as.data.frame(power_data[,col_keep])
 
-  bounds<-power_data[,c((dim(power_data)[2]-3): (dim(power_data)[2]) )]
+  #bounds<-power_data[,c((dim(power_data)[2]-3): (dim(power_data)[2]) )]
+
+  col_names = c("min.lwr", "min.upr","max.lwr","max.upr" )
+
+  bounds <- power_data[ , base::match(col_names,colnames(power_data))]
   power_data2<-cbind(power_data2,bounds)
 
   if(dim(power_data2)[2] == 5){

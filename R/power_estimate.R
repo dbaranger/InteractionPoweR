@@ -92,7 +92,8 @@ power_estimate<-function(power_data,x,power_target){
 
           if(is.complex(pwr_line)){
             j<-polynom::polynomial(stats::coefficients(fit2))
-            pwr_line<-(solve(j,b = power_target)) }
+            pwr_line<-(solve(j,b = power_target))
+            }
 
         }
 

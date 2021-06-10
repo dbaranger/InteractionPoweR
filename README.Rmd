@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-InteractionPoweR is an R package for running power analyses for interactions between continuous variables (also known as a moderation analysis). The main function is `power_interaction()`, which performs the power analysis. This is done via Monte Carlo simulation. `power_estimate()` helps to interpret the results of the power simulation, and `plot_power_curve()` and `plot_simple_slope()` generate plots to visualize the results. The function `generate_interaction()` simulates a single data set drawn from the specified population-level effects and `plot_interaction()` can be used to visualize the simulated data. 
+InteractionPoweR is an R package for running power analyses for interactions in cross-sectional data sets between continuous and/or binary variables (also known as a moderation analysis). The main function is `power_interaction()`, which performs the power analysis. This is done via Monte Carlo simulation. `power_estimate()` helps to interpret the results of the power simulation, and `plot_power_curve()` and `plot_simple_slope()` generate plots to visualize the results. The function `generate_interaction()` simulates a single data set drawn from the specified population-level effects and `plot_interaction()` can be used to visualize the simulated data. 
 
 ## Installation
 
@@ -70,7 +70,7 @@ plot_interaction(data = sample_data,q = 2)
 ```
 
 
-The `test_interaction()` function can be used to see the results of the regression `y ~ x1 + x2 + x1x2`, the correlation between the variables, and find the simple slopes from the plot above. In this case, the 'lower slope', Moderator Group = 1, is roughly 0, while the 'upper slope', Moderator Group = 1, is 0.38.
+The `test_interaction()` function can be used to see the results of the regression `y ~ x1 + x2 + x1x2`, the correlation between the variables, and find the simple slopes from the plot above. In this case, the 'lower slope', X2 Group = 1, is roughly 0, while the 'upper slope', X2 Group = 2, is 0.38.
 
 ```{r example222}
 test_interaction(data = sample_data,q = 2)
@@ -214,9 +214,17 @@ We can see that in this example, our power decreases as the x1 skew increases.
 
 ```{r example12}
 set.seed(2020)
-sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2,
-                                  transform.x1 = "binary",transform.x2 = "binary",transform.y = "binary",
-                                  skew.x1 = binary.p2skew(.5),skew.x2 = binary.p2skew(.7),skew.y = binary.p2skew(.4),
+sample_data<-generate_interaction(N=350,
+                                  r.x1x2.y =.15,
+                                  r.x1.y = .2, 
+                                  r.x2.y = .1, 
+                                  r.x1.x2 = .2,
+                                  transform.x1 = "binary",
+                                  transform.x2 = "binary",
+                                  transform.y = "binary",
+                                  skew.x1 = binary.p2skew(.5),
+                                  skew.x2 = binary.p2skew(.7),
+                                  skew.y = binary.p2skew(.4),
                                   adjust.correlations = T
                                     )
 plot_interaction(data = sample_data)
