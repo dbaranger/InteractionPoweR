@@ -182,7 +182,7 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
 i=NULL
     new_settings<-foreach::foreach(i = 1: dim(settingsa)[1],.inorder = F,
                                    .combine = 'rbind',
-                                   .packages = c('dplyr','MASS','InteractionPoweR'),
+                                   .packages = c('dplyr','MASS'),
                                    .export=c("test_interaction","generate_interaction",
                                              "norm2binary","norm2gamma",
                                              "compute_adjustment"  )) %dopar% {
@@ -238,7 +238,7 @@ i=NULL
   }
 
 if( sum(base::is.na(settings$r.x1x2.y.adjust)) > 0){
-  error_out = paste(sum(base::is.na(settings$r.x1x2.y.adjust))," correlations cannot be adjusted as adjusting results in |r|>1, ",
+  error_out = base::paste(sum(base::is.na(settings$r.x1x2.y.adjust))," correlations cannot be adjusted as adjusting results in |r|>1, ",
                     sum(base::is.na(settings$r.x1x2.y.adjust))/dim(settings)[1],"% of settings. These will be removed from simulations" ,sep="")
 
 print(error_out)

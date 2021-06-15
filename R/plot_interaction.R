@@ -26,9 +26,19 @@ plot_interaction<-function(data,q=2){
     xlabel="x2"
     ModeratorLabel = "x1 group"
 
-  }else{
+  }
+
+  if(length(table(data$x2)) == 2){
+    q=2
+    data$simpleslopes<-as.factor(as.numeric(as.factor(data$x2)))
+    data$plotx =  data$x1
+    xlabel="x1"
+    ModeratorLabel = "x2 group"
+    }
+
+    if(length(table(data$x2)) > 2 & length(table(data$x1)) > 2) {
     data$simpleslopes<-as.factor(as.numeric(cut(data$x2,
-                                                include.lowest = T,
+                                                include.lowest = F,
                                                 breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q)))))
     data$plotx =  data$x1
     xlabel="x1"

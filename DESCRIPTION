@@ -58,7 +58,3 @@ Imports:
   e1071,
   betafunctions,
   ggbeeswarm
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
