@@ -400,7 +400,8 @@ if(dim(settings)[1] == 0){
 
  # power_test<-power_test[,is.na(match(colnames(power_test),"chunk"))]
 
-  new_settings<-power_test[,c(22:dim(power_test)[2])]
+  new_settings<-power_test[,c(which(colnames(power_test) == "N"):dim(power_test)[2])]
+
   dimnum<- sapply(X=c(1:dim(new_settings)[2]), FUN=function(x){length(table(new_settings[,x]))})
   grouping_variables<-colnames(new_settings)[dimnum>1]
 
@@ -457,7 +458,9 @@ if(dim(settings)[1] == 0){
 
   results<-power_results
 
-  if(detailed_results == TRUE){results<-merge(results,power_results2,power_results3,power_results4,all=T)}
+  if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
+                                              results<-merge(results,power_results3,all=T)
+                                                 results<-merge(results,power_results4,all=T)}
 
   if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
 
@@ -485,9 +488,9 @@ d=NULL
 
                                             #settingsd<-settingsd[,-18]
 
-                                            out.mat.outer<-sapply(a,FUN = function(a){
+                                            out.mat.outer<-sapply(a,FUN = function(a1){
 
-                                              i = a
+                                              i = a1
                                               out.mat<-sapply(X = c(1:n.iter),FUN = function(X){
                                                 # i = X
                                                 t1 = test_interaction(simple = T,data =
@@ -536,20 +539,27 @@ d=NULL
                                               chunk_col = base::grep(pattern = c("chunk"),x = colnames(settings_e))
                                               settings_e = settings_e[,-c(adjust_col,chunk_col)]
 
+
                                               power_results<-power_test %>%
+                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups  = "drop_last",
                                                                  pwr = mean(.data$sig_int ))
 
                                               power_results2<-power_test %>%
                                                 dplyr::filter(.data$sig_int == 1) %>%
+                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups = "drop_last",
                                                                  min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                                                                  min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                                                                  max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
                                                                  max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
 
+
                                               power_results3<-power_test %>%
+                                                dplyr::filter(.data$sig_int == 1) %>%
+                                                #dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups = "drop_last",
+                                                                 x1x2_r2_mean= mean(.data$x1x2_r2),
                                                                  x1_est_mean   =mean(.data$x1_est),
                                                                  x2_est_mean = mean(.data$x2_est),
                                                                  x1x2_est_mean = mean(.data$x1x2_est),
@@ -558,12 +568,34 @@ d=NULL
                                                                  r_x1_x2_mean = mean(.data$r_x1_x2),
                                                                  r_y_x1x2_mean = mean(.data$r_y_x1x2),
                                                                  r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                                                                 r_x2_x1x2_mean = mean(.data$r_x2_x1x2)
+                                                                 r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
+                                                                 x1x2_95_CI_25_mean = mean(.data$x1x2_95confint_25 ),
+                                                                 x1x2_95_CI_975_mean = mean(.data$x1x2_95confint_975 ),
+                                                                 x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25)
                                                 )
-                                              results<-merge(power_results,power_results2,all = T)
+
+                                              quants = c(.025,.5,.975) #quantiles
+
+                                              power_results4<-power_test %>%
+                                                dplyr::filter(.data$sig_int == 1) %>%
+                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+                                                dplyr::summarise(.groups = "drop_last",
+                                                                 r_y_x1x2.q.250 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
+                                                                 r_y_x1x2.q.500 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
+                                                                 r_y_x1x2.q.975 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
+                                                )
+
+
+                                              results<-power_results
                                               results<-merge(results,settings_e,all = T)
 
-                                              if(detailed_results == TRUE){results<-merge(results,power_results3,all=T)}
+                                              if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
+                                                                           results<-merge(results,power_results3,all=T)
+                                                                           results<-merge(results,power_results4,all=T)
+                                                                         }
+
+                                              if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
+
 
                                               return(results)
 
@@ -580,15 +612,16 @@ d=NULL
                                           } # end of dopar
 
 
-    settings_f = out_final[,c(6:18)]
+    settings_f = out_final[,c(base::which(colnames(out_final)=="N"): base::which(colnames(out_final)=="q")   )]
     group_cols = base::apply(settings_f,2,function(X) base::length(base::table(X)))>1
     settings_e = base::as.data.frame(settings_f[,group_cols])
     colnames(settings_e) = colnames(settings_f)[group_cols]
 
-    results = base::cbind(settings_e,out_final$pwr,out_final[,c(2:5)])
-    colnames(results)[(dim(settings_e)[2]+1)] = "pwr"
+    #results = base::cbind(settings_e,out_final$pwr,out_final[,c(2:5)])
+    results = base::cbind(out_final$pwr,settings_e)
+    colnames(results)[1] = "pwr"
 
-    if(detailed_results == TRUE){results<-base::cbind(results,out_final[,c(19:27)])}
+    if(detailed_results == TRUE){results<-base::cbind(results,out_final[,c(base::which(colnames(out_final)=="min.lwr"): base::which(colnames(out_final)=="r_y_x1x2.q.975")   )]  )}
 
     order_cols = stats::na.omit(match(colnames(settings_f),base::colnames(results)))
 

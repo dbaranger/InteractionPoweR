@@ -61,23 +61,12 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 17.71 sec elapsed
+#> 15.72 sec elapsed
 test_power
-#> # A tibble: 1,000 x 4
-#> # Groups:   x1x2_r2, x1x2_95confint_25 [1,000]
-#>     x1x2_r2 x1x2_95confint_25 x1x2_95confint_975   pwr
-#>       <dbl>             <dbl>              <dbl> <dbl>
-#>  1 -0.00278           -0.114              0.0991     0
-#>  2 -0.00277           -0.101              0.114      0
-#>  3 -0.00271           -0.106              0.118      0
-#>  4 -0.00268           -0.102              0.111      0
-#>  5 -0.00246           -0.0868             0.121      0
-#>  6 -0.00235           -0.0843             0.124      0
-#>  7 -0.00215           -0.117              0.0715     0
-#>  8 -0.00204           -0.0740             0.127      0
-#>  9 -0.00196           -0.132              0.0779     0
-#> 10 -0.00175           -0.0765             0.146      0
-#> # ... with 990 more rows
+#> # A tibble: 1 x 1
+#>     pwr
+#>   <dbl>
+#> 1 0.797
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -155,7 +144,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 60000 simulations"
 toc()
-#> 251.05 sec elapsed
+#> 275.66 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -173,11 +162,11 @@ The function `power_estimate()` can be used to estimate where the
 power_curve for each interaction effect size crosses our 90% line:
 
 ``` r
-power_estimate(test_power,power_target = .9,x = "N")
+power_estimate(test_power,power_target = .9,x="N")
 #>   r.x1x2.y estimate
-#> 1     0.18 306.2977
-#> 2     0.20 244.7260
-#> 3     0.22 201.1376
+#> 1     0.18 309.8195
+#> 2     0.20 243.9879
+#> 3     0.22 205.9261
 ```
 
 We can see that depending on the specific effect size we hope to detect,
@@ -212,7 +201,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 14000 simulations"
 toc()
-#> 88.11 sec elapsed
+#> 89.81 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -229,7 +218,7 @@ power_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.1472064
+#> [1] 0.1475744
 ```
 
 We can use the function `plot_simple_slope()` to visualize the
@@ -274,7 +263,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 28000 simulations"
 toc()
-#> 162.2 sec elapsed
+#> 166.42 sec elapsed
 plot_power_curve(test_power,power_target = .9)
 ```
 
@@ -327,11 +316,9 @@ test_power<-power_interaction(
 #> [1] "Adjusting correlations for variable transformations..."
 #> [1] "Performing 9000 simulations"
 toc()
-#> 76.56 sec elapsed
+#> 77.07 sec elapsed
 plot_power_curve(test_power,power_target = .9,x = "skew.x1")
 ```
-
-<img src="man/figures/README-example11-1.png" width="100%" />
 
 We can see that in this example, our power decreases as the x1 skew
 increases.

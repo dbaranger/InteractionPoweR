@@ -102,7 +102,7 @@ toc()
 The results of this analysis can be hard to interpret just by looking at the output. Instead, we recommend visualizing them using `plot_power_curve()`. In this case, the horizontal line on the plot will be at our target power of 90%:
 
 ```{r example4}
-plot_power_curve(test_power,power_target = .9)
+plot_power_curve(test_power,power_target = .9,x = "N",group = "r.x1x2.y")
 ```
 
 The function `power_estimate()` can be used to estimate where the power_curve for each interaction effect size crosses our 90% line:
