@@ -23,9 +23,19 @@ test_interaction<-function(data,alpha=0.05,q=2,simple=F){
 
   if(length(table(data$y))>2){
     mod<-stats::lm(y ~ x1 + x2 + x1x2, data = data)
-  }else{mod<-stats::glm(as.factor(y) ~ x1 + x2 + x1x2, data = data,family = "binomial")
-}
+    mod_simple<-stats::lm(y ~ x1 + x2 , data = data)
+    x1x2_r2 = summary(mod)$adj.r.squared - summary(mod_simple)$adj.r.squared
 
+  }else{
+    mod<-stats::glm(as.factor(y) ~ x1 + x2 + x1x2, data = data,family = "binomial")
+    mod_simple<-stats::glm(as.factor(y) ~ x1 + x2, data = data,family = "binomial")
+    x1x2_r2 = 1 - mod$deviance/mod_simple$deviance #pseudo r2
+    }
+
+
+  c.int = suppressMessages(t(unname(stats::confint(mod)[4,])))
+  x1x2_95confint_25 = c.int[1]
+  x1x2_95confint_975 = c.int[2]
 
   results_out<-stats::coefficients(base::summary(mod))[-1,]
   results<-stats::coefficients(base::summary(mod))[-1,]
@@ -83,11 +93,15 @@ test_interaction<-function(data,alpha=0.05,q=2,simple=F){
 
 
   ####
-  results2<-cbind(results2,dd)
+  results2<-cbind(results2,dd,x1x2_r2,x1x2_95confint_25,x1x2_95confint_975)
   results2<-as.data.frame(results2)
   #results4<-cbind(results2,results3)
 
-  out=list(linear.model = results_out, correlation = dd_out, simple.slopes =slopes )
+  out=list(linear.model = results_out,
+           x1x2.r2 =x1x2_r2,
+           x1x2.confint = c.int,
+           correlation = dd_out,
+           simple.slopes =slopes )
 
 
   if(simple == T){return(results2)}else{return(out)}

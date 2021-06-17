@@ -423,10 +423,12 @@ if(dim(settings)[1] == 0){
                      max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
                      max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
 
+
   power_results3<-power_test %>%
-    # dplyr::filter(sig_int == 1) %>%
+    dplyr::filter(.data$sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
+                     x1x2_r2_mean= mean(.data$x1x2_r2),
                      x1_est_mean   =mean(.data$x1_est),
                      x2_est_mean = mean(.data$x2_est),
                      x1x2_est_mean = mean(.data$x1x2_est),
@@ -435,15 +437,27 @@ if(dim(settings)[1] == 0){
                      r_x1_x2_mean = mean(.data$r_x1_x2),
                      r_y_x1x2_mean = mean(.data$r_y_x1x2),
                      r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                     r_x2_x1x2_mean = mean(.data$r_x2_x1x2)
+                     r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
+                     x1x2_95_CI_25_mean = mean(.data$x1x2_95confint_25 ),
+                     x1x2_95_CI_975_mean = mean(.data$x1x2_95confint_975 ),
+                     x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25)
+    )
 
+  quants = c(.025,.5,.975) #quantiles
 
+  power_results4<-power_test %>%
+    dplyr::filter(.data$sig_int == 1) %>%
+    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+    dplyr::summarise(.groups = "drop_last",
+                     r_y_x1x2.q.250 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
+                     r_y_x1x2.q.500 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
+                     r_y_x1x2.q.975 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
     )
 
 
-  results<-merge(power_results,power_results2,all = T)
+  results<-power_results
 
-  if(detailed_results == TRUE){results<-merge(results,power_results3,all=T)}
+  if(detailed_results == TRUE){results<-merge(results,power_results2,power_results3,power_results4,all=T)}
 
   if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
 

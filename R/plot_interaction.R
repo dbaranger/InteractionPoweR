@@ -37,8 +37,9 @@ plot_interaction<-function(data,q=2){
     }
 
     if(length(table(data$x2)) > 2 & length(table(data$x1)) > 2) {
-    data$simpleslopes<-as.factor(as.numeric(cut(data$x2,
-                                                include.lowest = F,
+    data$simpleslopes<-
+      as.factor(as.numeric(cut(data$x2,
+                                                include.lowest = T,
                                                 breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q)))))
     data$plotx =  data$x1
     xlabel="x1"
@@ -80,14 +81,16 @@ plot_interaction<-function(data,q=2){
 
     }else{
 
-    plot1<-ggplot2::ggplot(data = data,ggplot2::aes(x = .data$plotx,y=.data$ploty,color = .data$simpleslopes,fill=.data$simpleslopes))+
+    plot1<-ggplot2::ggplot(data = data,ggplot2::aes(x = .data$plotx,
+                                                    y=.data$ploty,
+                                                    color = .data$simpleslopes,
+                                                    fill=.data$simpleslopes))+
       ggplot2::scale_color_viridis_d(option = c("D"))+
       ggplot2::scale_fill_viridis_d(option = c("D"))+
       ggplot2::geom_hline(yintercept = 0,color="grey",size=1,linetype="solid")+
-      ggplot2::geom_smooth(data = data,ggplot2::aes(x = .data$x1,y=.data$ploty),method = stats::lm,inherit.aes = F,alpha=.5,
+      ggplot2::geom_smooth(data = data,ggplot2::aes(x = .data$plotx,y=.data$ploty),method = stats::lm,inherit.aes = F,alpha=.5,
                   formula = y~x,se=F,size=1.5,color="black",linetype="dashed")+
       ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
-      # ggplot2::geom_smooth(method = stats::lm,formula = y~x,se=T,size=1.5,linetype="solid")+
       ggplot2::geom_smooth(method = stats::lm,alpha=.5,
                            formula = y~x,se=T,size=1.5,linetype="solid")+
       ggplot2::theme_minimal()+
