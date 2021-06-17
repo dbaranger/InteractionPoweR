@@ -61,12 +61,12 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 15.72 sec elapsed
+#> 16.27 sec elapsed
 test_power
 #> # A tibble: 1 x 1
 #>     pwr
 #>   <dbl>
-#> 1 0.797
+#> 1 0.796
 ```
 
 We see that we have \~80% power to detect the effect of interest.
@@ -144,7 +144,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 60000 simulations"
 toc()
-#> 275.66 sec elapsed
+#> 278.41 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -164,9 +164,9 @@ power_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x="N")
 #>   r.x1x2.y estimate
-#> 1     0.18 309.8195
-#> 2     0.20 243.9879
-#> 3     0.22 205.9261
+#> 1     0.18 307.1685
+#> 2     0.20 243.3279
+#> 3     0.22 202.9760
 ```
 
 We can see that depending on the specific effect size we hope to detect,
@@ -201,7 +201,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 14000 simulations"
 toc()
-#> 89.81 sec elapsed
+#> 94.82 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -218,7 +218,7 @@ power_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.1475744
+#> [1] 0.149134
 ```
 
 We can use the function `plot_simple_slope()` to visualize the
@@ -263,7 +263,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 28000 simulations"
 toc()
-#> 166.42 sec elapsed
+#> 176.02 sec elapsed
 plot_power_curve(test_power,power_target = .9)
 ```
 
@@ -316,9 +316,11 @@ test_power<-power_interaction(
 #> [1] "Adjusting correlations for variable transformations..."
 #> [1] "Performing 9000 simulations"
 toc()
-#> 77.07 sec elapsed
-plot_power_curve(test_power,power_target = .9,x = "skew.x1")
+#> 82.54 sec elapsed
+plot_power_curve(test_power,power_target = .9)
 ```
+
+<img src="man/figures/README-example11-1.png" width="100%" />
 
 We can see that in this example, our power decreases as the x1 skew
 increases.

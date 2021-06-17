@@ -612,7 +612,7 @@ d=NULL
                                           } # end of dopar
 
 
-    settings_f = out_final[,c(base::which(colnames(out_final)=="N"): base::which(colnames(out_final)=="q")   )]
+    settings_f = out_final[,c(2:14)]  # ugh hard coded
     group_cols = base::apply(settings_f,2,function(X) base::length(base::table(X)))>1
     settings_e = base::as.data.frame(settings_f[,group_cols])
     colnames(settings_e) = colnames(settings_f)[group_cols]
@@ -625,7 +625,14 @@ d=NULL
 
     order_cols = stats::na.omit(match(colnames(settings_f),base::colnames(results)))
 
-    results = base::eval(base::parse(  text = paste("results[base::order(",paste("results[,",order_cols,"]",collapse = ","), "),]")))
+    # results = base::eval(
+    #   base::parse(
+    #     text = paste("results[base::order(",paste("results[,",order_cols,"]",collapse = ","), "),]")))
+
+    num_cols = c(1:dim(results)[2])
+    results_rest = results[,-c(1,match(order_cols,num_cols))]
+    results = cbind(results[,c(order_cols,1)],results_rest)
+
 
 
     }# end chunked loop

@@ -16,8 +16,8 @@
 #' power_estimate(power_data = simulation_results, x = "N", power_target = .8)
 #' }
 power_estimate<-function(power_data,x,power_target){
-  power_data2 = power_data
-  #power_data2<-power_data[,c(1: which(colnames(power_data) == "pwr"))]
+  #power_data2 = power_data
+  power_data2<-power_data[,c(1: which(colnames(power_data) == "pwr"))]
   data_dim<-dim(power_data2)[2]
   x_col<-which(colnames(power_data2) == x)
   pwr_col<-which(colnames(power_data2) == "pwr")
