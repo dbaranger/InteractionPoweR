@@ -26,7 +26,8 @@ power_interaction(
   cl = NULL,
   ss.IQR = 1.5,
   detailed_results = FALSE,
-  full_simulation = FALSE
+  full_simulation = FALSE,
+  seed = NULL
 )
 }
 \arguments{
@@ -73,6 +74,8 @@ power_interaction(
 \item{detailed_results}{Default is FALSE. Should detailed results be reported (mean of effect size and correlations for each setting)?}
 
 \item{full_simulation}{Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.}
+
+\item{seed}{Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.}
 }
 \value{
 A data frame containing the power (\% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.

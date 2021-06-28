@@ -37,6 +37,10 @@ test_interaction<-function(data,alpha=0.05,q=2,simple=F){
   x1x2_95confint_25 = c.int[1]
   x1x2_95confint_975 = c.int[2]
 
+  c.int = data.frame(x1x2_95confint_2.5 = x1x2_95confint_25,
+                     x1x2_95confint_97.5 = x1x2_95confint_975
+                     )
+
   results_out<-stats::coefficients(base::summary(mod))[-1,]
   results<-stats::coefficients(base::summary(mod))[-1,]
 
@@ -73,35 +77,58 @@ test_interaction<-function(data,alpha=0.05,q=2,simple=F){
                               include.lowest = T,
                               breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q))))
 }
-  g1<-dplyr::filter(data,data$groups == min(data$groups))
-  g2<-dplyr::filter(data,data$groups == max(data$groups))
+
   if(length(table(data$y))>2){
-  mod1<-stats::lm(y~x1,data = g1)
-  mod2<-stats::lm(y~x1,data = g2)
+    g1<-dplyr::filter(data,data$groups == min(data$groups)) %>% as.matrix()
+    g2<-dplyr::filter(data,data$groups == max(data$groups)) %>% as.matrix()
+
+  mod1<-stats::lm.fit(y = g1[,3],x = cbind(1,g1[,1])   )
+  mod2<-stats::lm.fit(y = g2[,3],x =  cbind(1,g2[,1]) )
+
+  slopes = data.frame(lower.slope = mod1$coefficients[2],
+                     upper.slope = mod2$coefficients[2]
+  )
+
   }else{
+
+    g1<-dplyr::filter(data,data$groups == min(data$groups))
+    g2<-dplyr::filter(data,data$groups == max(data$groups))
+
     mod1<-stats::glm(as.factor(y)~x1,data = g1,family = "binomial")
     mod2<-stats::glm(as.factor(y)~x1,data = g2,family = "binomial")
 
+    slopes = data.frame(lower.slope = stats::coefficients(mod1)[2],
+                        upper.slope = stats::coefficients(mod2)[2]
+    )
   }
 
-  slopes = data.frame(lower.slope = stats::coefficients(mod1)[2],
-                      upper.slope = stats::coefficients(mod2)[2]
-                      )
+
+
+  int.shape = data.frame(crossover.point = c(results[2,1]/results[3,1]*-1),
+                     shape = c(results[3,1]/results[1,1]))
+crossover = int.shape$crossover.point
+shape = int.shape$shape
 
   results2$est_min<-stats::coefficients(mod1)[2]
   results2$est_max<-stats::coefficients(mod2)[2]
 
 
   ####
-  results2<-cbind(results2,dd,x1x2_r2,x1x2_95confint_25,x1x2_95confint_975)
+  results2<-cbind(results2,
+                  dd,
+                  x1x2_r2,
+                  x1x2_95confint_25,
+                  x1x2_95confint_975,crossover,shape)
   results2<-as.data.frame(results2)
   #results4<-cbind(results2,results3)
 
   out=list(linear.model = results_out,
-           x1x2.r2 =x1x2_r2,
+           x1x2.adjusted.r2 =x1x2_r2,
            x1x2.confint = c.int,
-           correlation = dd_out,
-           simple.slopes =slopes )
+           interaction.shape=int.shape,
+           simple.slopes =slopes,
+           correlation = dd_out
+            )
 
 
   if(simple == T){return(results2)}else{return(out)}

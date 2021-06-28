@@ -43,7 +43,9 @@ know the population-level correlation between our predictors (x1 and x2)
 and our outcome, we have a smallest effect size of interest in mind for
 our interaction effect size, and our sample size is already set (maybe
 we are conducting secondary data analysis). Power can be determined with
-a single command:
+a single command. **NB** In all these examples we use 1000 simulations
+for speed (`n.iter = 1000`), but for robust results we recommend 10,000
+simulations (`n.iter = 10000`).
 
 ``` r
 library(InteractionPoweR)
@@ -56,20 +58,21 @@ test_power<-power_interaction(
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
   r.x1.y = .2,              # correlation between x1 and y
   r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2              # correlation between x1 and x2
+  r.x1.x2 = .2,             # correlation between x1 and x2
+  seed = 581827             # seed, for reproducibility - this generally should not be set
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 16.27 sec elapsed
+#> 16.42 sec elapsed
 test_power
 #> # A tibble: 1 x 1
 #>     pwr
 #>   <dbl>
-#> 1 0.796
+#> 1 0.809
 ```
 
-We see that we have \~80% power to detect the effect of interest.
+We see that we have 80.9% power to detect the effect of interest.
 
 It can be hard to know what interaction correlations mean in terms of
 how the data will look. To help users interpret interaction effects, we
@@ -85,10 +88,13 @@ plot_interaction(data = sample_data,q = 2)
 <img src="man/figures/README-example2-1.png" width="100%" />
 
 The `test_interaction()` function can be used to see the results of the
-regression `y ~ x1 + x2 + x1x2`, the correlation between the variables,
-and find the simple slopes from the plot above. In this case, the ‘lower
-slope’, X2 Group = 1, is roughly 0, while the ‘upper slope’, X2 Group =
-2, is 0.38.
+regression `y ~ x1 + x2 + x1x2`. It also returns a variety of statistics
+that can be useful in understanding the interaction, including the
+adjusted *R*<sup>2</sup>, the 95% confidence-interval of the
+interaction, the cross-over point (the value of x1 where the simple
+slopes intersect), the “shape” of the interaction (1 = knock-out, \<1 =
+attenuated, \>1 = cross-over), the simple-slopes, the correlation
+between the variables.
 
 ``` r
 test_interaction(data = sample_data,q = 2)
@@ -98,12 +104,20 @@ test_interaction(data = sample_data,q = 2)
 #> x2   0.1356407 0.05165265 2.626016 9.022851e-03
 #> x1x2 0.2129386 0.05001033 4.257892 2.661829e-05
 #> 
-#> $x1x2.r2
+#> $x1x2.adjusted.r2
 #> [1] 0.04391331
 #> 
 #> $x1x2.confint
-#>           [,1]      [,2]
-#> [1,] 0.1145761 0.3113011
+#>   x1x2_95confint_2.5 x1x2_95confint_97.5
+#> 1          0.1145761           0.3113011
+#> 
+#> $interaction.shape
+#>   crossover.point    shape
+#> 1      -0.6369945 1.127275
+#> 
+#> $simple.slopes
+#>    lower.slope upper.slope
+#> x2  0.00222888   0.3766329
 #> 
 #> $correlation
 #>           cor v1   v2
@@ -113,10 +127,6 @@ test_interaction(data = sample_data,q = 2)
 #> 13 0.03519020 x1 x1x2
 #> 14 0.07511716 x2 x1x2
 #> 15 0.23245767  y x1x2
-#> 
-#> $simple.slopes
-#>    lower.slope upper.slope
-#> x1  0.00222888   0.3766329
 ```
 
 ### Example 2
@@ -139,12 +149,13 @@ test_power<-power_interaction(
   r.x1x2.y = c(.18,.2,.22), # range of interaction effects to test
   r.x1.y = .2,              # correlation between x1 and y
   r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2              # correlation between x1 and x2
+  r.x1.x2 = .2,             # correlation between x1 and x2
+  seed = 290115             # seed, for reproducibility
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 60000 simulations"
 toc()
-#> 278.41 sec elapsed
+#> 264.2 sec elapsed
 ```
 
 The results of this analysis can be hard to interpret just by looking at
@@ -164,13 +175,13 @@ power_curve for each interaction effect size crosses our 90% line:
 ``` r
 power_estimate(test_power,power_target = .9,x="N")
 #>   r.x1x2.y estimate
-#> 1     0.18 307.1685
-#> 2     0.20 243.3279
-#> 3     0.22 202.9760
+#> 1     0.18 314.0026
+#> 2     0.20 244.6019
+#> 3     0.22 205.0056
 ```
 
 We can see that depending on the specific effect size we hope to detect,
-we would need between N\~200 and N\~300 participants.
+we would need between N\~205 and N\~314 participants.
 
 ### Example 3
 
@@ -196,12 +207,13 @@ test_power<-power_interaction(
   r.x1.y = .2,              # correlation between x1 and y
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2,             # correlation between x1 and x2
- detailed_results = T       # detailed results have more information on the simulations
+ detailed_results = T,      # detailed results have more information on the simulations
+ seed = 876924              # seed, for reproducibility
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 14000 simulations"
 toc()
-#> 94.82 sec elapsed
+#> 90.41 sec elapsed
 ```
 
 As with the previous example, the results of this analysis can be hard
@@ -218,7 +230,7 @@ power_curve for each interaction effect size crosses our 90% line:
 
 ``` r
 power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-#> [1] 0.149134
+#> [1] 0.1518392
 ```
 
 We can use the function `plot_simple_slope()` to visualize the
@@ -258,12 +270,13 @@ test_power<-power_interaction(
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2,             # correlation between x1 and x2
   rel.x1 = seq(.4,1,.1),    # x1 reliability
-  rel.x2 = seq(.4,1,.2)     # x2 reliability
+  rel.x2 = seq(.4,1,.2),    # x2 reliability
+  seed = 721507             # seed, for repoducibility
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 28000 simulations"
 toc()
-#> 176.02 sec elapsed
+#> 170.65 sec elapsed
 plot_power_curve(test_power,power_target = .9)
 ```
 
@@ -309,14 +322,15 @@ test_power<-power_interaction(
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2           ,  # correlation between x1 and x2
   skew.x1 = seq(0,2,by=.25),# x1 skew
-  adjust.correlations = T   # Default, adjust correlations
+  adjust.correlations = T, # Default, adjust correlations
+  seed = 435380
 
 )
 #> [1] "Checking for errors in inputs..."
 #> [1] "Adjusting correlations for variable transformations..."
 #> [1] "Performing 9000 simulations"
 toc()
-#> 82.54 sec elapsed
+#> 80.02 sec elapsed
 plot_power_curve(test_power,power_target = .9)
 ```
 
@@ -334,7 +348,7 @@ of a single data set where all variables are binary and x2 & y are
 skewed (the x1 probability of 0.5 corresponds to a skew of 0).
 
 ``` r
-set.seed(2021)
+set.seed(2022)
 sample_data<-generate_interaction(N=350,
                                   r.x1x2.y =.15,
                                   r.x1.y = .1, 
@@ -357,27 +371,31 @@ plot_interaction(data = sample_data)
 test_interaction(data = sample_data)
 #> $linear.model
 #>        Estimate Std. Error   z value     Pr(>|z|)
-#> x1   0.05167397  0.1254139 0.4120275 6.803193e-01
-#> x2   0.62716077  0.1425995 4.3980560 1.092248e-05
-#> x1x2 0.29777864  0.1424952 2.0897455 3.664067e-02
+#> x1   0.05346554  0.1276503 0.4188439 0.6753302251
+#> x2   0.46958487  0.1479850 3.1731915 0.0015077302
+#> x1x2 0.54681794  0.1474124 3.7094421 0.0002077165
 #> 
-#> $x1x2.r2
-#> [1] 0.01080814
+#> $x1x2.adjusted.r2
+#> [1] 0.03750483
 #> 
 #> $x1x2.confint
-#>            [,1]      [,2]
-#> [1,] 0.02966431 0.5959014
+#>   x1x2_95confint_2.5 x1x2_95confint_97.5
+#> 1          0.2745436           0.8631236
 #> 
-#> $correlation
-#>             cor v1   v2
-#> 5   0.195113099 x1   x2
-#> 9   0.101302720 x1    y
-#> 10  0.250452591 x2    y
-#> 13 -0.002271454 x1 x1x2
-#> 14 -0.161866537 x2 x1x2
-#> 15  0.069639076  y x1x2
+#> $interaction.shape
+#>   crossover.point    shape
+#> 1      -0.8587591 10.22748
 #> 
 #> $simple.slopes
 #>    lower.slope upper.slope
-#> x1  -0.3904739   0.2516496
+#> x1   -0.803889   0.4012278
+#> 
+#> $correlation
+#>             cor v1   v2
+#> 5   0.127097034 x1   x2
+#> 9   0.086243416 x1    y
+#> 10  0.156288349 x2    y
+#> 13 -0.002924991 x1 x1x2
+#> 14 -0.119419576 x2 x1x2
+#> 15  0.186003277  y x1x2
 ```

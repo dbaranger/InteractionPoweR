@@ -24,6 +24,7 @@
 #' @param cl Number of clusters to use for running simulations in parallel (recommended). Default is 1 (i.e. not in parallel).
 #' @param detailed_results Default is FALSE. Should detailed results be reported (mean of effect size and correlations for each setting)?
 #' @param full_simulation Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.
+#' @param seed Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.
 #'
 #' @importFrom dplyr "%>%"
 #' @importFrom foreach "%dopar%"
@@ -49,8 +50,15 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  transform.x2 = "default",
                                  transform.y = "default",
                                  adjust.correlations = T,
-                                 alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,detailed_results=FALSE,full_simulation=FALSE){
+                                 alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,
+                                 detailed_results=FALSE,full_simulation=FALSE,
+                                 seed=NULL){
 
+if(is.null(seed)){
+  seed =  base::sample(c(1:1000000),1)
+  print(paste("Seed is",seed))
+}
+  base::set.seed(seed = seed)
 
   settings<-expand.grid(list( N=N,
                               r.x1.y = r.x1.y,
@@ -111,7 +119,7 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
     settings2<-merge(settings,to_be_removed,all.x=T)
     removed<-settings2[!is.na(settings2$Removed),]
 
-    print(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations produce a negative y-variance, n=",dim(removed)[1],
+    print(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations are impossible, n=",dim(removed)[1],
                 ". Removing from list.",sep=""))
     print(to_be_removed)
 
@@ -177,6 +185,8 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
 
     settingsa<-base::unique(settings[,c(2:5,9:11)])
 
+    seed.list1 = base::sample(c(1:1000000),dim(settingsa)[1],replace = F)
+
     # if(!is.null(cl)){settingsa$chunk<-base::rep(c(1:cl),length=dim(settingsa)[1])}else{settingsa$chunk<-1}
     # chunks<-base::split(x = settingsa,f = settingsa$chunk)
 i=NULL
@@ -188,7 +198,7 @@ i=NULL
                                              "compute_adjustment"  )) %dopar% {
 
 
-
+                                                base::set.seed(seed.list1[i])
                                                  settingsb<-settingsa[i,]
 
 
@@ -266,6 +276,7 @@ if(dim(settings)[1] == 0){
   if(dim(settings)[1] == 1 | full_simulation == T){
 
   if(dim(settings)[1] > 1){
+    seed.list2 = base::sample(c(1:1000000),dim(settings)[1],replace = F)
 
     power_test<-foreach::foreach(i = 1: dim(settings)[1],
                                  .combine = 'rbind',
@@ -280,8 +291,9 @@ if(dim(settings)[1] == 0){
                                             # out.mat.outer<-sapply(a,FUN = function(a){
 
                                              #  i = a
+                                               base::set.seed(seed.list2[i])
 
-                                               out.mat<-sapply(X = c(1:n.iter),FUN = function(X){
+                                             out.mat<-sapply(X = c(1:n.iter),FUN = function(X){
                                                      # i = X
                                                  test_interaction(simple = T,data =
                                                                     generate_interaction(
@@ -415,52 +427,68 @@ if(dim(settings)[1] == 0){
     dplyr::summarise(.groups  = "drop_last",
                      pwr = mean(.data$sig_int ))
 
-  power_results2<-power_test %>%
+  power_results2<-power_test %>% # effect size
     dplyr::filter(.data$sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
+                     x1x2_est_mean = mean(.data$x1x2_est),
+
+                     x1x2_r2_mean= mean(.data$x1x2_r2),
+                     crossover_mean = mean(.data$crossover),
+                     shape_mean = mean(.data$shape),
                      min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                      min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                      max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
                      max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
 
 
-  power_results3<-power_test %>%
+  power_results3<-power_test %>% # mean effects
     dplyr::filter(.data$sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
-                     x1x2_r2_mean= mean(.data$x1x2_r2),
+                     x1_pwr = mean( .data$x1_p > alpha),
+                     x2_pwr = mean( .data$x2_p > alpha),
+
                      x1_est_mean   =mean(.data$x1_est),
-                     x2_est_mean = mean(.data$x2_est),
-                     x1x2_est_mean = mean(.data$x1x2_est),
-                     r_x1_y_mean = mean(.data$r_x1_y),
-                     r_x2_y_mean = mean(.data$r_x2_y),
-                     r_x1_x2_mean = mean(.data$r_x1_x2),
-                     r_y_x1x2_mean = mean(.data$r_y_x1x2),
-                     r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                     r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
-                     x1x2_95_CI_25_mean = mean(.data$x1x2_95confint_25 ),
-                     x1x2_95_CI_975_mean = mean(.data$x1x2_95confint_975 ),
-                     x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25)
+                     x2_est_mean = mean(.data$x2_est)
+
+                     # ,
+                     #
+                     # r_x1_y_mean = mean(.data$r_x1_y),
+                     # r_x2_y_mean = mean(.data$r_x2_y),
+                     # r_x1_x2_mean = mean(.data$r_x1_x2),
+                     # r_y_x1x2_mean = mean(.data$r_y_x1x2),
+                     # r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
+                     # r_x2_x1x2_mean = mean(.data$r_x2_x1x2)
+
     )
 
   quants = c(.025,.5,.975) #quantiles
 
-  power_results4<-power_test %>%
+  power_results4<-power_test %>% # precision
     dplyr::filter(.data$sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
-                     r_y_x1x2.q.250 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
-                     r_y_x1x2.q.500 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
-                     r_y_x1x2.q.975 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
+
+                     x1x2_95_CI_2.5_mean = mean(.data$x1x2_95confint_25 ),
+                     x1x2_95_CI_97.5_mean = mean(.data$x1x2_95confint_975 ),
+                     x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25),
+
+                     r_y_x1x2_q_2.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
+                     r_y_x1x2_q_50.0 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
+                     r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
     )
 
 
   results<-power_results
 
   if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
-                                              results<-merge(results,power_results3,all=T)
-                                                 results<-merge(results,power_results4,all=T)}
+                                              results<-merge(results,power_results4,all=T)
+                                                 results<-merge(results,power_results3,all=T)}
+
+  pwr_col = base::which(base::colnames(results) == "pwr") - 1
+  results = results %>% dplyr::arrange(results[,c(1:pwr_col)])
+
 
   if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
 
@@ -474,13 +502,18 @@ if(dim(settings)[1] == 0){
     if(!is.null(cl)){settings$chunk<-base::rep(c(1:cl),length=dim(settings)[1])}else{settings$chunk<-1}
     settings_chunks<-base::split(x = settings,f = settings$chunk)
 
-d=NULL
+    seed.list3 = base::sample(c(1:1000000),length(settings_chunks),replace = F)
+
+
+    d=NULL
+
     out_final<-foreach::foreach(d = 1: length(settings_chunks),
                                 .combine = 'rbind',
                                 .packages = c('dplyr','MASS'),
                                 .export=c("test_interaction","generate_interaction",
                                           "norm2binary","norm2gamma" )) %dopar% {
 
+                                            base::set.seed(seed.list3[d])
 
                                             settingsd<-settings_chunks[[d]]
                                             a = c(1:dim(settingsd)[1])
@@ -549,29 +582,33 @@ d=NULL
                                                 dplyr::filter(.data$sig_int == 1) %>%
                                                # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups = "drop_last",
-                                                                 min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                                                                 x1x2_est_mean = mean(.data$x1x2_est),
+                                                                 x1x2_r2_mean= mean(.data$x1x2_r2),
+                                                                 crossover_mean = mean(.data$crossover),
+                                                                 shape_mean = mean(.data$shape),
+
+                                                                  min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                                                                  min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
                                                                  max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
                                                                  max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
 
 
                                               power_results3<-power_test %>%
-                                                dplyr::filter(.data$sig_int == 1) %>%
+                                               # dplyr::filter(.data$sig_int == 1) %>%
                                                 #dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups = "drop_last",
-                                                                 x1x2_r2_mean= mean(.data$x1x2_r2),
-                                                                 x1_est_mean   =mean(.data$x1_est),
-                                                                 x2_est_mean = mean(.data$x2_est),
-                                                                 x1x2_est_mean = mean(.data$x1x2_est),
-                                                                 r_x1_y_mean = mean(.data$r_x1_y),
-                                                                 r_x2_y_mean = mean(.data$r_x2_y),
-                                                                 r_x1_x2_mean = mean(.data$r_x1_x2),
-                                                                 r_y_x1x2_mean = mean(.data$r_y_x1x2),
-                                                                 r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                                                                 r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
-                                                                 x1x2_95_CI_25_mean = mean(.data$x1x2_95confint_25 ),
-                                                                 x1x2_95_CI_975_mean = mean(.data$x1x2_95confint_975 ),
-                                                                 x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25)
+
+                                                                 x1_pwr = mean( .data$x1_p < alpha),
+                                                                 x2_pwr = mean( .data$x2_p < alpha)
+
+
+                                                                 # r_x1_y_mean = mean(.data$r_x1_y),
+                                                                 # r_x2_y_mean = mean(.data$r_x2_y),
+                                                                 # r_x1_x2_mean = mean(.data$r_x1_x2),
+                                                                 # r_y_x1x2_mean = mean(.data$r_y_x1x2),
+                                                                 # r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
+                                                                 # r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
+
                                                 )
 
                                               quants = c(.025,.5,.975) #quantiles
@@ -580,9 +617,16 @@ d=NULL
                                                 dplyr::filter(.data$sig_int == 1) %>%
                                                # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                 dplyr::summarise(.groups = "drop_last",
-                                                                 r_y_x1x2.q.250 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
-                                                                 r_y_x1x2.q.500 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
-                                                                 r_y_x1x2.q.975 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
+
+                                                                 x1x2_95_CI_2.5_mean = mean(.data$x1x2_95confint_25 ),
+                                                                 x1x2_95_CI_97.5_mean = mean(.data$x1x2_95confint_975 ),
+                                                                 x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25),
+
+                                                                 r_y_x1x2_q_2.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
+                                                                 r_y_x1x2_q_50.0 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
+                                                                 r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3]),
+                                                                 x1_est_mean   =mean(.data$x1_est),
+                                                                 x2_est_mean = mean(.data$x2_est)
                                                 )
 
 
@@ -590,8 +634,8 @@ d=NULL
                                               results<-merge(results,settings_e,all = T)
 
                                               if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
-                                                                           results<-merge(results,power_results3,all=T)
                                                                            results<-merge(results,power_results4,all=T)
+                                                                           results<-merge(results,power_results3,all=T)
                                                                          }
 
                                               if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
@@ -621,7 +665,9 @@ d=NULL
     results = base::cbind(out_final$pwr,settings_e)
     colnames(results)[1] = "pwr"
 
-    if(detailed_results == TRUE){results<-base::cbind(results,out_final[,c(base::which(colnames(out_final)=="min.lwr"): base::which(colnames(out_final)=="r_y_x1x2.q.975")   )]  )}
+    if(detailed_results == TRUE){
+      results<-base::cbind(results,
+                           out_final[,c(base::which(colnames(out_final)=="x1x2_est_mean"): base::which(colnames(out_final)=="x2_est_mean")   )]  )}
 
     order_cols = stats::na.omit(match(colnames(settings_f),base::colnames(results)))
 
@@ -633,7 +679,9 @@ d=NULL
     results_rest = results[,-c(1,match(order_cols,num_cols))]
     results = cbind(results[,c(order_cols,1)],results_rest)
 
+   pwr_col = base::which(base::colnames(results) == "pwr") - 1
 
+   results = results %>% dplyr::arrange(results[,c(1:pwr_col)])
 
     }# end chunked loop
 
