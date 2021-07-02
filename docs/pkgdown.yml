@@ -1,0 +1,8 @@
+pandoc: 2.14.0.1
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  articles/CommonQuestions: CommonQuestions.html
+  articles/InteractionPoweRvignette: InteractionPoweRvignette.html
+last_built: 2021-07-02T22:47Z
+
