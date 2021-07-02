@@ -22,7 +22,7 @@
 #' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
 #' @param ss.IQR Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.
 #' @param cl Number of clusters to use for running simulations in parallel (recommended). Default is 1 (i.e. not in parallel).
-#' @param detailed_results Default is FALSE. Should detailed results be reported (mean of effect size and correlations for each setting)?
+#' @param detailed_results Default is FALSE. Should detailed results be reported?
 #' @param full_simulation Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.
 #' @param seed Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.
 #'

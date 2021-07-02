@@ -1,0 +1,48 @@
+---
+title: "Common questions"
+author: "David AA Baranger"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a non-exhaustive list of common questions:
+
+# Error messages
+
+1.  "All reliabilities must be greater than 0 and less than or equal to 1"
+
+    -   Reliability can't be more than 1 (measurement variance attributable to true signal can't be more than 100%), and it can't be less than or equal to 0. If your reliability measure is less than 0, it is probably spuriously low, and you should set reliability to something like 0.001.
+
+2.  "All correlations must be within [-1,1]"
+
+    -   The main input effect sizes are Pearson's correlations, which range from [-1,1]. If you see this error, check for typos in your input.
+
+3.  "All correlations must be within [-1,1], this could be due to skew being too high." or "No valid settings"
+
+    -   If `adjust.correlations = TRUE`, and a variable is binary or skew is not 0, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or skewed reduces their correlations with the other variables. However, it can happen that a variable is *so* skewed that this is impossible, as it would require correlations greater than \|1\|. If you encounter this error, reduce your skew, or your correlations between variables. `power_interaction()` automatically removes these settings from the input.
+
+4.  "Settings produce a negative y-variance" or "No valid settings"
+
+    -   It is possible to specify an impossible correlation matrix. This error indicates that $X_1$, $X_2$, and $X_1X_2$ have settings that result in them explaining more than 100% of the $Y$ variance - obviously impossible. If you encounter this error, reduce your correlations.
+
+# Strange results
+
+1.  `power_estimate()` produces `NA`.
+
+    -   `power_estimate()` fits a regression model to the output of `power_interaction()` to identify when a specified power-level is reached. It will give a result of `NA` for three related reasons:
+
+        1.  The predicted value where power is reached is outside the range of values tested by the simulation. Simply increase the range of values tested.
+
+        2.  The predicted value is within the range of values tested, but only barely. For example, say `power_target = .8`, and one simulation achieved a `pwr = 0.804`. Even though 0.804 was achieved in one round of simulations, the regression analysis may predict, based on the other values tested in the simulation, that an even larger value is needed to achieve 80% power. The solution is again to increase the range of values tested.
+
+        3.  Power-curves taper-off as power increases, eventually flattening out. `power_estimate()` fits a threshold regression model using the [chngpt](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1863-x) package, to identify whether the power-curve has flattened, and to remove the flattened portion if so. This is so that the main `power_estimate()` regression model will be more accurate. However, occasionally the threshold regression model is greedy, and it removes too much. This can happen particularly if the simulation only includes a few values. The solution is again to increase the range of values tested.
+
+2.  Results differ each time I run a simulation
+
+    -   The examples in this package use `n.iter = 1000` simulations, as this is enough to give a general sense of the pattern of results. However, we recommend `n.iter = 10000` for more stable results. `power_estimate()` fits a regression model, and as with any regression, the number of observations, as well as their variance, impacts results. So, increasing the range and density of parameters in the simulation will also improve the stability of results.
