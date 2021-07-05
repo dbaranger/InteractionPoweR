@@ -447,11 +447,7 @@ if(dim(settings)[1] == 0){
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups = "drop_last",
                      x1_pwr = mean( .data$x1_p > alpha),
-                     x2_pwr = mean( .data$x2_p > alpha),
-
-                     x1_est_mean   =mean(.data$x1_est),
-                     x2_est_mean = mean(.data$x2_est)
-
+                     x2_pwr = mean( .data$x2_p > alpha)
                      # ,
                      #
                      # r_x1_y_mean = mean(.data$r_x1_y),
@@ -476,7 +472,9 @@ if(dim(settings)[1] == 0){
 
                      r_y_x1x2_q_2.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
                      r_y_x1x2_q_50.0 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
-                     r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3])
+                     r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3]),
+                     x1_est_mean   = mean(.data$x1_est),
+                     x2_est_mean = mean(.data$x2_est),
     )
 
 
@@ -667,7 +665,7 @@ if(dim(settings)[1] == 0){
 
     if(detailed_results == TRUE){
       results<-base::cbind(results,
-                           out_final[,c(base::which(colnames(out_final)=="x1x2_est_mean"): base::which(colnames(out_final)=="x2_est_mean")   )]  )}
+                           out_final[,c(base::which(colnames(out_final)=="x1x2_est_mean"): base::which(colnames(out_final)=="x2_pwr")   )]  )}
 
     order_cols = stats::na.omit(match(colnames(settings_f),base::colnames(results)))
 

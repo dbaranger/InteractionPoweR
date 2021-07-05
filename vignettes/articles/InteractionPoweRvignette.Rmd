@@ -77,7 +77,7 @@ test_interaction(data = example_data, # simulated data
 
 # A simple power analysis
 
-The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. The power analysis is run with the function `power_interaction()`. We additionally specify `alpha`, which is the p-value we're using (0.05 is default), and `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results.
+The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. The power analysis is run with the function `power_interaction()`. We additionally specify `alpha`, which is the p-value we're using (0.05 is default), and `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results. Also note that in all these examples the parameter `seed` is set. This is the seed for the random number generator, which will allow you to obtain the same results. However, we recommend not setting `seed` when running your own power analyses, at least until you are ready to share the results. Each time an analysis is run a new seed will be chosen and echoed, so that you will be able to reproduce your results.
 
 ```{r message=F}
 power_interaction(n.iter = 1000,  # number of simulations
@@ -86,11 +86,11 @@ power_interaction(n.iter = 1000,  # number of simulations
                   r.x1.y = .2,    # correlation between x1 and y
                   r.x2.y =  .1,   # correlation between x2 and y
                   r.x1.x2 = .2,   # correlation between x1 and x2
-                  r.x1x2.y = .15  # correlation between x1x2 and y
-                          )
+                  r.x1x2.y = .15, # correlation between x1x2 and y
+                  seed = 290115  )# seed
 ```
 
-We find that our analysis has \~82% power (`pwr`).
+We find that our analysis has 82% power (`pwr`).
 
 # Exploring the parameter space
 
@@ -110,8 +110,8 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = .15,                # correlation between x1x2 and y
-                  cl = 6                         # number of clusters for parallel analyses
-                          )
+                  cl = 6,                        # number of clusters for parallel analyses
+                  seed = 507421        )         # seed
 power_test
 ```
 
@@ -132,7 +132,7 @@ power_estimate(power_data = power_test, # output from power_interaction()
 )
 ```
 
-Our guess turned out to be accurate in this case, and N=450 yields approximately 90% power.
+Our guess turned out to be accurate in this case, and N=443 yields approximately 90% power.
 
 ## Finding the smallest detectable effect size
 
@@ -145,9 +145,9 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x1.y = .2,                   # correlation between x1 and y
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
-                  r.x1x2.y = seq(.1,.2,by=.01),   # correlation between x1x2 and y
-                  cl = 6                         # number of clusters for parallel analyses
-                          )
+                  r.x1x2.y = seq(.1,.2,by=.01),  # correlation between x1x2 and y
+                  cl = 6,                        # number of clusters for parallel analyses
+                  seed = 387455        )         # seed
 power_test
 ```
 
@@ -178,7 +178,8 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = seq(.1,.2,by=.01),   # correlation between x1x2 and y
                   cl = 6,                         # number of clusters for parallel analyses
-                  detailed_results = T            # detailed results
+                  detailed_results = T,           # detailed results
+                  seed = 316834                  # seed
                 )
 plot_simple_slope(power_data = power_test)
 ```
@@ -196,9 +197,11 @@ power_test = power_interaction(n.iter = 1000,     # number of simulations
                   r.x1.y = .2,                    # correlation between x1 and y
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2       ,            # correlation between x1 and x2
-                  r.x1x2.y = seq(.15,.2,by=.025),# correlation between x1x2 and y
-                  cl = 6,detailed_results = T                          # number of clusters for parallel analyses
-                          )
+                  r.x1x2.y = seq(.15,.2,by=.025), # correlation between x1x2 and y
+                  cl = 6,                         # number of clusters for parallel analyses
+                  detailed_results = T,
+                  seed = 742425)
+
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9,       # the power we want to achieve 
                  x = "N",                 # x-axis
@@ -210,7 +213,7 @@ power_estimate(power_data = power_test, # output from power_interaction()
 )
 ```
 
-From this we've learned that, depending on exactly what effect size we're aiming for, we'll need an `N` between 260 and 450.
+From this we've learned that, depending on exactly what effect size we're aiming for, we'll need an `N` between 260 and 460.
 
 # Reliability
 
@@ -227,8 +230,8 @@ power_test = power_interaction(n.iter = 1000,     # number of simulations
                   rel.x1 =  seq(.4,1,by=.2),      # x1 reliability    
                   rel.x2 =  seq(.4,1,by=.2),      # x2 reliability          
                   rel.y  =  seq(.4,1,by=.2),      # y reliability          
-                  cl = 6                          # number of clusters for parallel analyses
-                          )
+                  cl = 6,                         # number of clusters for parallel analyses
+                  seed = 293437        )
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9,       # the power we want to achieve 
                  x     = "rel.x1",        # x-axis
@@ -277,8 +280,8 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
                   skew.x1 = seq(0,2,by=.25),      # x1 skew 
                   adjust.correlations = TRUE,     # Adjust correlations for skew?
-                  cl = 6                          # number of clusters for parallel analyses
-                          )
+                  cl = 6 ,                        # number of clusters for parallel analyses
+                  seed = 73071      )
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9       # the power we want to achieve 
                  )
@@ -308,9 +311,13 @@ power_test
 
 What is all this?
 
-The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `min.lwr`, `min.upr`, `max.lwr`, and `max.upr`. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (`q`) is 2 (i.e. a 50/50 split), and $X_2$ is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the `IQR` flag. The default value for `IQR` is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.
+The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `x1x2_est_mean` and `x1x2_r2_mean`. This is the *mean* effect size ($B_3$) and mean change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. `crossover` and `shape` are the value of $X_1$ where the $X_2$ simple slopes intersect, and the shape of the interaction ($B_3 / B_1$), which reflects whether it is a knock-out, attenuated, or crossover interaction.
 
-Next we have `x1x2_r2_mean`. This is the *mean* change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. dd
+Next we have `min.lwr`, `min.upr`, `max.lwr`, and `max.upr`. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (`q`) is 2 (i.e. a 50/50 split), and $X_2$ is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the `IQR` flag. The default value for `IQR` is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.
+
+`x1x2_95_CI_2.5_mean` and `x1x2_95_CI_97.5_mean` are the mean lower and upper 95% confidence intervals of the interaction term, and `x1x2_95_CI_width_mean` is the mean width of the confidence interval. Similarly, `r_y_x1x2_q_2.5`, `r_y_x1x2_q_50.0`, and `r_y_x1x2_q_97.5` are quantiles (2.5%, 50%, and 97.5%) of the correlation between $Y$ and $X_1X_2$ when the interaction is significant.
+
+`x1_est_mean` and `x2_est_mean` are the mean main effects of $X_1$ and $X_2$, and `pwr_x1` and `pwr_x2` is the power to detect those main effects, in the context of the full interaction regression.
 
 ### Full results
 
@@ -324,7 +331,8 @@ power_test = power_interaction(n.iter = 1000,  # number of simulations
                   r.x2.y =  .1,   # correlation between x2 and y
                   r.x1.x2 = .2,   # correlation between x1 and x2
                   r.x1x2.y = .15, # correlation between x1x2 and y
-                  full_simulation = T # return the full simulation results       
+                  full_simulation = T, # return the full simulation results       
+                  seed = 942141
                    )
 # the standard output:
 power_test$results
@@ -340,3 +348,4 @@ power_test$simulation %>%
 ```
 
 When $B_3$ is significant (`sig_int == 1`), 95% of the observed sample-level correlations range from 0.1to 0.25, even though the population-level correlation is 0.15! Also note that more than half of the observed *significant* effect sizes are greater than 0.15, even though the median of *all* effects is 0.15. This is why *post-hoc* power-analyses using the observed effect-sizes in your sample are typically not a great idea. Because the choice to run the power analysis is conditioned on the result being significant, you've effectively subjected yourself to publication bias, and as a result the power analysis will tend to yield an inflated estimate of power.
+

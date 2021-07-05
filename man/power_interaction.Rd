@@ -71,7 +71,7 @@ power_interaction(
 
 \item{ss.IQR}{Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.}
 
-\item{detailed_results}{Default is FALSE. Should detailed results be reported (mean of effect size and correlations for each setting)?}
+\item{detailed_results}{Default is FALSE. Should detailed results be reported?}
 
 \item{full_simulation}{Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.}
 

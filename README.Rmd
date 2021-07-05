@@ -16,9 +16,14 @@ knitr::opts_chunk$set(
 # InteractionPoweR
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
-InteractionPoweR is an R package for running power analyses for interactions in cross-sectional data sets between continuous and/or binary variables (also known as a moderation analysis). The main function is `power_interaction()`, which performs the power analysis. This is done via Monte Carlo simulation. `power_estimate()` helps to interpret the results of the power simulation, and `plot_power_curve()` and `plot_simple_slope()` generate plots to visualize the results. The function `generate_interaction()` simulates a single data set drawn from the specified population-level effects and `plot_interaction()` can be used to visualize the simulated data. 
+InteractionPoweR is an R package for running power analyses for interactions in cross-sectional data sets between continuous and/or binary variables (also known as a moderation analysis). The main function is `power_interaction()`, which performs the power analysis. This is done via Monte Carlo simulation. `power_estimate()` helps to interpret the results of the power simulation, and `plot_power_curve()` and `plot_simple_slope()` generate plots to visualize the results. The function `generate_interaction()` simulates a single data set drawn from the specified population-level effects and `plot_interaction()` can be used to visualize the simulated data.
+
+**See the [website](https://dbaranger.github.io/InteractionPoweR/) for further documentation and examples.**
+
+Please report bugs, issues, or questions as an [Issue on Github](https://github.com/dbaranger/InteractionPoweR/issues).
 
 ## Installation
 
@@ -29,18 +34,16 @@ install.packages("devtools")
 devtools::install_github("dbaranger/InteractionPoweR")
 ```
 
-Sometimes there will be a minor installation error, which can be resolved by using: 
+Sometimes there will be a minor installation error, which can be resolved by using:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("dbaranger/InteractionPoweR/@HEAD")
 ```
 
-## Examples
-### Example 1
+## Basic Usage
 
 The simplest use-case is when all the input parameters are known. We know the population-level correlation between our predictors (x1 and x2) and our outcome, we have a smallest effect size of interest in mind for our interaction effect size, and our sample size is already set (maybe we are conducting secondary data analysis). Power can be determined with a single command. **NB** In all these examples we use 1000 simulations for speed (`n.iter = 1000`), but for robust results we recommend 10,000 simulations (`n.iter = 10000`).
-
 
 ```{r example1, message=F,warning=F}
 library(InteractionPoweR)
@@ -60,179 +63,4 @@ toc()
 test_power
 ```
 
-We see that we have 80.9% power to detect the effect of interest. 
-
-It can be hard to know what interaction correlations mean in terms of how the data will look. To help users interpret interaction effects, we provide a simple interface for simulating single data sets and plotting them.
-
-```{r example2}
-set.seed(2020)
-sample_data<-generate_interaction(N=350,r.x1x2.y =.15,r.x1.y = .2, r.x2.y = .1, r.x1.x2 = .2)
-plot_interaction(data = sample_data,q = 2)
-```
-
-
-The `test_interaction()` function can be used to see the results of the regression `y ~ x1 + x2 + x1x2`. It also returns a variety of statistics that can be useful in understanding the interaction, including the adjusted $R^2$, the 95% confidence-interval of the interaction, the cross-over point (the value of x1 where the simple slopes intersect), the "shape" of the interaction (1 = knock-out, <1 = attenuated, >1 = cross-over), the simple-slopes, the correlation between the variables.
-
-```{r example222}
-test_interaction(data = sample_data,q = 2)
-```
-
-### Example 2
-
-In this example, we know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We are interested in interactions within a certain range, and wish to know what sample size we would need to detect those interactions. 
-
-
-```{r example3}
-library(tictoc)
-tic()
-  
-test_power<-power_interaction(
-  n.iter = 1000,            # number of simulations per unique combination of input parameters
-  cl = 6,                   # number of cores for parallel processing (strongly recommended)
-  alpha = 0.05,             # alpha, for the power analysis
-  N = seq(20,400,by=20),    # range of sample sizes to test
-  r.x1x2.y = c(.18,.2,.22), # range of interaction effects to test
-  r.x1.y = .2,              # correlation between x1 and y
-  r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2,             # correlation between x1 and x2
-  seed = 290115             # seed, for reproducibility
-)
-toc()
-
-```
-
-The results of this analysis can be hard to interpret just by looking at the output. Instead, we recommend visualizing them using `plot_power_curve()`. In this case, the horizontal line on the plot will be at our target power of 90%:
-
-```{r example4}
-plot_power_curve(test_power,power_target = .9)
-```
-
-The function `power_estimate()` can be used to estimate where the power_curve for each interaction effect size crosses our 90% line:
-
-```{r example5}
-power_estimate(test_power,power_target = .9,x="N")
-```
-
-We can see that depending on the specific effect size we hope to detect, we would need between N~205 and N~314 participants.
-
-### Example 3
-
-In this example, we know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We know our sample size (perhaps we are doing some secondary data analysis) and we want to know what's the smallest effect size we can detect. Using that information, we can decide whether that effect would be plausible, which in turn can help inform our decision of whether or not to run the analysis. We'll ask for more details on the simulations using `detailed_results=T`. 
-
-
-```{r example6}
-library(tictoc)
-tic()
-
-test_power<-power_interaction(
-  n.iter = 1000,            # number of simulations per unique combination of input parameters
-  cl = 6,                   # number of cores for parallel processing (strongly recommended)
-  alpha = 0.05,             # alpha, for the power analysis
-  N = 450,                  # sample size
-  r.x1x2.y = seq(0.04,0.3,by=.02), # range of interaction effects to test
-  r.x1.y = .2,              # correlation between x1 and y
-  r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2,             # correlation between x1 and x2
- detailed_results = T,      # detailed results have more information on the simulations
- seed = 876924              # seed, for reproducibility
-)
-toc()
-
-```
-As with the previous example, the results of this analysis can be hard to interpret just by looking at the output. With this example, we can use the function `plot_power_curve()` to visualize the power curve.
-
-```{r example7}
-plot_power_curve(test_power,power_target = .9)
-```
-The function `power_estimate()` can be used to estimate where the power_curve for each interaction effect size crosses our 90% line:
-
-```{r example8}
-power_estimate(test_power,power_target = .9,x = "r.x1x2.y")
-```
-We can use the function `plot_simple_slope()` to visualize the distribution of the simple slopes (returned because `detailed_results = T`) across the different interaction effect sizes. 
-```{r example9}
-plot_simple_slope(test_power)
-```
-
-From this we can see that we have 90% power to detect effects as small as r.x1x2.y ~ .15, which is a 'knock-out' interaction where the association between y and x1 is close to 0 at one end of the x2 distribution. 
-
-### Example 4
-
-In this example, we're going to explore how the reliability of x1 and x2 impacts our power. We know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We know our sample size (perhaps we are doing some secondary data analysis).
-
-
-```{r example10}
-library(tictoc)
-tic()
-
-test_power<-power_interaction(
-  n.iter = 1000,                  # number of simulations per unique combination of input parameters
-  cl = 6,                   # number of cores for parallel processing (strongly recommended)
-  alpha = 0.05,             # alpha, for the power analysis
-  N = 450,                  # sample size
-  r.x1x2.y = .15,           # range of interaction effects to test
-  r.x1.y = .2,              # correlation between x1 and y
-  r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2,             # correlation between x1 and x2
-  rel.x1 = seq(.4,1,.1),    # x1 reliability
-  rel.x2 = seq(.4,1,.2),    # x2 reliability
-  seed = 721507             # seed, for repoducibility
-)
-toc()
-plot_power_curve(test_power,power_target = .9)
-
-```
-
-We can see that even with good reliability of both x1 and x2 (say x1 & x2 reliability  = .8) we have less than 80% power (74% powere here), while a power analysis that assumes perfect reliability would estimate that we have 90% power.  
-
-### Example 5
-
-So far, these examples have assumed that all variables are normally distributed. It is also possible to specify that a variable is binary (i.e. dichotomous) and/or skewed. By default, it is assumed that the specified correlations between all variables are the population-level correlations of the *skewed* or *binary* variables. If this is the case, retain the defaul setting of `adjust.correlations = T`. The 'adjustment' here is how much each correlation needs to be changed, so that the resulting correlation matrix post-variable-transformation matches the input correlation matrix. Transforming a variable typically attenuates correlations with other variables, which can result in the analysis confounding *skew* and decreasing effect sizes. The correlation adjustment is run prior to the main power analysis, and depending on the severity of the changes and size of the analysis, can be relatively time-consuming. If, on the other hand, the correlations between continuous normal variables is known, but in the analysis one or both variables are artificially skewed/dichotomized, set `adjust.correlations = F`. In the case where `y` is binary, all analyses and plots are run as logistic regressions. 
-
-```{r example11}
-library(tictoc)
-tic()
-
-test_power<-power_interaction(
-  n.iter = 1000,            # number of simulations per unique combination of input parameters
-  cl = 6,                   # number of cores for parallel processing (strongly recommended)
-  alpha = 0.05,             # alpha, for the power analysis
-  N = 450,                  # sample size
-  r.x1x2.y = .15,           #  interaction effect
-  r.x1.y = .2,              # correlation between x1 and y
-  r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2           ,  # correlation between x1 and x2
-  skew.x1 = seq(0,2,by=.25),# x1 skew
-  adjust.correlations = T, # Default, adjust correlations
-  seed = 435380
-
-)
-toc()
-plot_power_curve(test_power,power_target = .9)
-
-```
-
-We can see that in this example, our power decreases as the x1 skew increases. 
-
-### Example 6
-
-*Any* variable can be skewed and/or binary in these simulations. If a variable is binary, the skew can be computed from the probability of 1 vs 0 using the `binary.p2skew` convenience function. Here is an example of a single data set where all variables are binary and x2 & y are skewed (the x1 probability of 0.5 corresponds to a skew of 0). 
-
-```{r example12}
-set.seed(2022)
-sample_data<-generate_interaction(N=350,
-                                  r.x1x2.y =.15,
-                                  r.x1.y = .1, 
-                                  r.x2.y = .2, 
-                                  r.x1.x2 = .2,
-                                  transform.x1 = "binary",
-                                  transform.x2 = "binary",
-                                  transform.y = "binary",
-                                  skew.x1 = binary.p2skew(.5),
-                                  skew.x2 = binary.p2skew(.7),
-                                  skew.y = binary.p2skew(.4),
-                                  adjust.correlations = T
-                                    )
-plot_interaction(data = sample_data)
-test_interaction(data = sample_data)
-```
+We see that we have 80.9% power to detect the effect of interest.

@@ -184,7 +184,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
 <div id="a-simple-power-analysis" class="section level1">
 <h1 class="hasAnchor">
 <a href="#a-simple-power-analysis" class="anchor"></a>A simple power analysis</h1>
-<p>The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. The power analysis is run with the function <code><a href="../../reference/power_interaction.html">power_interaction()</a></code>. We additionally specify <code>alpha</code>, which is the p-value we’re using (0.05 is default), and <code>n.iter</code>, which is the number of simulations run. In this example we’ll use just 1,000 simulations, but we recommend using 10,000 for more stable results.</p>
+<p>The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. The power analysis is run with the function <code><a href="../../reference/power_interaction.html">power_interaction()</a></code>. We additionally specify <code>alpha</code>, which is the p-value we’re using (0.05 is default), and <code>n.iter</code>, which is the number of simulations run. In this example we’ll use just 1,000 simulations, but we recommend using 10,000 for more stable results. Also note that in all these examples the parameter <code>seed</code> is set. This is the seed for the random number generator, which will allow you to obtain the same results. However, we recommend not setting <code>seed</code> when running your own power analyses, at least until you are ready to share the results. Each time an analysis is run a new seed will be chosen and echoed, so that you will be able to reproduce your results.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>n.iter <span class="op">=</span> <span class="fl">1000</span>,  <span class="co"># number of simulations</span>
                   alpha <span class="op">=</span> <span class="fl">0.05</span>,   <span class="co"># p-value</span>
@@ -192,16 +192,15 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1.y <span class="op">=</span> <span class="fl">.2</span>,    <span class="co"># correlation between x1 and y</span>
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,   <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,   <span class="co"># correlation between x1 and x2</span>
-                  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>  <span class="co"># correlation between x1x2 and y</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 290115"
-## [1] "Checking for errors in inputs..."
+                  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>, <span class="co"># correlation between x1x2 and y</span>
+                  seed <span class="op">=</span> <span class="fl">290115</span>  <span class="op">)</span><span class="co"># seed</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 1000 simulations"</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##     pwr
 ##   &lt;dbl&gt;
 ## 1 0.824</code></pre>
-<p>We find that our analysis has ~82% power (<code>pwr</code>).</p>
+<p>We find that our analysis has 82% power (<code>pwr</code>).</p>
 </div>
 <div id="exploring-the-parameter-space" class="section level1">
 <h1 class="hasAnchor">
@@ -220,10 +219,9 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>                         <span class="co"># number of clusters for parallel analyses</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 507421"
-## [1] "Checking for errors in inputs..."
+                  cl <span class="op">=</span> <span class="fl">6</span>,                        <span class="co"># number of clusters for parallel analyses</span>
+                  seed <span class="op">=</span> <span class="fl">507421</span>        <span class="op">)</span>         <span class="co"># seed</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 9000 simulations"</code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span></code></pre></div>
@@ -250,7 +248,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
              power_target <span class="op">=</span> <span class="fl">0.9</span>         <span class="co"># the power we want to achieve </span>
 <span class="op">)</span></code></pre></div>
 <pre><code>## [1] 442.7771</code></pre>
-<p>Our guess turned out to be accurate in this case, and N=450 yields approximately 90% power.</p>
+<p>Our guess turned out to be accurate in this case, and N=443 yields approximately 90% power.</p>
 </div>
 <div id="finding-the-smallest-detectable-effect-size" class="section level2">
 <h2 class="hasAnchor">
@@ -263,11 +261,10 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1.y <span class="op">=</span> <span class="fl">.2</span>,                   <span class="co"># correlation between x1 and y</span>
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
-                  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.01</span><span class="op">)</span>,   <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>                         <span class="co"># number of clusters for parallel analyses</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 387455"
-## [1] "Checking for errors in inputs..."
+                  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.01</span><span class="op">)</span>,  <span class="co"># correlation between x1x2 and y</span>
+                  cl <span class="op">=</span> <span class="fl">6</span>,                        <span class="co"># number of clusters for parallel analyses</span>
+                  seed <span class="op">=</span> <span class="fl">387455</span>        <span class="op">)</span>         <span class="co"># seed</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 11000 simulations"</code></pre>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span></code></pre></div>
@@ -305,10 +302,10 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.01</span><span class="op">)</span>,   <span class="co"># correlation between x1x2 and y</span>
                   cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
-                  detailed_results <span class="op">=</span> <span class="cn">T</span>            <span class="co"># detailed results</span>
+                  detailed_results <span class="op">=</span> <span class="cn">T</span>,           <span class="co"># detailed results</span>
+                  seed <span class="op">=</span> <span class="fl">316834</span>                  <span class="co"># seed</span>
                 <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 316834"
-## [1] "Checking for errors in inputs..."
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 11000 simulations"</code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/plot_simple_slope.html">plot_simple_slope</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span><span class="op">)</span></code></pre></div>
@@ -326,11 +323,11 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1.y <span class="op">=</span> <span class="fl">.2</span>,                    <span class="co"># correlation between x1 and y</span>
                   r.x2.y <span class="op">=</span> <span class="fl">.1</span>,                    <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>       ,            <span class="co"># correlation between x1 and x2</span>
-                  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.15</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.025</span><span class="op">)</span>,<span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,detailed_results <span class="op">=</span> <span class="cn">T</span>                          <span class="co"># number of clusters for parallel analyses</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 742425"
-## [1] "Checking for errors in inputs..."
+                  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.15</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.025</span><span class="op">)</span>, <span class="co"># correlation between x1x2 and y</span>
+                  cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
+                  detailed_results <span class="op">=</span> <span class="cn">T</span>,
+                  seed <span class="op">=</span> <span class="fl">742425</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 33000 simulations"</code></pre>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span>, <span class="co"># output from power_interaction()</span>
@@ -348,7 +345,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
 ## 1    0.150 464.6584
 ## 2    0.175 322.2866
 ## 3    0.200 258.9152</code></pre>
-<p>From this we’ve learned that, depending on exactly what effect size we’re aiming for, we’ll need an <code>N</code> between 260 and 450.</p>
+<p>From this we’ve learned that, depending on exactly what effect size we’re aiming for, we’ll need an <code>N</code> between 260 and 460.</p>
 </div>
 </div>
 <div id="reliability" class="section level1">
@@ -366,10 +363,9 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   rel.x1 <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># x1 reliability    </span>
                   rel.x2 <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># x2 reliability          </span>
                   rel.y  <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># y reliability          </span>
-                  cl <span class="op">=</span> <span class="fl">6</span>                          <span class="co"># number of clusters for parallel analyses</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 293437"
-## [1] "Checking for errors in inputs..."
+                  cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
+                  seed <span class="op">=</span> <span class="fl">293437</span>        <span class="op">)</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 64000 simulations"</code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span>, <span class="co"># output from power_interaction()</span>
@@ -414,10 +410,9 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                 <span class="co"># correlation between x1x2 and y</span>
                   skew.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span>,by<span class="op">=</span><span class="fl">.25</span><span class="op">)</span>,      <span class="co"># x1 skew </span>
                   adjust.correlations <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># Adjust correlations for skew?</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>                          <span class="co"># number of clusters for parallel analyses</span>
-                          <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 73071"
-## [1] "Checking for errors in inputs..."
+                  cl <span class="op">=</span> <span class="fl">6</span> ,                        <span class="co"># number of clusters for parallel analyses</span>
+                  seed <span class="op">=</span> <span class="fl">73071</span>      <span class="op">)</span></code></pre></div>
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Adjusting correlations for variable transformations..."
 ## [1] "Performing 9000 simulations"</code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
@@ -486,21 +481,23 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
 ## 9             0.2845679             0.2009518     0.11047213       0.1856735
 ## 10            0.2922399             0.2011397     0.11167161       0.1926035
 ## 11            0.2996748             0.1998440     0.11473601       0.2034652
-##    r_y_x1x2_q_97.5 x1_est_mean x2_est_mean
-## 1        0.2291311   0.1881460  0.06275476
-## 2        0.2310188   0.1856230  0.06133046
-## 3        0.2298826   0.1887811  0.06184092
-## 4        0.2437811   0.1891903  0.06458132
-## 5        0.2528085   0.1892109  0.06101913
-## 6        0.2609328   0.1878766  0.06147682
-## 7        0.2635555   0.1853947  0.06471401
-## 8        0.2708916   0.1856022  0.06270192
-## 9        0.2844487   0.1869308  0.06226448
-## 10       0.2908955   0.1871553  0.06077683
-## 11       0.3005169   0.1867724  0.06399038</code></pre>
+##    r_y_x1x2_q_97.5 x1_est_mean x2_est_mean x1_pwr x2_pwr
+## 1        0.2291311   0.1881460  0.06275476  0.944  0.221
+## 2        0.2310188   0.1856230  0.06133046  0.933  0.224
+## 3        0.2298826   0.1887811  0.06184092  0.948  0.205
+## 4        0.2437811   0.1891903  0.06458132  0.955  0.228
+## 5        0.2528085   0.1892109  0.06101913  0.952  0.227
+## 6        0.2609328   0.1878766  0.06147682  0.936  0.217
+## 7        0.2635555   0.1853947  0.06471401  0.948  0.231
+## 8        0.2708916   0.1856022  0.06270192  0.944  0.227
+## 9        0.2844487   0.1869308  0.06226448  0.957  0.218
+## 10       0.2908955   0.1871553  0.06077683  0.949  0.214
+## 11       0.3005169   0.1867724  0.06399038  0.954  0.223</code></pre>
 <p>What is all this?</p>
-<p>The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have <code>min.lwr</code>, <code>min.upr</code>, <code>max.lwr</code>, and <code>max.upr</code>. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (<code>q</code>) is 2 (i.e. a 50/50 split), and <span class="math inline">\(X_2\)</span> is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the <code>IQR</code> flag. The default value for <code>IQR</code> is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.</p>
-<p>Next we have <code>x1x2_r2_mean</code>. This is the <em>mean</em> change in the adjusted <span class="math inline">\(R^2\)</span> (or pseudo-<span class="math inline">\(R^2\)</span> when <span class="math inline">\(Y\)</span> is binary) when the interaction term <span class="math inline">\(X_1X_2\)</span> is added to the model. dd</p>
+<p>The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have <code>x1x2_est_mean</code> and <code>x1x2_r2_mean</code>. This is the <em>mean</em> effect size (<span class="math inline">\(B_3\)</span>) and mean change in the adjusted <span class="math inline">\(R^2\)</span> (or pseudo-<span class="math inline">\(R^2\)</span> when <span class="math inline">\(Y\)</span> is binary) when the interaction term <span class="math inline">\(X_1X_2\)</span> is added to the model. <code>crossover</code> and <code>shape</code> are the value of <span class="math inline">\(X_1\)</span> where the <span class="math inline">\(X_2\)</span> simple slopes intersect, and the shape of the interaction (<span class="math inline">\(B_3 / B_1\)</span>), which reflects whether it is a knock-out, attenuated, or crossover interaction.</p>
+<p>Next we have <code>min.lwr</code>, <code>min.upr</code>, <code>max.lwr</code>, and <code>max.upr</code>. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (<code>q</code>) is 2 (i.e. a 50/50 split), and <span class="math inline">\(X_2\)</span> is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the <code>IQR</code> flag. The default value for <code>IQR</code> is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.</p>
+<p><code>x1x2_95_CI_2.5_mean</code> and <code>x1x2_95_CI_97.5_mean</code> are the mean lower and upper 95% confidence intervals of the interaction term, and <code>x1x2_95_CI_width_mean</code> is the mean width of the confidence interval. Similarly, <code>r_y_x1x2_q_2.5</code>, <code>r_y_x1x2_q_50.0</code>, and <code>r_y_x1x2_q_97.5</code> are quantiles (2.5%, 50%, and 97.5%) of the correlation between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X_1X_2\)</span> when the interaction is significant.</p>
+<p><code>x1_est_mean</code> and <code>x2_est_mean</code> are the mean main effects of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>, and <code>pwr_x1</code> and <code>pwr_x2</code> is the power to detect those main effects, in the context of the full interaction regression.</p>
 </div>
 <div id="full-results" class="section level3">
 <h3 class="hasAnchor">
@@ -514,10 +511,10 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,   <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,   <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>, <span class="co"># correlation between x1x2 and y</span>
-                  full_simulation <span class="op">=</span> <span class="cn">T</span> <span class="co"># return the full simulation results       </span>
+                  full_simulation <span class="op">=</span> <span class="cn">T</span>, <span class="co"># return the full simulation results       </span>
+                  seed <span class="op">=</span> <span class="fl">942141</span>
                    <span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Seed is 942141"
-## [1] "Checking for errors in inputs..."
+<pre><code>## [1] "Checking for errors in inputs..."
 ## [1] "Performing 1000 simulations"</code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># the standard output:</span>

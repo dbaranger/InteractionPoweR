@@ -31,6 +31,10 @@ This is a non-exhaustive list of common questions:
 
     -   It is possible to specify an impossible correlation matrix. This error indicates that $X_1$, $X_2$, and $X_1X_2$ have settings that result in them explaining more than 100% of the $Y$ variance - obviously impossible. If you encounter this error, reduce your correlations.
 
+5.  "Correlation matrix is impossible - is not positive semi-definite."
+
+    -   Another way that a correlation matrix can be "impossible". Any true correlation matrix will have this property (by definition). This error can be caused when correlations are too large or when variables are skewed and correlations are transformed. If you encounter this error, reduce your correlations or skews.
+
 # Strange results
 
 1.  `power_estimate()` produces `NA`.
@@ -45,4 +49,4 @@ This is a non-exhaustive list of common questions:
 
 2.  Results differ each time I run a simulation
 
-    -   The examples in this package use `n.iter = 1000` simulations, as this is enough to give a general sense of the pattern of results. However, we recommend `n.iter = 10000` for more stable results. `power_estimate()` fits a regression model, and as with any regression, the number of observations, as well as their variance, impacts results. So, increasing the range and density of parameters in the simulation will also improve the stability of results.
+    -   The examples in this package use `n.iter = 1000` simulations, as this is enough to give a general sense of the pattern of results. However, we recommend `n.iter = 10000` for more stable results. `power_estimate()` fits a regression model, and as with any regression, the number of observations, as well as their variance, impacts results. So, increasing the range and density of parameters in the simulation will also improve the stability of results. The `seed` parameter can also be set, so that identical results are given each time. However, this is not recommended until results have stabilized (by increasing `n.iter`). If `seed` is set `n.iter = 50` will yield the same results every time, but that doesn't mean those results are informative.

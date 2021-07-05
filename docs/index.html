@@ -93,6 +93,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <p>InteractionPoweR is an R package for running power analyses for interactions in cross-sectional data sets between continuous and/or binary variables (also known as a moderation analysis). The main function is <code><a href="reference/power_interaction.html">power_interaction()</a></code>, which performs the power analysis. This is done via Monte Carlo simulation. <code><a href="reference/power_estimate.html">power_estimate()</a></code> helps to interpret the results of the power simulation, and <code><a href="reference/plot_power_curve.html">plot_power_curve()</a></code> and <code><a href="reference/plot_simple_slope.html">plot_simple_slope()</a></code> generate plots to visualize the results. The function <code><a href="reference/generate_interaction.html">generate_interaction()</a></code> simulates a single data set drawn from the specified population-level effects and <code><a href="reference/plot_interaction.html">plot_interaction()</a></code> can be used to visualize the simulated data.</p>
+<p><strong>See the <a href="https://dbaranger.github.io/InteractionPoweR/">website</a> for further documentation and examples.</strong></p>
+<p>Please report bugs, issues, or questions as an <a href="https://github.com/dbaranger/InteractionPoweR/issues">Issue on Github</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -105,12 +107,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"dbaranger/InteractionPoweR/@HEAD"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="examples" class="section level2">
+<div id="basic-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
-<div id="example-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-1" class="anchor"></a>Example 1</h3>
+<a href="#basic-usage" class="anchor"></a>Basic Usage</h2>
 <p>The simplest use-case is when all the input parameters are known. We know the population-level correlation between our predictors (x1 and x2) and our outcome, we have a smallest effect size of interest in mind for our interaction effect size, and our sample size is already set (maybe we are conducting secondary data analysis). Power can be determined with a single command. <strong>NB</strong> In all these examples we use 1000 simulations for speed (<code>n.iter = 1000</code>), but for robust results we recommend 10,000 simulations (<code>n.iter = 10000</code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dbaranger/InteractionPoweR">InteractionPoweR</a></span><span class="op">)</span>
@@ -129,238 +128,13 @@
 <span class="co">#&gt; [1] "Checking for errors in inputs..."</span>
 <span class="co">#&gt; [1] "Performing 1000 simulations"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; 16.42 sec elapsed</span>
+<span class="co">#&gt; 18.92 sec elapsed</span>
 <span class="va">test_power</span>
 <span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;     pwr</span>
 <span class="co">#&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 0.809</span></code></pre></div>
 <p>We see that we have 80.9% power to detect the effect of interest.</p>
-<p>It can be hard to know what interaction correlations mean in terms of how the data will look. To help users interpret interaction effects, we provide a simple interface for simulating single data sets and plotting them.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">)</span>
-<span class="va">sample_data</span><span class="op">&lt;-</span><span class="fu"><a href="reference/generate_interaction.html">generate_interaction</a></span><span class="op">(</span>N<span class="op">=</span><span class="fl">350</span>,r.x1x2.y <span class="op">=</span><span class="fl">.15</span>,r.x1.y <span class="op">=</span> <span class="fl">.2</span>, r.x2.y <span class="op">=</span> <span class="fl">.1</span>, r.x1.x2 <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span>
-<span class="fu"><a href="reference/plot_interaction.html">plot_interaction</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sample_data</span>,q <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example2-1.png" width="100%"></p>
-<p>The <code><a href="reference/test_interaction.html">test_interaction()</a></code> function can be used to see the results of the regression <code>y ~ x1 + x2 + x1x2</code>. It also returns a variety of statistics that can be useful in understanding the interaction, including the adjusted <em>R</em><sup>2</sup>, the 95% confidence-interval of the interaction, the cross-over point (the value of x1 where the simple slopes intersect), the “shape” of the interaction (1 = knock-out, &lt;1 = attenuated, &gt;1 = cross-over), the simple-slopes, the correlation between the variables.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/test_interaction.html">test_interaction</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sample_data</span>,q <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; $linear.model</span>
-<span class="co">#&gt;       Estimate Std. Error  t value     Pr(&gt;|t|)</span>
-<span class="co">#&gt; x1   0.1888967 0.05153863 3.665148 2.859696e-04</span>
-<span class="co">#&gt; x2   0.1356407 0.05165265 2.626016 9.022851e-03</span>
-<span class="co">#&gt; x1x2 0.2129386 0.05001033 4.257892 2.661829e-05</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $x1x2.adjusted.r2</span>
-<span class="co">#&gt; [1] 0.04391331</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $x1x2.confint</span>
-<span class="co">#&gt;   x1x2_95confint_2.5 x1x2_95confint_97.5</span>
-<span class="co">#&gt; 1          0.1145761           0.3113011</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $interaction.shape</span>
-<span class="co">#&gt;   crossover.point    shape</span>
-<span class="co">#&gt; 1      -0.6369945 1.127275</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $simple.slopes</span>
-<span class="co">#&gt;    lower.slope upper.slope</span>
-<span class="co">#&gt; x2  0.00222888   0.3766329</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $correlation</span>
-<span class="co">#&gt;           cor v1   v2</span>
-<span class="co">#&gt; 5  0.20000000 x1   x2</span>
-<span class="co">#&gt; 9  0.22361262 x1    y</span>
-<span class="co">#&gt; 10 0.18961691 x2    y</span>
-<span class="co">#&gt; 13 0.03519020 x1 x1x2</span>
-<span class="co">#&gt; 14 0.07511716 x2 x1x2</span>
-<span class="co">#&gt; 15 0.23245767  y x1x2</span></code></pre></div>
-</div>
-<div id="example-2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-2" class="anchor"></a>Example 2</h3>
-<p>In this example, we know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We are interested in interactions within a certain range, and wish to know what sample size we would need to detect those interactions.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/collectivemedia/tictoc">tictoc</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span>
-  
-<span class="va">test_power</span><span class="op">&lt;-</span><span class="fu"><a href="reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>
-  n.iter <span class="op">=</span> <span class="fl">1000</span>,            <span class="co"># number of simulations per unique combination of input parameters</span>
-  cl <span class="op">=</span> <span class="fl">6</span>,                   <span class="co"># number of cores for parallel processing (strongly recommended)</span>
-  alpha <span class="op">=</span> <span class="fl">0.05</span>,             <span class="co"># alpha, for the power analysis</span>
-  N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">20</span>,<span class="fl">400</span>,by<span class="op">=</span><span class="fl">20</span><span class="op">)</span>,    <span class="co"># range of sample sizes to test</span>
-  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.18</span>,<span class="fl">.2</span>,<span class="fl">.22</span><span class="op">)</span>, <span class="co"># range of interaction effects to test</span>
-  r.x1.y <span class="op">=</span> <span class="fl">.2</span>,              <span class="co"># correlation between x1 and y</span>
-  r.x2.y <span class="op">=</span> <span class="fl">.1</span>,              <span class="co"># correlation between x2 and y</span>
-  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,             <span class="co"># correlation between x1 and x2</span>
-  seed <span class="op">=</span> <span class="fl">290115</span>             <span class="co"># seed, for reproducibility</span>
-<span class="op">)</span>
-<span class="co">#&gt; [1] "Checking for errors in inputs..."</span>
-<span class="co">#&gt; [1] "Performing 60000 simulations"</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; 264.2 sec elapsed</span></code></pre></div>
-<p>The results of this analysis can be hard to interpret just by looking at the output. Instead, we recommend visualizing them using <code><a href="reference/plot_power_curve.html">plot_power_curve()</a></code>. In this case, the horizontal line on the plot will be at our target power of 90%:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example4-1.png" width="100%"></p>
-<p>The function <code><a href="reference/power_estimate.html">power_estimate()</a></code> can be used to estimate where the power_curve for each interaction effect size crosses our 90% line:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/power_estimate.html">power_estimate</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span>,x<span class="op">=</span><span class="st">"N"</span><span class="op">)</span>
-<span class="co">#&gt;   r.x1x2.y estimate</span>
-<span class="co">#&gt; 1     0.18 314.0026</span>
-<span class="co">#&gt; 2     0.20 244.6019</span>
-<span class="co">#&gt; 3     0.22 205.0056</span></code></pre></div>
-<p>We can see that depending on the specific effect size we hope to detect, we would need between N~205 and N~314 participants.</p>
-</div>
-<div id="example-3" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-3" class="anchor"></a>Example 3</h3>
-<p>In this example, we know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We know our sample size (perhaps we are doing some secondary data analysis) and we want to know what’s the smallest effect size we can detect. Using that information, we can decide whether that effect would be plausible, which in turn can help inform our decision of whether or not to run the analysis. We’ll ask for more details on the simulations using <code>detailed_results=T</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/collectivemedia/tictoc">tictoc</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">test_power</span><span class="op">&lt;-</span><span class="fu"><a href="reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>
-  n.iter <span class="op">=</span> <span class="fl">1000</span>,            <span class="co"># number of simulations per unique combination of input parameters</span>
-  cl <span class="op">=</span> <span class="fl">6</span>,                   <span class="co"># number of cores for parallel processing (strongly recommended)</span>
-  alpha <span class="op">=</span> <span class="fl">0.05</span>,             <span class="co"># alpha, for the power analysis</span>
-  N <span class="op">=</span> <span class="fl">450</span>,                  <span class="co"># sample size</span>
-  r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.04</span>,<span class="fl">0.3</span>,by<span class="op">=</span><span class="fl">.02</span><span class="op">)</span>, <span class="co"># range of interaction effects to test</span>
-  r.x1.y <span class="op">=</span> <span class="fl">.2</span>,              <span class="co"># correlation between x1 and y</span>
-  r.x2.y <span class="op">=</span> <span class="fl">.1</span>,              <span class="co"># correlation between x2 and y</span>
-  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,             <span class="co"># correlation between x1 and x2</span>
- detailed_results <span class="op">=</span> <span class="cn">T</span>,      <span class="co"># detailed results have more information on the simulations</span>
- seed <span class="op">=</span> <span class="fl">876924</span>              <span class="co"># seed, for reproducibility</span>
-<span class="op">)</span>
-<span class="co">#&gt; [1] "Checking for errors in inputs..."</span>
-<span class="co">#&gt; [1] "Performing 14000 simulations"</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; 90.41 sec elapsed</span></code></pre></div>
-<p>As with the previous example, the results of this analysis can be hard to interpret just by looking at the output. With this example, we can use the function <code><a href="reference/plot_power_curve.html">plot_power_curve()</a></code> to visualize the power curve.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example7-1.png" width="100%"> The function <code><a href="reference/power_estimate.html">power_estimate()</a></code> can be used to estimate where the power_curve for each interaction effect size crosses our 90% line:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/power_estimate.html">power_estimate</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span>,x <span class="op">=</span> <span class="st">"r.x1x2.y"</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.1518392</span></code></pre></div>
-<p>We can use the function <code><a href="reference/plot_simple_slope.html">plot_simple_slope()</a></code> to visualize the distribution of the simple slopes (returned because <code>detailed_results = T</code>) across the different interaction effect sizes.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_simple_slope.html">plot_simple_slope</a></span><span class="op">(</span><span class="va">test_power</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example9-1.png" width="100%"></p>
-<p>From this we can see that we have 90% power to detect effects as small as r.x1x2.y ~ .15, which is a ‘knock-out’ interaction where the association between y and x1 is close to 0 at one end of the x2 distribution.</p>
-</div>
-<div id="example-4" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-4" class="anchor"></a>Example 4</h3>
-<p>In this example, we’re going to explore how the reliability of x1 and x2 impacts our power. We know the population-level correlation between each of our predictors (x1 and x2) and our outcome (y), as well as the correlation between the two predictors. We know our sample size (perhaps we are doing some secondary data analysis).</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/collectivemedia/tictoc">tictoc</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">test_power</span><span class="op">&lt;-</span><span class="fu"><a href="reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>
-  n.iter <span class="op">=</span> <span class="fl">1000</span>,                  <span class="co"># number of simulations per unique combination of input parameters</span>
-  cl <span class="op">=</span> <span class="fl">6</span>,                   <span class="co"># number of cores for parallel processing (strongly recommended)</span>
-  alpha <span class="op">=</span> <span class="fl">0.05</span>,             <span class="co"># alpha, for the power analysis</span>
-  N <span class="op">=</span> <span class="fl">450</span>,                  <span class="co"># sample size</span>
-  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,           <span class="co"># range of interaction effects to test</span>
-  r.x1.y <span class="op">=</span> <span class="fl">.2</span>,              <span class="co"># correlation between x1 and y</span>
-  r.x2.y <span class="op">=</span> <span class="fl">.1</span>,              <span class="co"># correlation between x2 and y</span>
-  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,             <span class="co"># correlation between x1 and x2</span>
-  rel.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,<span class="fl">.1</span><span class="op">)</span>,    <span class="co"># x1 reliability</span>
-  rel.x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,<span class="fl">.2</span><span class="op">)</span>,    <span class="co"># x2 reliability</span>
-  seed <span class="op">=</span> <span class="fl">721507</span>             <span class="co"># seed, for repoducibility</span>
-<span class="op">)</span>
-<span class="co">#&gt; [1] "Checking for errors in inputs..."</span>
-<span class="co">#&gt; [1] "Performing 28000 simulations"</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; 170.65 sec elapsed</span>
-<span class="fu"><a href="reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example10-1.png" width="100%"></p>
-<p>We can see that even with good reliability of both x1 and x2 (say x1 &amp; x2 reliability = .8) we have less than 80% power (74% powere here), while a power analysis that assumes perfect reliability would estimate that we have 90% power.</p>
-</div>
-<div id="example-5" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-5" class="anchor"></a>Example 5</h3>
-<p>So far, these examples have assumed that all variables are normally distributed. It is also possible to specify that a variable is binary (i.e. dichotomous) and/or skewed. By default, it is assumed that the specified correlations between all variables are the population-level correlations of the <em>skewed</em> or <em>binary</em> variables. If this is the case, retain the defaul setting of <code>adjust.correlations = T</code>. The ‘adjustment’ here is how much each correlation needs to be changed, so that the resulting correlation matrix post-variable-transformation matches the input correlation matrix. Transforming a variable typically attenuates correlations with other variables, which can result in the analysis confounding <em>skew</em> and decreasing effect sizes. The correlation adjustment is run prior to the main power analysis, and depending on the severity of the changes and size of the analysis, can be relatively time-consuming. If, on the other hand, the correlations between continuous normal variables is known, but in the analysis one or both variables are artificially skewed/dichotomized, set <code>adjust.correlations = F</code>. In the case where <code>y</code> is binary, all analyses and plots are run as logistic regressions.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/collectivemedia/tictoc">tictoc</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">test_power</span><span class="op">&lt;-</span><span class="fu"><a href="reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>
-  n.iter <span class="op">=</span> <span class="fl">1000</span>,            <span class="co"># number of simulations per unique combination of input parameters</span>
-  cl <span class="op">=</span> <span class="fl">6</span>,                   <span class="co"># number of cores for parallel processing (strongly recommended)</span>
-  alpha <span class="op">=</span> <span class="fl">0.05</span>,             <span class="co"># alpha, for the power analysis</span>
-  N <span class="op">=</span> <span class="fl">450</span>,                  <span class="co"># sample size</span>
-  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,           <span class="co">#  interaction effect</span>
-  r.x1.y <span class="op">=</span> <span class="fl">.2</span>,              <span class="co"># correlation between x1 and y</span>
-  r.x2.y <span class="op">=</span> <span class="fl">.1</span>,              <span class="co"># correlation between x2 and y</span>
-  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>           ,  <span class="co"># correlation between x1 and x2</span>
-  skew.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span>,by<span class="op">=</span><span class="fl">.25</span><span class="op">)</span>,<span class="co"># x1 skew</span>
-  adjust.correlations <span class="op">=</span> <span class="cn">T</span>, <span class="co"># Default, adjust correlations</span>
-  seed <span class="op">=</span> <span class="fl">435380</span>
-
-<span class="op">)</span>
-<span class="co">#&gt; [1] "Checking for errors in inputs..."</span>
-<span class="co">#&gt; [1] "Adjusting correlations for variable transformations..."</span>
-<span class="co">#&gt; [1] "Performing 9000 simulations"</span>
-<span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; 80.02 sec elapsed</span>
-<span class="fu"><a href="reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">test_power</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example11-1.png" width="100%"></p>
-<p>We can see that in this example, our power decreases as the x1 skew increases.</p>
-</div>
-<div id="example-6" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-6" class="anchor"></a>Example 6</h3>
-<p><em>Any</em> variable can be skewed and/or binary in these simulations. If a variable is binary, the skew can be computed from the probability of 1 vs 0 using the <code>binary.p2skew</code> convenience function. Here is an example of a single data set where all variables are binary and x2 &amp; y are skewed (the x1 probability of 0.5 corresponds to a skew of 0).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2022</span><span class="op">)</span>
-<span class="va">sample_data</span><span class="op">&lt;-</span><span class="fu"><a href="reference/generate_interaction.html">generate_interaction</a></span><span class="op">(</span>N<span class="op">=</span><span class="fl">350</span>,
-                                  r.x1x2.y <span class="op">=</span><span class="fl">.15</span>,
-                                  r.x1.y <span class="op">=</span> <span class="fl">.1</span>, 
-                                  r.x2.y <span class="op">=</span> <span class="fl">.2</span>, 
-                                  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,
-                                  transform.x1 <span class="op">=</span> <span class="st">"binary"</span>,
-                                  transform.x2 <span class="op">=</span> <span class="st">"binary"</span>,
-                                  transform.y <span class="op">=</span> <span class="st">"binary"</span>,
-                                  skew.x1 <span class="op">=</span> <span class="fu"><a href="reference/binary.p2skew.html">binary.p2skew</a></span><span class="op">(</span><span class="fl">.5</span><span class="op">)</span>,
-                                  skew.x2 <span class="op">=</span> <span class="fu"><a href="reference/binary.p2skew.html">binary.p2skew</a></span><span class="op">(</span><span class="fl">.7</span><span class="op">)</span>,
-                                  skew.y <span class="op">=</span> <span class="fu"><a href="reference/binary.p2skew.html">binary.p2skew</a></span><span class="op">(</span><span class="fl">.4</span><span class="op">)</span>,
-                                  adjust.correlations <span class="op">=</span> <span class="cn">T</span>
-                                    <span class="op">)</span>
-<span class="fu"><a href="reference/plot_interaction.html">plot_interaction</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sample_data</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example12-1.png" width="100%"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/test_interaction.html">test_interaction</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sample_data</span><span class="op">)</span>
-<span class="co">#&gt; $linear.model</span>
-<span class="co">#&gt;        Estimate Std. Error   z value     Pr(&gt;|z|)</span>
-<span class="co">#&gt; x1   0.05346554  0.1276503 0.4188439 0.6753302251</span>
-<span class="co">#&gt; x2   0.46958487  0.1479850 3.1731915 0.0015077302</span>
-<span class="co">#&gt; x1x2 0.54681794  0.1474124 3.7094421 0.0002077165</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $x1x2.adjusted.r2</span>
-<span class="co">#&gt; [1] 0.03750483</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $x1x2.confint</span>
-<span class="co">#&gt;   x1x2_95confint_2.5 x1x2_95confint_97.5</span>
-<span class="co">#&gt; 1          0.2745436           0.8631236</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $interaction.shape</span>
-<span class="co">#&gt;   crossover.point    shape</span>
-<span class="co">#&gt; 1      -0.8587591 10.22748</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $simple.slopes</span>
-<span class="co">#&gt;    lower.slope upper.slope</span>
-<span class="co">#&gt; x1   -0.803889   0.4012278</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $correlation</span>
-<span class="co">#&gt;             cor v1   v2</span>
-<span class="co">#&gt; 5   0.127097034 x1   x2</span>
-<span class="co">#&gt; 9   0.086243416 x1    y</span>
-<span class="co">#&gt; 10  0.156288349 x2    y</span>
-<span class="co">#&gt; 13 -0.002924991 x1 x1x2</span>
-<span class="co">#&gt; 14 -0.119419576 x2 x1x2</span>
-<span class="co">#&gt; 15  0.186003277  y x1x2</span></code></pre></div>
-</div>
 </div>
 </div>
   </div>
