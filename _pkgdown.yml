@@ -1,6 +1,6 @@
 template:
   params:
-    ganalytics: G-0NF8EE2N1C
+    ganalytics: UA-201375012-1
   twitter:
       creator: "@David_Baranger"
       card: summary
