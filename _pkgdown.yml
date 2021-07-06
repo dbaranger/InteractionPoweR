@@ -1,19 +1,24 @@
+url: https://dbaranger.github.io/InteractionPoweR
+
+home:
+  title: Power analyses for interactions via simulation in R
+  description: Conducts power analyses for regression models with interacting correlated variables.
+
 template:
   params:
-    ganalytics: UA-201375012-1
-  twitter:
+    ganalytics: G-36JVDTC1K0
+  opengraph:
+    twitter:
       creator: "@David_Baranger"
       card: summary
-url: https://dbaranger.github.io/InteractionPoweR
+
 articles:
 - title: InteractionPoweR
   navbar: ~
   contents:
   - articles/InteractionPoweRvignette
   - articles/CommonQuestions
-home:
-  title: Power analyses for interactions via simulation in R
-  description: Conducts power analyses for regression models with interacting correlated variables.
+
 reference:
 - title: "Power analysis"
   desc: >
