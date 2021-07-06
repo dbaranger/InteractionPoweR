@@ -35,7 +35,7 @@ Description: Power analysis for regression models which test the interaction
     variable reliability. Power analysis is done via simulation. 
     Includes tools for simulating single data sets and 
     visualizing power analysis results. 
-URL: https://github.com/dbaranger/InteractionPoweR
+URL: https://dbaranger.github.io/InteractionPoweR
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues
 License: GPL (>= 3)
 Encoding: UTF-8

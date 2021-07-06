@@ -281,7 +281,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   skew.x1 = seq(0,2,by=.25),      # x1 skew 
                   adjust.correlations = TRUE,     # Adjust correlations for skew?
                   cl = 6 ,                        # number of clusters for parallel analyses
-                  seed = 73071      )
+                  seed = 73070      )
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9       # the power we want to achieve 
                  )
@@ -348,4 +348,3 @@ power_test$simulation %>%
 ```
 
 When $B_3$ is significant (`sig_int == 1`), 95% of the observed sample-level correlations range from 0.1to 0.25, even though the population-level correlation is 0.15! Also note that more than half of the observed *significant* effect sizes are greater than 0.15, even though the median of *all* effects is 0.15. This is why *post-hoc* power-analyses using the observed effect-sizes in your sample are typically not a great idea. Because the choice to run the power analysis is conditioned on the result being significant, you've effectively subjected yourself to publication bias, and as a result the power analysis will tend to yield an inflated estimate of power.
-

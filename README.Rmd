@@ -13,8 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# InteractionPoweR
-
+# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR'><img src='man/figures/logo.png' align="right" height="139" /></a>
 <!-- badges: start -->
 
 <!-- badges: end -->

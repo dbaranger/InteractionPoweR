@@ -1,5 +1,5 @@
 ---
-title: "Common questions"
+title: "Questions & Errors"
 author: "David AA Baranger"
 output:
   html_document:
@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This is a non-exhaustive list of common questions:
+This is a non-exhaustive list of common questions and error messages:
 
 # Error messages
 

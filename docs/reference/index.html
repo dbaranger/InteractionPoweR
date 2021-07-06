@@ -8,6 +8,13 @@
 
 <title>Function reference • InteractionPoweR</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -40,6 +47,7 @@
 
 
 <meta property="og:title" content="Function reference" />
+<meta property="og:image" content="https://dbaranger.github.io/InteractionPoweR/logo.png" />
 
 
 
@@ -53,6 +61,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0NF8EE2N1C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0NF8EE2N1C');
+</script>
 
 
   </head>
@@ -94,10 +112,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/CommonQuestions.html">Common questions</a>
+      <a href="../articles/articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
     </li>
     <li>
-      <a href="../articles/articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
+      <a href="../articles/articles/CommonQuestions.html">Questions &amp; Errors</a>
     </li>
   </ul>
 </li>
@@ -136,8 +154,89 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-power-analysis" class="hasAnchor"><a href="#section-power-analysis" class="anchor"></a>Power analysis</h2>
+          <p class="section-desc"><p>Function to run a power analysis</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="power_interaction.html">power_interaction()</a></code> </p>
+        </td>
+        <td><p>Power analysis for interactions</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-next-steps" class="hasAnchor"><a href="#section-next-steps" class="anchor"></a>Next steps</h2>
+          <p class="section-desc"><p>Interpret and visualize power analysis results</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="power_estimate.html">power_estimate()</a></code> </p>
+        </td>
+        <td><p>Power estimate</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_power_curve.html">plot_power_curve()</a></code> </p>
+        </td>
+        <td><p>Plot power curve</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_simple_slope.html">plot_simple_slope()</a></code> </p>
+        </td>
+        <td><p>Simple slope plot</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-a-single-data-set" class="hasAnchor"><a href="#section-a-single-data-set" class="anchor"></a>A single data set</h2>
+          <p class="section-desc"><p>Simulate and plot a single data set</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="generate_interaction.html">generate_interaction()</a></code> </p>
+        </td>
+        <td><p>Generate interaction data set</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_interaction.html">plot_interaction()</a></code> </p>
+        </td>
+        <td><p>Plot interaction</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="test_interaction.html">test_interaction()</a></code> </p>
+        </td>
+        <td><p>Test interaction</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-internal-functions" class="hasAnchor"><a href="#section-internal-functions" class="anchor"></a>Internal functions</h2>
+          <p class="section-desc"><p>Internal functions that support the package</p></p>
         </th>
       </tr>
       
@@ -160,12 +259,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="generate_interaction.html">generate_interaction()</a></code> </p>
-        </td>
-        <td><p>Generate interaction data set</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="name_key.html">name_key</a></code> </p>
         </td>
         <td><p>Name key for plotting</p></td>
@@ -181,42 +274,6 @@
           <p><code><a href="norm2gamma.html">norm2gamma()</a></code> </p>
         </td>
         <td><p>norm2gamma</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_interaction.html">plot_interaction()</a></code> </p>
-        </td>
-        <td><p>Plot interaction</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_power_curve.html">plot_power_curve()</a></code> </p>
-        </td>
-        <td><p>Plot power curve</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_simple_slope.html">plot_simple_slope()</a></code> </p>
-        </td>
-        <td><p>Simple slope plot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="power_estimate.html">power_estimate()</a></code> </p>
-        </td>
-        <td><p>Power estimate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="power_interaction.html">power_interaction()</a></code> </p>
-        </td>
-        <td><p>Power analysis for interactions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="test_interaction.html">test_interaction()</a></code> </p>
-        </td>
-        <td><p>Test interaction</p></td>
       </tr>
     </tbody>
     </table>

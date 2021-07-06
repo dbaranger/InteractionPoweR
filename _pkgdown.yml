@@ -1,0 +1,45 @@
+template:
+  params:
+    ganalytics: G-0NF8EE2N1C
+  twitter:
+      creator: "@David_Baranger"
+      card: summary
+url: https://dbaranger.github.io/InteractionPoweR
+articles:
+- title: InteractionPoweR
+  navbar: ~
+  contents:
+  - articles/InteractionPoweRvignette
+  - articles/CommonQuestions
+home:
+  title: Power analyses for interactions via simulation in R
+  description: Conducts power analyses for regression models with interacting correlated variables.
+reference:
+- title: "Power analysis"
+  desc: >
+    Function to run a power analysis
+- contents:
+  - power_interaction
+- title: "Next steps"
+  desc: >
+    Interpret and visualize power analysis results
+- contents:
+  - power_estimate
+  - plot_power_curve
+  - plot_simple_slope
+- title: "A single data set"
+  desc: >
+    Simulate and plot a single data set
+- contents:
+  - generate_interaction
+  - plot_interaction
+  - test_interaction
+- title: "Internal functions"
+  desc: >
+    Internal functions that support the package
+- contents:
+  - binary.p2skew
+  - compute_adjustment
+  - name_key
+  - norm2binary
+  - norm2gamma

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# InteractionPoweR
+# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -68,7 +68,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 18.92 sec elapsed
+#> 16.55 sec elapsed
 test_power
 #> # A tibble: 1 x 1
 #>     pwr
