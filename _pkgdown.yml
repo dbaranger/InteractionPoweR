@@ -7,6 +7,9 @@ home:
 template:
   params:
     ganalytics: G-36JVDTC1K0
+    docsearch:
+      api_key: d9b5db6cf281b0bbf8f497a463b0d116
+      index_name: interactionpower
   opengraph:
     twitter:
       creator: "@David_Baranger"
