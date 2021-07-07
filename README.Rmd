@@ -13,14 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR'><img src="man/figures/logo.png" align="right" height="139"/></a>
+
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-InteractionPoweR is an R package for running power analyses for interactions in cross-sectional data sets between continuous and/or binary variables (also known as a moderation analysis). The main function is `power_interaction()`, which performs the power analysis. This is done via Monte Carlo simulation. `power_estimate()` helps to interpret the results of the power simulation, and `plot_power_curve()` and `plot_simple_slope()` generate plots to visualize the results. The function `generate_interaction()` simulates a single data set drawn from the specified population-level effects and `plot_interaction()` can be used to visualize the simulated data.
+The `{InteractionPoweR}` package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two variables, also known as 'moderation' analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson's correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can be binary, and (5) analyses can incorporate the effects of reliability and skew, both of the interacting variables, as well as of the outcome variable.
 
-**See the [website](https://dbaranger.github.io/InteractionPoweR/) for further documentation and examples.**
+**For more information see [documentation and examples](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html), and the [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
 
 Please report bugs, issues, or questions as an [Issue on Github](https://github.com/dbaranger/InteractionPoweR/issues).
 

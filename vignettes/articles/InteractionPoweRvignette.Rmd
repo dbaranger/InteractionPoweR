@@ -14,8 +14,6 @@ description: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The `InteractionPoweR` package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two variables, also known as 'moderation' analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson's correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can be binary, and (5) analyses can incorporate the effects of reliability and skew, both of the interacting variables, as well as of the outcome variable.
-
 # Introduction
 
 Interaction analyses take the form:
@@ -67,7 +65,7 @@ plot_interaction(data = example_data, # simulated data
                  )
 ```
 
-The function `test_interaction()` provides easy access to the results of the interaction regression, as well as the correlation between the variables, and the slopes of the simple-slopes:
+The function `test_interaction()` provides easy access to the results of the interaction regression, the adjusted $R^2$ of the interaction term, the 95% confidence interval of the interaction term, the shape of the interaction (`crossover.point` = the value of $X_1$ where the $X_2$ simple-slopes intersect, `shape` = the shape of the interaction, \>1 = cross-over, 1 = knock-out, \<1 = attenuated), the simple slopes of $X_2$, and the correlation between the variables:
 
 ```{r test1}
 test_interaction(data = example_data, # simulated data

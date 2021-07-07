@@ -117,7 +117,6 @@
 
     
     
-<p>The <code>InteractionPoweR</code> package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two variables, also known as ‘moderation’ analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson’s correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can be binary, and (5) analyses can incorporate the effects of reliability and skew, both of the interacting variables, as well as of the outcome variable.</p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
@@ -169,7 +168,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                  q <span class="op">=</span> <span class="fl">2</span>                <span class="co"># number of simple slopes</span>
                  <span class="op">)</span></code></pre></div>
 <p><img src="InteractionPoweRvignette_files/figure-html/fig1-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>The function <code><a href="../../reference/test_interaction.html">test_interaction()</a></code> provides easy access to the results of the interaction regression, as well as the correlation between the variables, and the slopes of the simple-slopes:</p>
+<p>The function <code><a href="../../reference/test_interaction.html">test_interaction()</a></code> provides easy access to the results of the interaction regression, the adjusted <span class="math inline">\(R^2\)</span> of the interaction term, the 95% confidence interval of the interaction term, the shape of the interaction (<code>crossover.point</code> = the value of <span class="math inline">\(X_1\)</span> where the <span class="math inline">\(X_2\)</span> simple-slopes intersect, <code>shape</code> = the shape of the interaction, &gt;1 = cross-over, 1 = knock-out, &lt;1 = attenuated), the simple slopes of <span class="math inline">\(X_2\)</span>, and the correlation between the variables:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/test_interaction.html">test_interaction</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">example_data</span>, <span class="co"># simulated data</span>
                  q <span class="op">=</span> <span class="fl">2</span>                <span class="co"># number of simple slopes</span>
