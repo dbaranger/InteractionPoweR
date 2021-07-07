@@ -158,7 +158,7 @@ generate_interaction <- function(N,
                                   r.x1.y,    r.x2.y,     r.x1x2.y,   1),       #y
                          ncol = 4, byrow = TRUE)
 
-  if(min(base::eigen(x = cormat,only.values = T)$values) <= 0){
+  if(min(base::eigen(x = cormat,only.values = T)$values) < 0){
     stop("Correlation matrix is impossible - is not positive semi-definite.")
   }
 
