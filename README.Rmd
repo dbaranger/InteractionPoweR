@@ -23,6 +23,8 @@ The `{InteractionPoweR}` package conducts power analyses for regression models i
 
 **For more information see [documentation and examples](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html), and the [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
 
+We also have a website app which implements the major functions, available [**here**](https://dbaranger.github.io/InteractionPoweR/index.html).
+
 Please report bugs, issues, or questions as an [Issue on Github](https://github.com/dbaranger/InteractionPoweR/issues).
 
 ## Installation

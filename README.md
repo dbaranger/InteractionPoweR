@@ -24,6 +24,10 @@ examples](https://dbaranger.github.io/InteractionPoweR/articles/articles/Interac
 and the
 [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
 
+We also have a website app which implements the major functions,
+available
+[**here**](https://dbaranger.github.io/InteractionPoweR/index.html).
+
 Please report bugs, issues, or questions as an [Issue on
 Github](https://github.com/dbaranger/InteractionPoweR/issues).
 
@@ -72,7 +76,7 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 16.25 sec elapsed
+#> 16.66 sec elapsed
 test_power
 #> # A tibble: 1 x 1
 #>     pwr
