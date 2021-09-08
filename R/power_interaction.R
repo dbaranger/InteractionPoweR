@@ -275,7 +275,7 @@ if(dim(settings)[1] == 0){
 
   if(dim(settings)[1] == 1 | full_simulation == T){
 
-  if(dim(settings)[1] > 1){
+
     seed.list2 = base::sample(c(1:1000000),dim(settings)[1],replace = F)
 
     power_test<-foreach::foreach(i = 1: dim(settings)[1],
@@ -344,7 +344,7 @@ if(dim(settings)[1] == 0){
 
                                            } # end of dopar
 
-  } # end of if(dim(settings)[1] > 1)
+
 
 
 #
