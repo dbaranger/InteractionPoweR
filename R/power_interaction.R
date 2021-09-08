@@ -347,65 +347,75 @@ if(dim(settings)[1] == 0){
   } # end of if(dim(settings)[1] > 1)
 
 
-
-  if(dim(settings)[1] == 1){
-
-    # if(!is.null(cl)){
-    #   chunk_settings = data.frame(iter = c(1:n.iter),
-    #                               chunks = rep(1:cl,length=n.iter))
-    # }else{
-    #   chunk_settings = data.frame(iter = c(1:n.iter),
-    #                               chunks = rep(1:1,length=n.iter))
-
-   # }
-
-    out.mat<-foreach::foreach(i = 1:n.iter,.combine = 'rbind',
-                              .packages = c('dplyr','MASS'),
-                              .export=c("test_interaction","generate_interaction",
-                                        "norm2binary","norm2gamma",
-                                        "compute_adjustment")) %do% {
-
-                                         # n_sims = base::length(chunk_settings$iter[chunk_settings$chunks == i])
-
-
-                                        #  simulation <- base::sapply(X = c(1:n_sims),FUN = function(X){
-
-                                            sim<-test_interaction(simple = T,data =
-                                                                    generate_interaction(N = settings$N[1],
-                                                                                             r.x1.y = settings$r.x1.y[1],
-                                                                                             r.x2.y = settings$r.x2.y[1],
-                                                                                             r.x1x2.y= settings$r.x1x2.y [1],
-                                                                                             r.x1.x2  = settings$r.x1.x2[1],
-                                                                                             rel.x1=settings$rel.x1[1],
-                                                                                             rel.x2=settings$rel.x2[1],
-                                                                                             rel.y=settings$rel.y[1]
-
-                                                                    ),
-                                                                  alpha = settings$alpha[1],
-                                                                  q = settings$q[1])
-
-                                           # return(sim)
-                                          #}) # end sapply
-
-
-                                         # simulation<-t(simulation)
-                                          #out.mat.outer<-cbind(out.mat.outer,settings[i,],row.names=NULL)
-                                          #out.cols<-colnames(simulation)
-                                          #simulation<-as.data.frame(matrix(unlist(simulation),ncol = length(out.cols)))
-                                         # colnames(simulation)<-out.cols
-
-                                          return(sim)
-
-                                        } # end do par
-
-    #out.mat<-t(out.mat)
-    out.mat<-cbind(out.mat,settings[1,],row.names=NULL)
-    out.cols<-colnames(out.mat)
-    out.mat<-as.data.frame(matrix(unlist(out.mat),nrow = n.iter))
-    colnames(out.mat)<-out.cols
-    power_test <- out.mat
-
-  } # end if only 1 setting row
+#
+#   if(dim(settings)[1] == 1){
+#
+#     # if(!is.null(cl)){
+#     #   chunk_settings = data.frame(iter = c(1:n.iter),
+#     #                               chunks = rep(1:cl,length=n.iter))
+#     # }else{
+#     #   chunk_settings = data.frame(iter = c(1:n.iter),
+#     #                               chunks = rep(1:1,length=n.iter))
+#
+#    # }
+#
+#     out.mat<-foreach::foreach(i = 1:n.iter,.combine = 'rbind',
+#                               .packages = c('dplyr','MASS'),
+#                               .export=c("test_interaction","generate_interaction",
+#                                         "norm2binary","norm2gamma",
+#                                         "compute_adjustment")) %do% {
+#
+#                                          # n_sims = base::length(chunk_settings$iter[chunk_settings$chunks == i])
+#
+#
+#                                         #  simulation <- base::sapply(X = c(1:n_sims),FUN = function(X){
+#
+#                                             sim<-test_interaction(simple = T,data =
+#                                                                     generate_interaction(N = settings$N[1],
+#                                                                                              r.x1.y = settings$r.x1.y[1],
+#                                                                                              r.x2.y = settings$r.x2.y[1],
+#                                                                                              r.x1x2.y= settings$r.x1x2.y [1],
+#                                                                                              r.x1.x2  = settings$r.x1.x2[1],
+#                                                                                          rel.x1=settings$rel.x1[i],
+#                                                                                          rel.x2=settings$rel.x2[i],
+#                                                                                          rel.y=settings$rel.y[i],
+#                                                                                          skew.x1 = settings$skew.x1[i],
+#                                                                                          skew.x2 = settings$skew.x2[i],
+#                                                                                          skew.y = settings$skew.y[i],
+#                                                                                          transform.x1 = transform.x1,
+#                                                                                          transform.x2 = transform.x2,
+#                                                                                          transform.y =  transform.y,
+#                                                                                          r.x1.y.adjust = settings$r.x1.y.adjust[i],
+#                                                                                          r.x2.y.adjust = settings$r.x2.y.adjust[i],
+#                                                                                          r.x1x2.y.adjust = settings$r.x1x2.y.adjust[i],
+#                                                                                          r.x1.x2.adjust = settings$r.x1.x2.adjust[i]
+#
+#                                                                     ),
+#                                                                   alpha = settings$alpha[1],
+#                                                                   q = settings$q[1])
+#
+#                                            # return(sim)
+#                                           #}) # end sapply
+#
+#
+#                                          # simulation<-t(simulation)
+#                                           #out.mat.outer<-cbind(out.mat.outer,settings[i,],row.names=NULL)
+#                                           #out.cols<-colnames(simulation)
+#                                           #simulation<-as.data.frame(matrix(unlist(simulation),ncol = length(out.cols)))
+#                                          # colnames(simulation)<-out.cols
+#
+#                                           return(sim)
+#
+#                                         } # end do par
+#
+#     #out.mat<-t(out.mat)
+#     out.mat<-cbind(out.mat,settings[1,],row.names=NULL)
+#     out.cols<-colnames(out.mat)
+#     out.mat<-as.data.frame(matrix(unlist(out.mat),nrow = n.iter))
+#     colnames(out.mat)<-out.cols
+#     power_test <- out.mat
+#
+#   } # end if only 1 setting row
 
 
 
