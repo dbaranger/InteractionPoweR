@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-The `{InteractionPoweR}` package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two variables, also known as 'moderation' analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson's correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can be binary, and (5) analyses can incorporate the effects of reliability and skew, both of the interacting variables, as well as of the outcome variable.
+The `{InteractionPoweR}` package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two variables, also known as 'moderation' analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson's correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can have anywhere from 2 (i.e., binary) to 20 discrete values, and (5) analyses can incorporate the effects of reliability and skew, both of the interacting variables, as well as of the outcome variable.
 
 **For more information see [documentation and examples](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html), and the [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
 
@@ -66,3 +66,7 @@ test_power
 ```
 
 We see that we have 80.9% power to detect the effect of interest.
+
+## Changelog
+
+* **0.1.0.5** *2/17/2022* Adds functions to handle variables with >2 discrete values (e.g., a likert scale). Also, a speed-up and minor bug-fixes. 

@@ -14,6 +14,9 @@
 #' @param skew.x1 Skew of x1. Default is 0 (normally distributed).
 #' @param skew.x2 Skew of x2. Default is 0 (normally distributed).
 #' @param skew.y Skew of y. Default is 0 (normally distributed).
+#' @param k.x1 Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
+#' @param k.x2 Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
+#' @param k.y Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
 #' @param adjust.correlations If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.
 #' @param transform.x1 Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.
 #' @param transform.x2 Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.
@@ -25,6 +28,8 @@
 #' @param detailed_results Default is FALSE. Should detailed results be reported?
 #' @param full_simulation Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.
 #' @param seed Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.
+#' @param tol Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
+#' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
 #'
 #' @importFrom dplyr "%>%"
 #' @importFrom foreach "%dopar%"
@@ -46,12 +51,15 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  skew.x1 = 0,
                                  skew.x2 = 0,
                                  skew.y = 0,
+                                 k.x1 = 0,
+                                 k.x2 = 0,
+                                 k.y = 0,
                                  transform.x1 = "default",
                                  transform.x2 = "default",
                                  transform.y = "default",
                                  adjust.correlations = T,
                                  alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,
-                                 detailed_results=FALSE,full_simulation=FALSE,
+                                 detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10,
                                  seed=NULL){
 
 if(is.null(seed)){
@@ -71,6 +79,9 @@ if(is.null(seed)){
                               skew.x1 = skew.x1,
                               skew.x2 = skew.x2,
                               skew.y = skew.y,
+                              k.x1 = k.x1,
+                              k.x2 = k.x2,
+                              k.y =  k.y,
                               alpha = alpha,
                               q = q))
 
@@ -85,6 +96,14 @@ if(is.null(seed)){
 
   if(max(abs(c( settings$r.x1.y,settings$r.x2.y,settings$r.x1.x2,settings$r.x1x2.y)))> 1 ){
     stop("All correlations must be within [-1,1]")}
+
+
+  if(any((c(settings$k.x1,settings$k.x2,settings$k.y) - floor(c(settings$k.x1,settings$k.x2,settings$k.y))) != 0 )){
+    stop("k.x1,k.x2,and k.y must all be positive integers >=2, or 0")
+  }
+  if(any(c(settings$k.x1,settings$k.x2,settings$k.y) < 0 )){
+    stop("k.x1,k.x2,and k.y must all be positive integers >=2, or 0")
+  }
 
 
   set2<-unique(settings[,c(2:5)])
@@ -132,23 +151,23 @@ if(is.null(seed)){
     }
   }
 
-
-
-
+  if(base::max(settings$k.x1)  >= 2){transform.x1 == "default"}
+  if(base::max(settings$k.x2)  >= 2){transform.x2 == "default"}
+  if(base::max(settings$k.y)  >= 2) {transform.y == "default"}
 
 
   if(transform.x1 == "default"){
-    if(base::max(settings$skew.x1) != 0){transform.x1 = "gamma"}
+    if(base::max(settings$skew.x1) != 0 & base::max(settings$k.x1) == 0 ){transform.x1 = "gamma"}
     # if(skew.x1 < 0 & skew.x1 >= -1){transform.x1 ="sn"}
    # if(min(settings$skew.x1) < 0){transform.x1 = "beta"}
   }
   if(transform.x2 == "default"){
-    if(base::max(settings$skew.x2) != 0){transform.x2 = "gamma"}
+    if(base::max(settings$skew.x2) != 0  & base::max(settings$k.x2) == 0 ){transform.x2 = "gamma"}
     # if(skew.x2 < 0 & skew.x2 >= -1){transform.x2 ="sn"}
   #  if(min(settings$skew.x2) < 0){transform.x2 = "beta"}
   }
   if(transform.y == "default"){
-    if(base::max(settings$skew.y) != 0){transform.y = "gamma"}
+    if(base::max(settings$skew.y) != 0  & base::max(settings$k.y) == 0 ){transform.y = "gamma"}
     #  if(skew.y < 0 & skew.y >= -1){transform.y = "sn"}
    # if(min(settings$skew.y) < 0){transform.y = "beta"}
   }
@@ -159,6 +178,7 @@ if(is.null(seed)){
     if(min(settings$skew.x1) == 0 & max(settings$skew.x1) == 0 &
        min(settings$skew.x2) == 0 & max(settings$skew.x2) == 0 &
        min(settings$skew.y) == 0 & max(settings$skew.y)   == 0 &
+       max(settings$k.x1) == 0 &  max(settings$k.x2) == 0 & max(settings$k.y) == 0 &
        transform.x1 == "default" & transform.x2 == "default" & transform.y == "default"){
       adjust.correlations <- F
     }
@@ -183,18 +203,17 @@ if(is.null(seed)){
 
     base::print("Adjusting correlations for variable transformations...")
 
-    settingsa<-base::unique(settings[,c(2:5,9:11)])
+    settingsa<-base::unique(settings[,c(2:5,9:14)])
 
     seed.list1 = base::sample(c(1:1000000),dim(settingsa)[1],replace = F)
 
-    # if(!is.null(cl)){settingsa$chunk<-base::rep(c(1:cl),length=dim(settingsa)[1])}else{settingsa$chunk<-1}
-    # chunks<-base::split(x = settingsa,f = settingsa$chunk)
+
 i=NULL
     new_settings<-foreach::foreach(i = 1: dim(settingsa)[1],.inorder = F,
                                    .combine = 'rbind',
                                    .packages = c('dplyr','MASS'),
                                    .export=c("test_interaction","generate_interaction",
-                                             "norm2binary","norm2gamma",
+                                             "norm2binary","norm2gamma","norm2likert",
                                              "compute_adjustment"  )) %dopar% {
 
 
@@ -203,10 +222,12 @@ i=NULL
 
 
                                                  if(settingsb$skew.x1 != 0 | settingsb$skew.x2 != 0 | settingsb$skew.y != 0 |
+                                                    settingsb$k.x1 != 0 | settingsb$k.x2 != 0 | settingsb$k.y != 0 |
                                                     transform.x1 != "default" | transform.x2 != "default" | transform.y != "default"){
 
                                                    adjustments<-base::tryCatch(expr = {
-                                                   adjustments<-compute_adjustment(r.x1.y = settingsb$r.x1.y,
+                                                   adjustments<-compute_adjustment(tol = tol,iter = iter,
+                                                                                   r.x1.y = settingsb$r.x1.y,
                                                                                    r.x2.y = settingsb$r.x2.y,
                                                                                    r.x1x2.y = settingsb$r.x1x2.y,
                                                                                    r.x1.x2 = settingsb$r.x1.x2,
@@ -215,7 +236,10 @@ i=NULL
                                                                                    skew.y = settingsb$skew.y,
                                                                                    transform.x1 = transform.x1,
                                                                                    transform.x2 = transform.x2,
-                                                                                   transform.y =  transform.y)
+                                                                                   transform.y =  transform.y,
+                                                                                   k.x1 = settingsb$k.x1,
+                                                                                   k.x2 = settingsb$k.x2,
+                                                                                   k.y = settingsb$k.y)
                                                    },
                                                    error = function(cond){adjustments<-rep(NA,6) })
 
@@ -230,16 +254,6 @@ i=NULL
                                                  return(settingsb)
 
                                                }
-                                                #)
-
-                                             #   temp_names<-rownames(adjustments_chunk)
-                                             #   adjustments_chunk<-as.data.frame(matrix(unlist(adjustments_chunk),
-                                             #                                           byrow = T,nrow = dim(settingsc)[1]))
-                                             #   colnames(adjustments_chunk)<-temp_names
-                                             #
-                                             #   return(adjustments_chunk)
-                                             #
-                                             # }
 
 
 
@@ -268,214 +282,202 @@ if(dim(settings)[1] == 0){
   i<-NULL
   #d<-NULL
 
+
+
+
+  new.order = function(input_dat,col_names){
+    col_index = base::match(base::colnames(input_dat),col_names)[!base::is.na(base::match(base::colnames(input_dat),col_names))]
+
+    for(i in 1: base::length(col_index)){
+      order1 = base::order(base::as.matrix(input_dat[,col_index[i]]))
+      input_dat = input_dat[order1,]
+    }
+
+    return(input_dat)
+  }
+
+
   print(paste("Performing",(dim(settings)[1]*n.iter) ,"simulations",sep=" "))
 
 
+  if(!is.null(cl)){
+    settings$chunk<-  base::sample(base::rep(c(1:cl),length=dim(settings)[1]),replace = F)
 
+  }else{settings$chunk<-1}
 
-  if(dim(settings)[1] == 1 | full_simulation == T){
+  settings_chunks<-base::split(x = settings,f = settings$chunk)
 
+  seed.list3 = base::sample(c(1:10000000),length(settings_chunks),replace = F)
 
-    seed.list2 = base::sample(c(1:1000000),dim(settings)[1],replace = F)
-
-    power_test<-foreach::foreach(i = 1: dim(settings)[1],
-                                 .combine = 'rbind',
-                                 .packages = c('dplyr','MASS'),
-                                 .export=c("test_interaction","generate_interaction",
-                                           "norm2binary","norm2gamma" )) %dopar% {
-
-                                            # settingsd<-settings[d,]
-                                             #settingsd<-settingsd[,-18]
-                                           #  a = c(1:dim(settingsd)[1])
-
-                                            # out.mat.outer<-sapply(a,FUN = function(a){
-
-                                             #  i = a
-                                               base::set.seed(seed.list2[i])
-
-                                             out.mat<-sapply(X = c(1:n.iter),FUN = function(X){
-                                                     # i = X
-                                                 test_interaction(simple = T,data =
-                                                                    generate_interaction(
-                                                                      adjust.correlations = F,
-                                                                      N = settings$N[i],
-                                                                      r.x1.y = settings$r.x1.y[i],
-                                                                      r.x2.y = settings$r.x2.y[i],
-                                                                      r.x1x2.y= settings$r.x1x2.y [i],
-                                                                      r.x1.x2  = settings$r.x1.x2[i],
-                                                                      rel.x1=settings$rel.x1[i],
-                                                                      rel.x2=settings$rel.x2[i],
-                                                                      rel.y=settings$rel.y[i],
-                                                                      skew.x1 = settings$skew.x1[i],
-                                                                      skew.x2 = settings$skew.x2[i],
-                                                                      skew.y = settings$skew.y[i],
-                                                                      transform.x1 = transform.x1,
-                                                                      transform.x2 = transform.x2,
-                                                                      transform.y =  transform.y,
-                                                                      r.x1.y.adjust = settings$r.x1.y.adjust[i],
-                                                                      r.x2.y.adjust = settings$r.x2.y.adjust[i],
-                                                                      r.x1x2.y.adjust = settings$r.x1x2.y.adjust[i],
-                                                                      r.x1.x2.adjust = settings$r.x1.x2.adjust[i]
-                                                                    ),
-                                                                  alpha = settings$alpha[i],
-                                                                  q = settings$q[i])
-
-
-
-                                               }) # end of inner sapply
-
-                                               out.mat<-t(out.mat)
-                                               out.mat<-cbind(out.mat,settings[i,],row.names=NULL)
-                                               out.cols<-colnames(out.mat)
-                                               out.mat<-as.data.frame(matrix(unlist(out.mat),nrow = n.iter))
-                                               colnames(out.mat)<-out.cols
-
-                                               return(out.mat)
-
-                                            # }) # end of outer sapply
-
-                                            # out.mat.outer<-t(out.mat.outer)
-                                             #out.mat.outer<-cbind(out.mat.outer,settings[i,],row.names=NULL)
-                                           #  out.cols<-colnames(out.mat.outer)
-                                            # out.mat.outer<-as.data.frame(matrix(unlist(out.mat.outer),ncol = length(out.cols)))
-                                            # colnames(out.mat.outer)<-out.cols
-
-                                             #return(out.mat)
-
-                                           } # end of dopar
-
-
-
-
-#
-#   if(dim(settings)[1] == 1){
-#
-#     # if(!is.null(cl)){
-#     #   chunk_settings = data.frame(iter = c(1:n.iter),
-#     #                               chunks = rep(1:cl,length=n.iter))
-#     # }else{
-#     #   chunk_settings = data.frame(iter = c(1:n.iter),
-#     #                               chunks = rep(1:1,length=n.iter))
-#
-#    # }
-#
-#     out.mat<-foreach::foreach(i = 1:n.iter,.combine = 'rbind',
-#                               .packages = c('dplyr','MASS'),
-#                               .export=c("test_interaction","generate_interaction",
-#                                         "norm2binary","norm2gamma",
-#                                         "compute_adjustment")) %do% {
-#
-#                                          # n_sims = base::length(chunk_settings$iter[chunk_settings$chunks == i])
-#
-#
-#                                         #  simulation <- base::sapply(X = c(1:n_sims),FUN = function(X){
-#
-#                                             sim<-test_interaction(simple = T,data =
-#                                                                     generate_interaction(N = settings$N[1],
-#                                                                                              r.x1.y = settings$r.x1.y[1],
-#                                                                                              r.x2.y = settings$r.x2.y[1],
-#                                                                                              r.x1x2.y= settings$r.x1x2.y [1],
-#                                                                                              r.x1.x2  = settings$r.x1.x2[1],
-#                                                                                          rel.x1=settings$rel.x1[i],
-#                                                                                          rel.x2=settings$rel.x2[i],
-#                                                                                          rel.y=settings$rel.y[i],
-#                                                                                          skew.x1 = settings$skew.x1[i],
-#                                                                                          skew.x2 = settings$skew.x2[i],
-#                                                                                          skew.y = settings$skew.y[i],
-#                                                                                          transform.x1 = transform.x1,
-#                                                                                          transform.x2 = transform.x2,
-#                                                                                          transform.y =  transform.y,
-#                                                                                          r.x1.y.adjust = settings$r.x1.y.adjust[i],
-#                                                                                          r.x2.y.adjust = settings$r.x2.y.adjust[i],
-#                                                                                          r.x1x2.y.adjust = settings$r.x1x2.y.adjust[i],
-#                                                                                          r.x1.x2.adjust = settings$r.x1.x2.adjust[i]
-#
-#                                                                     ),
-#                                                                   alpha = settings$alpha[1],
-#                                                                   q = settings$q[1])
-#
-#                                            # return(sim)
-#                                           #}) # end sapply
-#
-#
-#                                          # simulation<-t(simulation)
-#                                           #out.mat.outer<-cbind(out.mat.outer,settings[i,],row.names=NULL)
-#                                           #out.cols<-colnames(simulation)
-#                                           #simulation<-as.data.frame(matrix(unlist(simulation),ncol = length(out.cols)))
-#                                          # colnames(simulation)<-out.cols
-#
-#                                           return(sim)
-#
-#                                         } # end do par
-#
-#     #out.mat<-t(out.mat)
-#     out.mat<-cbind(out.mat,settings[1,],row.names=NULL)
-#     out.cols<-colnames(out.mat)
-#     out.mat<-as.data.frame(matrix(unlist(out.mat),nrow = n.iter))
-#     colnames(out.mat)<-out.cols
-#     power_test <- out.mat
-#
-#   } # end if only 1 setting row
-
-
-
-
- # power_test<-power_test[,is.na(match(colnames(power_test),"chunk"))]
-
-  new_settings<-power_test[,c(which(colnames(power_test) == "N"):dim(power_test)[2])]
-
-  dimnum<- sapply(X=c(1:dim(new_settings)[2]), FUN=function(x){length(table(new_settings[,x]))})
-  grouping_variables<-colnames(new_settings)[dimnum>1]
+  dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
+  grouping_variables<-colnames(settings)[dimnum>1]
 
   adjust_col = base::grep(pattern = "adjust",x = grouping_variables)
   if(base::length(adjust_col) > 0){grouping_variables<-grouping_variables[-adjust_col]}
 
-  #grouping_variables<-colnames(results(power_test)[grep("+test", colnames(results(power_test)))])
-
-  power_results<-power_test %>%
-    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-    dplyr::summarise(.groups  = "drop_last",
-                     pwr = mean(.data$sig_int ))
-
-  power_results2<-power_test %>% # effect size
-    dplyr::filter(.data$sig_int == 1) %>%
-    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-    dplyr::summarise(.groups = "drop_last",
-                     x1x2_est_mean = mean(.data$x1x2_est),
-
-                     x1x2_r2_mean= mean(.data$x1x2_r2),
-                     crossover_mean = mean(.data$crossover),
-                     shape_mean = mean(.data$shape),
-                     min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
-                     min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
-                     max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
-                     max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
-
-
-  power_results3<-power_test %>% # mean effects
-    dplyr::filter(.data$sig_int == 1) %>%
-    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-    dplyr::summarise(.groups = "drop_last",
-                     x1_pwr = mean( .data$x1_p > alpha),
-                     x2_pwr = mean( .data$x2_p > alpha)
-                     # ,
-                     #
-                     # r_x1_y_mean = mean(.data$r_x1_y),
-                     # r_x2_y_mean = mean(.data$r_x2_y),
-                     # r_x1_x2_mean = mean(.data$r_x1_x2),
-                     # r_y_x1x2_mean = mean(.data$r_y_x1x2),
-                     # r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                     # r_x2_x1x2_mean = mean(.data$r_x2_x1x2)
-
-    )
+  adjust_col = base::grep(pattern = "chunk",x = grouping_variables)
+  if(base::length(adjust_col) > 0){grouping_variables<-grouping_variables[-adjust_col]}
 
   quants = c(.025,.5,.975) #quantiles
 
-  power_results4<-power_test %>% # precision
+  d=NULL
+
+  if(dim(settings)[1] == 1){ grouping_variables = "N"}
+
+  power_test<-foreach::foreach(d = 1: length(settings_chunks),
+                              .combine = 'rbind',
+                              .packages = c('dplyr','MASS'),
+                              .export=c("test_interaction","generate_interaction","norm2likert",
+                                        "norm2binary","norm2gamma" )) %dopar% {
+
+                                          base::set.seed(seed.list3[d])
+
+                                          settingsd<-settings_chunks[[d]]
+
+                                          for (i in 1:dim(settingsd)[1] ){
+
+                                              test_data =  generate_interaction(
+                                              adjust.correlations = F,
+                                              N = settingsd$N[i] * n.iter,
+                                              r.x1.y = settingsd$r.x1.y[i],
+                                              r.x2.y = settingsd$r.x2.y[i],
+                                              r.x1x2.y= settingsd$r.x1x2.y [i],
+                                              r.x1.x2  = settingsd$r.x1.x2[i],
+                                              rel.x1=settingsd$rel.x1[i],
+                                              rel.x2=settingsd$rel.x2[i],
+                                              rel.y=settingsd$rel.y[i],
+                                              k.x1 = settingsd$k.x1[i],
+                                              k.x2 = settingsd$k.x2[i],
+                                              k.y = settingsd$k.y[i],
+                                              skew.x1 = settingsd$skew.x1[i],
+                                              skew.x2 = settingsd$skew.x2[i],
+                                              skew.y = settingsd$skew.y[i],
+                                              transform.x1 = transform.x1,
+                                              transform.x2 = transform.x2,
+                                              transform.y =  transform.y,
+                                              r.x1.y.adjust = settingsd$r.x1.y.adjust[i],
+                                              r.x2.y.adjust = settingsd$r.x2.y.adjust[i],
+                                              r.x1x2.y.adjust = settingsd$r.x1x2.y.adjust[i],
+                                              r.x1.x2.adjust = settingsd$r.x1.x2.adjust[i] )
+
+                                            test_data <- aperm(array(t(test_data),
+                                                                     list(4,settingsd$N[i],n.iter)), perm = c(2,1,3))
+
+                                             for(d in 1:n.iter){
+                                              a1=test_data[,,d] %>% as.data.frame()
+                                              colnames(a1) = c("x1","x2","y","x1x2")
+
+                                              temp = test_interaction( alpha = settingsd$alpha[i],
+                                                                       simple = T,
+                                                                       data = a1,
+                                                                       q = settingsd$q[i])
+
+                                              if(d ==1){
+                                                out.f = matrix(data = NA,nrow = n.iter,ncol = dim(temp)[2]) %>% as.data.frame()
+                                                colnames(out.f) = colnames(temp)
+                                              }
+
+                                              out.f[d,] = temp
+                                            }
+
+                                            out.f<-cbind(out.f,settingsd[i,],row.names=NULL)
+                                            if(full_simulation == TRUE) {out.f2 = out.f
+                                            }else{
+                                              settings_keep = settingsd[i,match(x = grouping_variables,colnames(settingsd))] %>% as.data.frame()
+                                              colnames(settings_keep) = grouping_variables
+
+                                              power_results<-
+                                                out.f %>%
+                                                dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+                                                dplyr::summarise(.groups  = "keep",
+                                                                 pwr = mean(.data$sig_int ) )
+
+                                              if(detailed_results == TRUE){
+                                                power_results3<-
+                                                  out.f %>%
+                                                  dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+                                                  dplyr::summarise(.groups  = "keep",
+                                                                   x1_pwr = mean( .data$x1_p > alpha),
+                                                                   x2_pwr = mean( .data$x2_p > alpha)
+                                                  )
+                                                power_results2<-out.f %>% # effect size
+                                                  dplyr::filter(.data$sig_int == 1) %>%
+                                                  dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+                                                  dplyr::summarise(.groups = "keep",
+                                                                   x1x2_est_mean = mean(.data$x1x2_est),
+                                                                   x1x2_r2_mean= mean(.data$x1x2_r2),
+                                                                   crossover_mean = mean(.data$crossover),
+                                                                   shape_mean = mean(.data$shape),
+                                                                   shape_q_2.5 = unname(stats::quantile(.data$shape,quants)[1]),
+                                                                   shape_q_97.5 = unname(stats::quantile(.data$shape,quants)[3]),
+                                                                   crossover_q_2.5 = unname(stats::quantile(.data$crossover,quants)[1]),
+                                                                   crossover_q_97.5 = unname(stats::quantile(.data$crossover,quants)[3]),
+                                                                   min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                                                                   min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                                                                   max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
+                                                                   max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
+                                                                   x1x2_95_CI_2.5_mean = mean(.data$x1x2_95confint_25 ),
+                                                                   x1x2_95_CI_97.5_mean = mean(.data$x1x2_95confint_975 ),
+                                                                   x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25),
+
+                                                                   r_y_x1x2_q_2.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
+                                                                   r_y_x1x2_q_50.0 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
+                                                                   r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3]),
+                                                                   x1_est_mean   = mean(.data$x1_est),
+                                                                   x2_est_mean = mean(.data$x2_est),
+                                                                   r_x1_y_mean = mean(.data$r_x1_y),
+                                                                   r_x2_y_mean = mean(.data$r_x2_y),
+                                                                   r_x1_x2_mean = mean(.data$r_x1_x2),
+                                                                   r_y_x1x2_mean = mean(.data$r_y_x1x2),
+                                                                   r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
+                                                                   r_x2_x1x2_mean = mean(.data$r_x2_x1x2))
+
+
+                                                power_results4 = merge(power_results3,power_results2)
+                                                power_results = merge(power_results,power_results4)
+                                              }
+                                              out.f2 = merge(settings_keep,power_results)
+                                            }
+
+                                            if(i == 1){out.mat = out.f2}else{out.mat = rbind(out.mat,out.f2)}
+
+                                          } # close settingsd loop
+                                        return(out.mat)
+                                        } # close dopar
+
+
+
+  if(full_simulation == TRUE) {
+
+  power_results<-
+    power_test %>%
+      dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+      dplyr::summarise(.groups  = "keep",
+                     pwr = mean(.data$sig_int )
+                     )
+  power_results3<-
+    power_test %>%
+    dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
+    dplyr::summarise(.groups  = "keep",
+                     x1_pwr = mean( .data$x1_p < alpha),
+                     x2_pwr = mean( .data$x2_p < alpha)
+    )
+  power_results2<-power_test %>% # effect size
     dplyr::filter(.data$sig_int == 1) %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-    dplyr::summarise(.groups = "drop_last",
-
+    dplyr::summarise(.groups = "keep",
+                     x1x2_est_mean = mean(.data$x1x2_est),
+                     x1x2_r2_mean= mean(.data$x1x2_r2),
+                     crossover_mean = mean(.data$crossover),
+                     shape_mean = mean(.data$shape),
+                     shape_q_2.5 = unname(stats::quantile(.data$shape,quants)[1]),
+                     shape_q_97.5 = unname(stats::quantile(.data$shape,quants)[3]),
+                     crossover_q_2.5 = unname(stats::quantile(.data$crossover,quants)[1]),
+                     crossover_q_97.5 = unname(stats::quantile(.data$crossover,quants)[3]),
+                     min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                     min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
+                     max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
+                     max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
                      x1x2_95_CI_2.5_mean = mean(.data$x1x2_95confint_25 ),
                      x1x2_95_CI_97.5_mean = mean(.data$x1x2_95confint_975 ),
                      x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25),
@@ -485,214 +487,31 @@ if(dim(settings)[1] == 0){
                      r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3]),
                      x1_est_mean   = mean(.data$x1_est),
                      x2_est_mean = mean(.data$x2_est),
-    )
+                     r_x1_y_mean = mean(.data$r_x1_y),
+                     r_x2_y_mean = mean(.data$r_x2_y),
+                     r_x1_x2_mean = mean(.data$r_x1_x2),
+                     r_y_x1x2_mean = mean(.data$r_y_x1x2),
+                     r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
+                     r_x2_x1x2_mean = mean(.data$r_x2_x1x2))
 
+  power_results4 = merge(power_results3,power_results2)
 
-  results<-power_results
+  power_results<-base::merge(power_results,power_results4)
 
-  if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
-                                              results<-merge(results,power_results4,all=T)
-                                                 results<-merge(results,power_results3,all=T)}
+  results = list()
+  results$results = power_results
+  #power_test = power_test %>% dplyr::arrange(.vars = dplyr::vars(dplyr::all_of(grouping_variables)))
+  power_test = new.order(input_dat = power_test,col_names = grouping_variables)
 
-  pwr_col = base::which(base::colnames(results) == "pwr") - 1
-  results = results %>% dplyr::arrange(results[,c(1:pwr_col)])
+  results$simulation  = power_test
 
+  }else{
+    #power_test = power_test %>% dplyr::arrange(.vars = dplyr::vars(dplyr::all_of(grouping_variables)))
+    power_test = new.order(input_dat = power_test,col_names = grouping_variables)
 
-  if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
+    results = power_test
 
-
-  }
-
-
-  if(dim(settings)[1] > 1 & full_simulation == F){ # start chunked loop
-
-
-    if(!is.null(cl)){settings$chunk<-base::rep(c(1:cl),length=dim(settings)[1])}else{settings$chunk<-1}
-    settings_chunks<-base::split(x = settings,f = settings$chunk)
-
-    seed.list3 = base::sample(c(1:1000000),length(settings_chunks),replace = F)
-
-
-    d=NULL
-
-    out_final<-foreach::foreach(d = 1: length(settings_chunks),
-                                .combine = 'rbind',
-                                .packages = c('dplyr','MASS'),
-                                .export=c("test_interaction","generate_interaction",
-                                          "norm2binary","norm2gamma" )) %dopar% {
-
-                                            base::set.seed(seed.list3[d])
-
-                                            settingsd<-settings_chunks[[d]]
-                                            a = c(1:dim(settingsd)[1])
-
-
-                                            #settingsd<-settingsd[,-18]
-
-                                            out.mat.outer<-sapply(a,FUN = function(a1){
-
-                                              i = a1
-                                              out.mat<-sapply(X = c(1:n.iter),FUN = function(X){
-                                                # i = X
-                                                t1 = test_interaction(simple = T,data =
-                                                                        generate_interaction(
-                                                                          adjust.correlations = F,
-                                                                          N = settingsd$N[i],
-                                                                          r.x1.y = settingsd$r.x1.y[i],
-                                                                          r.x2.y = settingsd$r.x2.y[i],
-                                                                          r.x1x2.y= settingsd$r.x1x2.y [i],
-                                                                          r.x1.x2  = settingsd$r.x1.x2[i],
-                                                                          rel.x1=settingsd$rel.x1[i],
-                                                                          rel.x2=settingsd$rel.x2[i],
-                                                                          rel.y=settingsd$rel.y[i],
-                                                                          skew.x1 = settingsd$skew.x1[i],
-                                                                          skew.x2 = settingsd$skew.x2[i],
-                                                                          skew.y = settingsd$skew.y[i],
-                                                                          transform.x1 = transform.x1,
-                                                                          transform.x2 = transform.x2,
-                                                                          transform.y =  transform.y,
-                                                                          r.x1.y.adjust = settingsd$r.x1.y.adjust[i],
-                                                                          r.x2.y.adjust = settingsd$r.x2.y.adjust[i],
-                                                                          r.x1x2.y.adjust = settingsd$r.x1x2.y.adjust[i],
-                                                                          r.x1.x2.adjust = settingsd$r.x1.x2.adjust[i]
-                                                                        ),
-                                                                      alpha = settingsd$alpha[i],
-                                                                      q = settingsd$q[i])
-
-                                                return(t1)
-
-                                              }) # end of inner sapply
-
-                                              out.mat<-t(out.mat)
-                                              #    out.mat<-cbind(out.mat,settings[i,],row.names=NULL)
-                                              out.cols<-colnames(out.mat)
-                                              out.mat<-as.data.frame(matrix(unlist(out.mat),nrow = n.iter))
-                                              colnames(out.mat)<-out.cols
-
-                                              # return(out.mat)
-
-
-                                              power_test=out.mat
-
-
-                                              settings_e<-settingsd[i,]
-                                              adjust_col = base::grep(pattern = c("adjust"),x = colnames(settings_e))
-                                              chunk_col = base::grep(pattern = c("chunk"),x = colnames(settings_e))
-                                              settings_e = settings_e[,-c(adjust_col,chunk_col)]
-
-
-                                              power_results<-power_test %>%
-                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-                                                dplyr::summarise(.groups  = "drop_last",
-                                                                 pwr = mean(.data$sig_int ))
-
-                                              power_results2<-power_test %>%
-                                                dplyr::filter(.data$sig_int == 1) %>%
-                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-                                                dplyr::summarise(.groups = "drop_last",
-                                                                 x1x2_est_mean = mean(.data$x1x2_est),
-                                                                 x1x2_r2_mean= mean(.data$x1x2_r2),
-                                                                 crossover_mean = mean(.data$crossover),
-                                                                 shape_mean = mean(.data$shape),
-
-                                                                  min.lwr = unname(stats::quantile(.data$est_min)[3]- (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
-                                                                 min.upr = unname(stats::quantile(.data$est_min)[3]+ (diff(stats::quantile(.data$est_min)[c(2,4)])*ss.IQR))  ,
-                                                                 max.lwr = unname(stats::quantile(.data$est_max)[3]- (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  ,
-                                                                 max.upr = unname(stats::quantile(.data$est_max)[3]+ (diff(stats::quantile(.data$est_max)[c(2,4)])*ss.IQR))  )
-
-
-                                              power_results3<-power_test %>%
-                                               # dplyr::filter(.data$sig_int == 1) %>%
-                                                #dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-                                                dplyr::summarise(.groups = "drop_last",
-
-                                                                 x1_pwr = mean( .data$x1_p < alpha),
-                                                                 x2_pwr = mean( .data$x2_p < alpha)
-
-
-                                                                 # r_x1_y_mean = mean(.data$r_x1_y),
-                                                                 # r_x2_y_mean = mean(.data$r_x2_y),
-                                                                 # r_x1_x2_mean = mean(.data$r_x1_x2),
-                                                                 # r_y_x1x2_mean = mean(.data$r_y_x1x2),
-                                                                 # r_x1_x1x2_mean = mean(.data$r_x1_x1x2),
-                                                                 # r_x2_x1x2_mean = mean(.data$r_x2_x1x2),
-
-                                                )
-
-                                              quants = c(.025,.5,.975) #quantiles
-
-                                              power_results4<-power_test %>%
-                                                dplyr::filter(.data$sig_int == 1) %>%
-                                               # dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
-                                                dplyr::summarise(.groups = "drop_last",
-
-                                                                 x1x2_95_CI_2.5_mean = mean(.data$x1x2_95confint_25 ),
-                                                                 x1x2_95_CI_97.5_mean = mean(.data$x1x2_95confint_975 ),
-                                                                 x1x2_95_CI_width_mean = mean(.data$x1x2_95confint_975 - .data$x1x2_95confint_25),
-
-                                                                 r_y_x1x2_q_2.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[1]),
-                                                                 r_y_x1x2_q_50.0 = unname(stats::quantile(.data$r_y_x1x2,quants)[2]),
-                                                                 r_y_x1x2_q_97.5 = unname(stats::quantile(.data$r_y_x1x2,quants)[3]),
-                                                                 x1_est_mean   =mean(.data$x1_est),
-                                                                 x2_est_mean = mean(.data$x2_est)
-                                                )
-
-
-                                              results<-power_results
-                                              results<-merge(results,settings_e,all = T)
-
-                                              if(detailed_results == TRUE){results<-merge(results,power_results2,all=T)
-                                                                           results<-merge(results,power_results4,all=T)
-                                                                           results<-merge(results,power_results3,all=T)
-                                                                         }
-
-                                              if(full_simulation == TRUE){results<-list(results = results, simulation=power_test)  }
-
-
-                                              return(results)
-
-                                            }) # end of outer sapply
-
-                                            out.mat.outer<-t(out.mat.outer)
-                                            #out.mat.outer<-cbind(out.mat.outer,settings[i,],row.names=NULL)
-                                            out.cols<-colnames(out.mat.outer)
-                                            out.mat.outer<-as.data.frame(matrix(unlist(out.mat.outer),ncol = length(out.cols)))
-                                            colnames(out.mat.outer)<-out.cols
-
-                                            return(out.mat.outer)
-
-                                          } # end of dopar
-
-
-    settings_f = out_final[,c(2:14)]  # ugh hard coded
-    group_cols = base::apply(settings_f,2,function(X) base::length(base::table(X)))>1
-    settings_e = base::as.data.frame(settings_f[,group_cols])
-    colnames(settings_e) = colnames(settings_f)[group_cols]
-
-    #results = base::cbind(settings_e,out_final$pwr,out_final[,c(2:5)])
-    results = base::cbind(out_final$pwr,settings_e)
-    colnames(results)[1] = "pwr"
-
-    if(detailed_results == TRUE){
-      results<-base::cbind(results,
-                           out_final[,c(base::which(colnames(out_final)=="x1x2_est_mean"): base::which(colnames(out_final)=="x2_pwr")   )]  )}
-
-    order_cols = stats::na.omit(match(colnames(settings_f),base::colnames(results)))
-
-    # results = base::eval(
-    #   base::parse(
-    #     text = paste("results[base::order(",paste("results[,",order_cols,"]",collapse = ","), "),]")))
-
-    num_cols = c(1:dim(results)[2])
-    results_rest = results[,-c(1,match(order_cols,num_cols))]
-    results = cbind(results[,c(order_cols,1)],results_rest)
-
-   pwr_col = base::which(base::colnames(results) == "pwr") - 1
-
-   results = results %>% dplyr::arrange(results[,c(1:pwr_col)])
-
-    }# end chunked loop
-
+    }
 
 
   if(!is.null(cl)){
@@ -700,11 +519,7 @@ if(dim(settings)[1] == 0){
     foreach::registerDoSEQ()
   }
 
+
+
   return(results)
-
-
-
-
-
-
 }

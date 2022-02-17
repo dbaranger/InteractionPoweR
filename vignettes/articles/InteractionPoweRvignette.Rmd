@@ -240,31 +240,55 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
 
 These plots make it clear how large of an effect reliability will have on your results. In this simulation, even a reliability of "acceptable" or "good" (reliability = 0.8), is enough to bring our power down, from 0.9 to 0.63!
 
-# Binary and skewed variables
+# Binary/Likert and skewed variables
 
-`InteractionPoweR` simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary and/or skewed. Typically, when a continuous and normal variable is transformed to be binary and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
+`InteractionPoweR` simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/likert (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/likert and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable or to measure that trait with a likert scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
 
-`InteractionPoweR` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/skewed variables. To circumvent the problem of variable transformations altering correlations, `InteractionPoweR` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
+`InteractionPoweR` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/likert/skewed variables. To circumvent the problem of variable transformations altering correlations, `InteractionPoweR` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
 
-The flags `transform.x1`, `transform.x2`, and `transform.y` control what distribution $X_1$, $X_2$, and $Y$ are transformed to. Currently, this flag is useful for binarizing, (i.e. dichotomizing) a variable, as in `transform.x1 = "binary"`. The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. We intend to add additional distribution options in future releases. If a `skew` is specified, the respective `transform` flag will be automatically set to `"gamma"`, unless the user specifies `"binary"`. If a variable is binary, the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default.
+The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags `k.x1`, `k.x2`, and `k.y` control the number of discrete values each variable takes (i.e., `k.x1 =2` means that `x1` is a binary variable, while `k.x2 = 5` means that `x2` is a likert-variable). If a variable is binary (i.e., `k=2`), the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default. The flags `transform.x1`, `transform.x2`, and `transform.y`are retained for backwards compatibility with prior versions of the package. Setting one of these to `"binary"` is equivalent to `k=2`.  
+
+## Binary
 
 Here's a single data set where x1, x2, and y are all binary. Note that when $Y$ is binary, the analysis is run as a logistic regression.
 
 ```{r fig8, warning=F,message=F,error=F,fig.height = 4, fig.width = 6, fig.align = "center"}
-# Normal
+
 test_data = generate_interaction(
                   N = 450,                        # sample size
                   r.x1.y = .2,                    # correlation between x1 and y
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2,                   # correlation between x1 and x2
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
-                  transform.x1 = "binary",        # x1 is binary
-                  transform.x2 = "binary",        # x2 is binary
-                  transform.y = "binary",         # y is binary
+                  k.x1 = 2,                       # x1 is binary
+                  k.x2 = 2,                       # x2 is binary
+                  k.y = 2,                        # y is binary
                   adjust.correlations = TRUE)     # Adjust correlations for skew?  
 
 plot_interaction(data =test_data )
 ```
+
+## Likert
+
+Here's an example showing the effects of artificially discretizing `x1` on power. We see that power is lower when there are fewer discrete values. 
+
+```{r fig9, warning=F,message=F,error=F,fig.height = 4, fig.width = 6, fig.align = "center"}
+
+power_test = power_interaction(
+                  n.iter=10000,
+                  N = 450,                        # sample size
+                  r.x1.y = .2,                    # correlation between x1 and y
+                  r.x2.y = .1,                    # correlation between x2 and y
+                  r.x1.x2 = .2,                   # correlation between x1 and x2
+                  r.x1x2.y = .15,                 # correlation between x1x2 and y
+                  k.x1 = seq(2,10,2),             # x1 has 2-10 discrete values
+                  adjust.correlations = FALSE,cl=5)     # Adjust correlations for skew?  
+
+plot_power_curve(power_test,power_target = .9)
+```
+
+
+## Skew
 
 We can also examine the effects on power when the actual variable is skewed:
 
@@ -289,19 +313,19 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
 
 Beyond power and the range of simple slopes, `InteractionPoweR` generates a lot of additional information about the simulations. These can be optionally returned using `detailed_results = TRUE` and `full_simulation = TRUE`. By default, both of these flags are `FALSE`. `detailed_results` returns additional information for each unique setting combination, including the mean correlation structure between the simulated variables across `niter` simulations, and the mean regression coefficients. `full_simulation`, as the name suggests, returns the output of `test_interaction()` for every single simulated data set that `power_interaction()` generates. The output can be quite large (i.e. if 10,000 simulations are run, it will have 10,000 rows).
 
-### Detailed results
+## Detailed results
 
 Let's return to our example of examining a range of interaction effect sizes, except now with `detailed_results = TRUE`. This yields a lot more information about what the simulated data looked like, on average.
 
 ```{r message=F}
 power_test = power_interaction(n.iter = 1000,    # number of simulations
                   alpha = 0.05,                  # p-value
-                  N = 350                ,       # sample size
+                  N = seq(50,200,50)  ,       # sample size
                   r.x1.y = .2,                   # correlation between x1 and y
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
-                  r.x1x2.y = seq(.1,.2,by=.01),  # correlation between x1x2 and y
-                  cl = 6,                        # number of clusters for parallel analyses
+                  r.x1x2.y = .4,                 # correlation between x1x2 and y
+                  cl = 4,                        # number of clusters for parallel analyses
                   detailed_results = TRUE        # return detailed results       
                    )
 power_test
@@ -309,7 +333,9 @@ power_test
 
 What is all this?
 
-The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `x1x2_est_mean` and `x1x2_r2_mean`. This is the *mean* effect size ($B_3$) and mean change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. `crossover` and `shape` are the value of $X_1$ where the $X_2$ simple slopes intersect, and the shape of the interaction ($B_3 / B_1$), which reflects whether it is a knock-out, attenuated, or crossover interaction.
+The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `x1_pwr1` and `x2_pwr`. This is the power to detect an effect of x1 and x2 *in the interaction model*. `x1x2_est_mean` and `x1x2_r2_mean` are then the *mean* effect size ($B_3$) and mean change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. `crossover` and `shape` are the value of $X_1$ where the $X_2$ simple slopes intersect, and the shape of the interaction ($B_3 / B_1$), which reflects whether it is a knock-out, attenuated, or crossover interaction. We also give the mean upper and lower bounds of the 95% confidence interval of the shape and crossover. 
+
+For example, one interesting insight we can gain here is that even though `n=50` has *76%* power in this analysis, the *observed* `shape` will vary widely. The confidence interval indicates that it is even likely that we will observe significant effects where the interaction has the *opposite* shape from anticipated. In fact, we don't see 95% of simulations yielding a shape that is consistent with our hypothesis that `r.x1x2.y > r.x1.y`, until `N=200`, which has *99.99%* power!  
 
 Next we have `min.lwr`, `min.upr`, `max.lwr`, and `max.upr`. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (`q`) is 2 (i.e. a 50/50 split), and $X_2$ is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the `IQR` flag. The default value for `IQR` is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.
 
@@ -317,7 +343,7 @@ Next we have `min.lwr`, `min.upr`, `max.lwr`, and `max.upr`. These reflect the r
 
 `x1_est_mean` and `x2_est_mean` are the mean main effects of $X_1$ and $X_2$, and `pwr_x1` and `pwr_x2` is the power to detect those main effects, in the context of the full interaction regression.
 
-### Full results
+## Full results
 
 `full_results` can be useful when one wants a better grasp of what goes into the power analysis. If we return to our first example, we can see what range of sample-level correlations one can expect to see, given a population-level correlation:
 

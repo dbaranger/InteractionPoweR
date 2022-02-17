@@ -5,7 +5,7 @@
 \alias{name_key}
 \title{Name key for plotting}
 \format{
-A data frame with 15 rows and 2 variables
+A data frame with 25 rows and 2 variables
 }
 \usage{
 data(name_key)

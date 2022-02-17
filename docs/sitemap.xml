@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/404.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/CommonQuestions.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweRvignette.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/authors.html</loc>
+  </url>
+  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/index.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/LICENSE.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/binary.p2skew.html</loc>
@@ -13,6 +37,9 @@
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/generate_interaction.html</loc>
   </url>
   <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/name_key.html</loc>
   </url>
   <url>
@@ -20,6 +47,9 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/norm2gamma.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/norm2likert.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/plot_interaction.html</loc>
@@ -38,11 +68,5 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/test_interaction.html</loc>
-  </url>
-  <url>
-    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html</loc>
-  </url>
-  <url>
-    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html</loc>
   </url>
 </urlset>

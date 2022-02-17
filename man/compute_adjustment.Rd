@@ -17,7 +17,10 @@ compute_adjustment(
   skew.y,
   transform.x1,
   transform.x2,
-  transform.y
+  transform.y,
+  k.x1,
+  k.x2,
+  k.y
 )
 }
 \arguments{
@@ -46,6 +49,12 @@ compute_adjustment(
 \item{transform.x2}{Internal use only}
 
 \item{transform.y}{Internal use only}
+
+\item{k.x1}{Internal use only}
+
+\item{k.x2}{Internal use only}
+
+\item{k.y}{Internal use only}
 }
 \value{
 Correlation adjustments.

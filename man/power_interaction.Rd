@@ -17,6 +17,9 @@ power_interaction(
   skew.x1 = 0,
   skew.x2 = 0,
   skew.y = 0,
+  k.x1 = 0,
+  k.x2 = 0,
+  k.y = 0,
   transform.x1 = "default",
   transform.x2 = "default",
   transform.y = "default",
@@ -27,6 +30,8 @@ power_interaction(
   ss.IQR = 1.5,
   detailed_results = FALSE,
   full_simulation = FALSE,
+  tol = 0.005,
+  iter = 10,
   seed = NULL
 )
 }
@@ -55,6 +60,12 @@ power_interaction(
 
 \item{skew.y}{Skew of y. Default is 0 (normally distributed).}
 
+\item{k.x1}{Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
+
+\item{k.x2}{Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
+
+\item{k.y}{Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
+
 \item{transform.x1}{Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.}
 
 \item{transform.x2}{Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.}
@@ -74,6 +85,10 @@ power_interaction(
 \item{detailed_results}{Default is FALSE. Should detailed results be reported?}
 
 \item{full_simulation}{Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.}
+
+\item{tol}{Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
+
+\item{iter}{Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.}
 
 \item{seed}{Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.}
 }

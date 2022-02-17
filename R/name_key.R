@@ -6,5 +6,5 @@
 #' @docType data
 #' @name name_key
 #' @usage data(name_key)
-#' @format A data frame with 15 rows and 2 variables
+#' @format A data frame with 25 rows and 2 variables
 NULL

@@ -15,9 +15,10 @@ features include (1) the ability to compute power for interactions
 between two continuous variables, (2) effect sizes are all specified as
 the cross-sectional Pearson’s correlation, (3) simulations do not assume
 that the interacting variables are independent, (4) any variable in the
-model, including the outcome, can be binary, and (5) analyses can
-incorporate the effects of reliability and skew, both of the interacting
-variables, as well as of the outcome variable.
+model, including the outcome, can have anywhere from 2 (i.e., binary) to
+20 discrete values, and (5) analyses can incorporate the effects of
+reliability and skew, both of the interacting variables, as well as of
+the outcome variable.
 
 **For more information see [documentation and
 examples](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html),
@@ -75,12 +76,16 @@ test_power<-power_interaction(
 #> [1] "Checking for errors in inputs..."
 #> [1] "Performing 1000 simulations"
 toc()
-#> 18.19 sec elapsed
+#> 17.72 sec elapsed
 test_power
-#> # A tibble: 1 x 1
-#>     pwr
-#>   <dbl>
-#> 1 0.809
+#>     N   pwr
+#> 1 350 0.806
 ```
 
 We see that we have 80.9% power to detect the effect of interest.
+
+## Changelog
+
+-   **0.1.0.5** *2/16/2022* Adds functions to handle variables with >2
+    discrete values (e.g., a likert scale). Also, a speed-up and minor
+    bug-fixes.

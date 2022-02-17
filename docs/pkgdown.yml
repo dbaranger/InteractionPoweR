@@ -1,10 +1,10 @@
 pandoc: 2.14.0.1
-pkgdown: 1.6.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  articles/CommonQuestions: CommonQuestions.html
-  articles/InteractionPoweRvignette: InteractionPoweRvignette.html
-last_built: 2021-09-02T18:00Z
+  CommonQuestions: CommonQuestions.html
+  InteractionPoweRvignette: InteractionPoweRvignette.html
+last_built: 2022-02-16T23:49Z
 urls:
   reference: https://dbaranger.github.io/InteractionPoweR/reference
   article: https://dbaranger.github.io/InteractionPoweR/articles

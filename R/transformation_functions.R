@@ -26,6 +26,40 @@ norm2binary = function(x,skew){
 
 
 
+
+#' norm2likert
+#'
+#' Transforms a vector with a normal distribution to a binomial distribution with two values.
+#'
+#' @param x Input vector
+#' @param skew Desired output skew
+#' @param k Number of discrete values (e.g., 2=binary, 5=likert scale)
+
+#'
+#' @return A likert or binary variable
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' norm2likert(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
+#'}
+norm2likert = function(x,skew,k){
+
+  k=k-1
+
+  fnToFindRoot = function(s,n,p) {return(((1-2*p)/sqrt(n*p*(1-p)))-s)}
+  binomial_p <- stats::uniroot(f = fnToFindRoot, interval = c(0, 1), tol = 0.0001, s=skew,n=k)$root
+  p <- stats::pnorm(x, 0, 1)
+  p2<-stats::qbinom(p, k, binomial_p )
+  x.new<-base::scale(p2,center = T,scale = T)
+  return(x.new)
+
+}
+
+
+
+
+
 #' binary.p2skew
 #'
 #' Converts the probability parameter of a binomial distribution to the skew, assuming n=1.
@@ -40,7 +74,7 @@ norm2binary = function(x,skew){
 #' binary.p2skew(p=.5)
 #'}
 binary.p2skew = function(p){
-  if(p <= 0 |p >= 1){stop("p must be greater than 0 and less than 1")}
+  if(min(p) <= 0 |max(p) >= 1){stop("p must be greater than 0 and less than 1")}
   q=1-p
   n=1
   skew = (q-p)/base::sqrt(n*p*q)
@@ -94,6 +128,9 @@ norm2gamma = function(x,skew){
 #' @param transform.x1 Internal use only
 #' @param transform.x2 Internal use only
 #' @param transform.y Internal use only
+#' @param k.x1 Internal use only
+#' @param k.x2 Internal use only
+#' @param k.y Internal use only
 #'
 #' @return Correlation adjustments.
 #' @export
@@ -111,7 +148,8 @@ compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,N.adjustment=1000000
                              # levels.y,
                              transform.x1,
                              transform.x2,
-                             transform.y
+                             transform.y,
+                             k.x1,k.x2,k.y
 ){
 
   target_matrix<-c(r.x1.x2,
@@ -139,7 +177,8 @@ compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,N.adjustment=1000000
                                  transform.x2 = transform.x2,
                                  skew.x2= skew.x2,
                                  transform.y = transform.y,
-                                 skew.y= skew.y)
+                                 skew.y= skew.y,
+                             k.x1 = k.x1,k.x2=k.x2,k.y=k.y)
     c1<-stats::cor(a2)
 
     sim_error<-max(abs((target_matrix - c1[lower.tri(c1)]) [-c(3,5) ]))
