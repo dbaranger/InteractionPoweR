@@ -108,7 +108,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = .15,                # correlation between x1x2 and y
-                  cl = 6,                        # number of clusters for parallel analyses
+                  cl = 2,                        # number of clusters for parallel analyses
                   seed = 507421        )         # seed
 power_test
 ```
@@ -144,7 +144,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = seq(.1,.2,by=.01),  # correlation between x1x2 and y
-                  cl = 6,                        # number of clusters for parallel analyses
+                  cl = 2,                        # number of clusters for parallel analyses
                   seed = 387455        )         # seed
 power_test
 ```
@@ -175,7 +175,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = seq(.1,.2,by=.01),   # correlation between x1x2 and y
-                  cl = 6,                         # number of clusters for parallel analyses
+                  cl = 2,                         # number of clusters for parallel analyses
                   detailed_results = T,           # detailed results
                   seed = 316834                  # seed
                 )
@@ -196,7 +196,7 @@ power_test = power_interaction(n.iter = 1000,     # number of simulations
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2       ,            # correlation between x1 and x2
                   r.x1x2.y = seq(.15,.2,by=.025), # correlation between x1x2 and y
-                  cl = 6,                         # number of clusters for parallel analyses
+                  cl = 2,                         # number of clusters for parallel analyses
                   detailed_results = T,
                   seed = 742425)
 
@@ -228,7 +228,7 @@ power_test = power_interaction(n.iter = 1000,     # number of simulations
                   rel.x1 =  seq(.4,1,by=.2),      # x1 reliability    
                   rel.x2 =  seq(.4,1,by=.2),      # x2 reliability          
                   rel.y  =  seq(.4,1,by=.2),      # y reliability          
-                  cl = 6,                         # number of clusters for parallel analyses
+                  cl = 2,                         # number of clusters for parallel analyses
                   seed = 293437        )
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9,       # the power we want to achieve 
@@ -240,13 +240,13 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
 
 These plots make it clear how large of an effect reliability will have on your results. In this simulation, even a reliability of "acceptable" or "good" (reliability = 0.8), is enough to bring our power down, from 0.9 to 0.63!
 
-# Binary/Likert and skewed variables
+# Binary/ordinal and skewed variables
 
-`InteractionPoweR` simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/likert (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/likert and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable or to measure that trait with a likert scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
+`InteractionPoweR` simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/ordinal (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/ordinal and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable or to measure that trait with a ordinal scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
 
-`InteractionPoweR` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/likert/skewed variables. To circumvent the problem of variable transformations altering correlations, `InteractionPoweR` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
+`InteractionPoweR` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/ordinal/skewed variables. To circumvent the problem of variable transformations altering correlations, `InteractionPoweR` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
 
-The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags `k.x1`, `k.x2`, and `k.y` control the number of discrete values each variable takes (i.e., `k.x1 =2` means that `x1` is a binary variable, while `k.x2 = 5` means that `x2` is a likert-variable). If a variable is binary (i.e., `k=2`), the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default. The flags `transform.x1`, `transform.x2`, and `transform.y`are retained for backwards compatibility with prior versions of the package. Setting one of these to `"binary"` is equivalent to `k=2`.  
+The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags `k.x1`, `k.x2`, and `k.y` control the number of discrete values each variable takes (i.e., `k.x1 =2` means that `x1` is a binary variable, while `k.x2 = 5` means that `x2` is a ordinal-variable). If a variable is binary (i.e., `k=2`), the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default. The flags `transform.x1`, `transform.x2`, and `transform.y`are retained for backwards compatibility with prior versions of the package. Setting one of these to `"binary"` is equivalent to `k=2`.  
 
 ## Binary
 
@@ -268,21 +268,21 @@ test_data = generate_interaction(
 plot_interaction(data =test_data )
 ```
 
-## Likert
+## ordinal
 
 Here's an example showing the effects of artificially discretizing `x1` on power. We see that power is lower when there are fewer discrete values. 
 
 ```{r fig9, warning=F,message=F,error=F,fig.height = 4, fig.width = 6, fig.align = "center"}
 
 power_test = power_interaction(
-                  n.iter=10000,
+                  n.iter=1000,
                   N = 450,                        # sample size
                   r.x1.y = .2,                    # correlation between x1 and y
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2,                   # correlation between x1 and x2
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
                   k.x1 = seq(2,10,2),             # x1 has 2-10 discrete values
-                  adjust.correlations = FALSE,cl=5)     # Adjust correlations for skew?  
+                  adjust.correlations = FALSE,cl=2)     # Adjust correlations for skew?  
 
 plot_power_curve(power_test,power_target = .9)
 ```
@@ -302,7 +302,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
                   skew.x1 = seq(0,2,by=.25),      # x1 skew 
                   adjust.correlations = TRUE,     # Adjust correlations for skew?
-                  cl = 6 ,                        # number of clusters for parallel analyses
+                  cl = 2 ,                        # number of clusters for parallel analyses
                   seed = 73070      )
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9       # the power we want to achieve 
@@ -325,7 +325,7 @@ power_test = power_interaction(n.iter = 1000,    # number of simulations
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = .4,                 # correlation between x1x2 and y
-                  cl = 4,                        # number of clusters for parallel analyses
+                  cl = 2,                        # number of clusters for parallel analyses
                   detailed_results = TRUE        # return detailed results       
                    )
 power_test

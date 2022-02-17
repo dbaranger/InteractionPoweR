@@ -51,4 +51,4 @@ reference:
   - name_key
   - norm2binary
   - norm2gamma
-  - norm2likert
+  - norm2ordinal

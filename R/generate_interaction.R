@@ -259,9 +259,9 @@ generate_interaction <- function(N,
   # if(transform.x2 == "binary"){x2 = norm2binary(x = x2,skew = skew.x2)}
   # if(transform.y == "binary"){y = norm2binary(x = y,skew = skew.y)}
 
-  if(k.x1 >= 2){x1 = norm2likert(x = x1,skew = skew.x1,k = k.x1)}
-  if(k.x2 >= 2){x2 = norm2likert(x = x2,skew = skew.x2,k = k.x2)}
-  if(k.y >= 2){y = norm2likert(x = y,skew = skew.y,k = k.y)}
+  if(k.x1 >= 2){x1 = norm2ordinal(x = x1,skew = skew.x1,k = k.x1)}
+  if(k.x2 >= 2){x2 = norm2ordinal(x = x2,skew = skew.x2,k = k.x2)}
+  if(k.y >= 2){y = norm2ordinal(x = y,skew = skew.y,k = k.y)}
 
   if(transform.x1 == "gamma"){x1 = norm2gamma(x = x1,skew = skew.x1)}
   if(transform.x2 == "gamma"){x2 = norm2gamma(x = x2,skew = skew.x2)}

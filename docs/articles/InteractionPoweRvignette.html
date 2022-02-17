@@ -237,22 +237,22 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,                        <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                        <span class="co"># number of clusters for parallel analyses</span>
                   seed <span class="op">=</span> <span class="fl">507421</span>        <span class="op">)</span>         <span class="co"># seed</span></code></pre></div>
 <pre><code><span class="co">## [1] "Checking for errors in inputs..."</span>
 <span class="co">## [1] "Performing 9000 simulations"</span></code></pre>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span></code></pre></div>
 <pre><code><span class="co">##     N   pwr</span>
-<span class="co">## 9 200 0.572</span>
-<span class="co">## 3 250 0.656</span>
-<span class="co">## 8 300 0.773</span>
-<span class="co">## 1 350 0.811</span>
-<span class="co">## 2 400 0.839</span>
-<span class="co">## 5 450 0.896</span>
-<span class="co">## 4 500 0.931</span>
-<span class="co">## 7 550 0.949</span>
-<span class="co">## 6 600 0.955</span></code></pre>
+<span class="co">## 6 200 0.567</span>
+<span class="co">## 7 250 0.670</span>
+<span class="co">## 1 300 0.760</span>
+<span class="co">## 2 350 0.824</span>
+<span class="co">## 3 400 0.868</span>
+<span class="co">## 4 450 0.907</span>
+<span class="co">## 8 500 0.907</span>
+<span class="co">## 9 550 0.934</span>
+<span class="co">## 5 600 0.961</span></code></pre>
 <p>We can plot these results using the function <code><a href="../reference/plot_power_curve.html">plot_power_curve()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span>, <span class="co"># output from power_interaction()</span>
@@ -265,7 +265,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                         x <span class="op">=</span> <span class="st">"N"</span>,        <span class="co"># the variable we want a precise number for</span>
              power_target <span class="op">=</span> <span class="fl">0.9</span>         <span class="co"># the power we want to achieve </span>
 <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 449.3587</span></code></pre>
+<pre><code><span class="co">## [1] 441.0214</span></code></pre>
 <p>Our guess turned out to be accurate in this case, and N=443 yields approximately 90% power.</p>
 </div>
 <div class="section level3">
@@ -280,24 +280,24 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.01</span><span class="op">)</span>,  <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,                        <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                        <span class="co"># number of clusters for parallel analyses</span>
                   seed <span class="op">=</span> <span class="fl">387455</span>        <span class="op">)</span>         <span class="co"># seed</span></code></pre></div>
 <pre><code><span class="co">## [1] "Checking for errors in inputs..."</span>
 <span class="co">## [1] "Performing 11000 simulations"</span></code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span></code></pre></div>
 <pre><code><span class="co">##    r.x1x2.y   pwr</span>
-<span class="co">## 9      0.10 0.486</span>
-<span class="co">## 3      0.11 0.536</span>
-<span class="co">## 5      0.12 0.633</span>
-<span class="co">## 1      0.13 0.687</span>
-<span class="co">## 10     0.14 0.757</span>
-<span class="co">## 2      0.15 0.823</span>
-<span class="co">## 11     0.16 0.866</span>
-<span class="co">## 7      0.17 0.891</span>
-<span class="co">## 8      0.18 0.910</span>
-<span class="co">## 6      0.19 0.933</span>
-<span class="co">## 4      0.20 0.964</span></code></pre>
+<span class="co">## 1      0.10 0.467</span>
+<span class="co">## 7      0.11 0.536</span>
+<span class="co">## 2      0.12 0.653</span>
+<span class="co">## 3      0.13 0.680</span>
+<span class="co">## 4      0.14 0.765</span>
+<span class="co">## 5      0.15 0.804</span>
+<span class="co">## 8      0.16 0.875</span>
+<span class="co">## 9      0.17 0.904</span>
+<span class="co">## 10     0.18 0.915</span>
+<span class="co">## 6      0.19 0.941</span>
+<span class="co">## 11     0.20 0.959</span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span>, <span class="co"># output from power_interaction()</span>
                  power_target <span class="op">=</span> <span class="fl">.9</span>        <span class="co"># the power we want to achieve </span>
@@ -308,7 +308,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                         x <span class="op">=</span> <span class="st">"r.x1x2.y"</span>,        <span class="co"># the variable we want a precise number for</span>
              power_target <span class="op">=</span> <span class="fl">0.9</span>         <span class="co"># the power we want to achieve </span>
 <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.1734518</span></code></pre>
+<pre><code><span class="co">## [1] 0.1712896</span></code></pre>
 <p>We see that we have approximately 90% power to detect effects as small as <code>r.x1x2.y</code> = 0.17.</p>
 <p>In some cases it may also be useful to take a look the distribution of simple slopes across the range of parameters tested. If we re-run our simulation using <code>detailed_results=T</code>, we can look at the distribution of effect sizes and simple slopes.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -319,7 +319,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.01</span><span class="op">)</span>,   <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                         <span class="co"># number of clusters for parallel analyses</span>
                   detailed_results <span class="op">=</span> <span class="cn">T</span>,           <span class="co"># detailed results</span>
                   seed <span class="op">=</span> <span class="fl">316834</span>                  <span class="co"># seed</span>
                 <span class="op">)</span></code></pre></div>
@@ -342,7 +342,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span> <span class="fl">.1</span>,                    <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>       ,            <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.15</span>,<span class="fl">.2</span>,by<span class="op">=</span><span class="fl">.025</span><span class="op">)</span>, <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                         <span class="co"># number of clusters for parallel analyses</span>
                   detailed_results <span class="op">=</span> <span class="cn">T</span>,
                   seed <span class="op">=</span> <span class="fl">742425</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "Checking for errors in inputs..."</span>
@@ -360,9 +360,9 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
              power_target <span class="op">=</span> <span class="fl">0.9</span>         <span class="co"># the power we want to achieve </span>
 <span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##   r.x1x2.y estimate</span>
-<span class="co">## 1    0.150 442.0470</span>
-<span class="co">## 2    0.175 331.1472</span>
-<span class="co">## 3    0.200 268.3371</span></code></pre>
+<span class="co">## 1    0.150 447.9153</span>
+<span class="co">## 2    0.175 330.1380</span>
+<span class="co">## 3    0.200 250.1208</span></code></pre>
 <p>From this we’ve learned that, depending on exactly what effect size we’re aiming for, we’ll need an <code>N</code> between 260 and 460.</p>
 </div>
 </div>
@@ -381,7 +381,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   rel.x1 <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># x1 reliability    </span>
                   rel.x2 <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># x2 reliability          </span>
                   rel.y  <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">1</span>,by<span class="op">=</span><span class="fl">.2</span><span class="op">)</span>,      <span class="co"># y reliability          </span>
-                  cl <span class="op">=</span> <span class="fl">6</span>,                         <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                         <span class="co"># number of clusters for parallel analyses</span>
                   seed <span class="op">=</span> <span class="fl">293437</span>        <span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "Checking for errors in inputs..."</span>
 <span class="co">## [1] "Performing 64000 simulations"</span></code></pre>
@@ -396,11 +396,11 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
 <p>These plots make it clear how large of an effect reliability will have on your results. In this simulation, even a reliability of “acceptable” or “good” (reliability = 0.8), is enough to bring our power down, from 0.9 to 0.63!</p>
 </div>
 <div class="section level2">
-<h2 id="binarylikert-and-skewed-variables">Binary/Likert and skewed variables<a class="anchor" aria-label="anchor" href="#binarylikert-and-skewed-variables"></a>
+<h2 id="binaryordinal-and-skewed-variables">Binary/ordinal and skewed variables<a class="anchor" aria-label="anchor" href="#binaryordinal-and-skewed-variables"></a>
 </h2>
-<p><code>InteractionPoweR</code> simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/likert (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/likert and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you’ve chosen to dichotomize that variable or to measure that trait with a likert scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable <em>is</em> binary (at least in the literature), maybe you’re looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations <em>with the binary/skewed variable</em>, so you don’t want them to be reduced or altered.</p>
-<p><code>InteractionPoweR</code> distinguishes between these cases with the <code>adjust.correlations</code> flag. The default is <code>adjust.correlations = TRUE</code>. This indicates that the input correlations are with the binary/likert/skewed variables. To circumvent the problem of variable transformations altering correlations, <code>InteractionPoweR</code> runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When <code>adjust.correlations = FALSE</code>, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.</p>
-<p>The flags <code>skew.x1</code>, <code>skew.x2</code>, and <code>skew.y</code> control the skew of <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, and <span class="math inline">\(Y\)</span>. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags <code>k.x1</code>, <code>k.x2</code>, and <code>k.y</code> control the number of discrete values each variable takes (i.e., <code>k.x1 =2</code> means that <code>x1</code> is a binary variable, while <code>k.x2 = 5</code> means that <code>x2</code> is a likert-variable). If a variable is binary (i.e., <code>k=2</code>), the <code><a href="../reference/binary.p2skew.html">binary.p2skew()</a></code> convenience function can be used to compute the skew from the proportion of 0’s and 1’s (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to <code>0</code> by default. The flags <code>transform.x1</code>, <code>transform.x2</code>, and <code>transform.y</code>are retained for backwards compatibility with prior versions of the package. Setting one of these to <code>"binary"</code> is equivalent to <code>k=2</code>.</p>
+<p><code>InteractionPoweR</code> simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/ordinal (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/ordinal and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you’ve chosen to dichotomize that variable or to measure that trait with a ordinal scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable <em>is</em> binary (at least in the literature), maybe you’re looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations <em>with the binary/skewed variable</em>, so you don’t want them to be reduced or altered.</p>
+<p><code>InteractionPoweR</code> distinguishes between these cases with the <code>adjust.correlations</code> flag. The default is <code>adjust.correlations = TRUE</code>. This indicates that the input correlations are with the binary/ordinal/skewed variables. To circumvent the problem of variable transformations altering correlations, <code>InteractionPoweR</code> runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When <code>adjust.correlations = FALSE</code>, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.</p>
+<p>The flags <code>skew.x1</code>, <code>skew.x2</code>, and <code>skew.y</code> control the skew of <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, and <span class="math inline">\(Y\)</span>. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags <code>k.x1</code>, <code>k.x2</code>, and <code>k.y</code> control the number of discrete values each variable takes (i.e., <code>k.x1 =2</code> means that <code>x1</code> is a binary variable, while <code>k.x2 = 5</code> means that <code>x2</code> is a ordinal-variable). If a variable is binary (i.e., <code>k=2</code>), the <code><a href="../reference/binary.p2skew.html">binary.p2skew()</a></code> convenience function can be used to compute the skew from the proportion of 0’s and 1’s (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to <code>0</code> by default. The flags <code>transform.x1</code>, <code>transform.x2</code>, and <code>transform.y</code>are retained for backwards compatibility with prior versions of the package. Setting one of these to <code>"binary"</code> is equivalent to <code>k=2</code>.</p>
 <div class="section level3">
 <h3 id="binary">Binary<a class="anchor" aria-label="anchor" href="#binary"></a>
 </h3>
@@ -421,22 +421,22 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
 <p><img src="InteractionPoweRvignette_files/figure-html/fig8-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="likert">Likert<a class="anchor" aria-label="anchor" href="#likert"></a>
+<h3 id="ordinal">ordinal<a class="anchor" aria-label="anchor" href="#ordinal"></a>
 </h3>
 <p>Here’s an example showing the effects of artificially discretizing <code>x1</code> on power. We see that power is lower when there are fewer discrete values.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span> <span class="op">=</span> <span class="fu"><a href="../reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>
-                  n.iter<span class="op">=</span><span class="fl">10000</span>,
+                  n.iter<span class="op">=</span><span class="fl">1000</span>,
                   N <span class="op">=</span> <span class="fl">450</span>,                        <span class="co"># sample size</span>
                   r.x1.y <span class="op">=</span> <span class="fl">.2</span>,                    <span class="co"># correlation between x1 and y</span>
                   r.x2.y <span class="op">=</span> <span class="fl">.1</span>,                    <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                   <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                 <span class="co"># correlation between x1x2 and y</span>
                   k.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">10</span>,<span class="fl">2</span><span class="op">)</span>,             <span class="co"># x1 has 2-10 discrete values</span>
-                  adjust.correlations <span class="op">=</span> <span class="cn">FALSE</span>,cl<span class="op">=</span><span class="fl">5</span><span class="op">)</span>     <span class="co"># Adjust correlations for skew?  </span></code></pre></div>
-<pre><code><span class="co">## [1] "Seed is 878089"</span>
+                  adjust.correlations <span class="op">=</span> <span class="cn">FALSE</span>,cl<span class="op">=</span><span class="fl">2</span><span class="op">)</span>     <span class="co"># Adjust correlations for skew?  </span></code></pre></div>
+<pre><code><span class="co">## [1] "Seed is 546648"</span>
 <span class="co">## [1] "Checking for errors in inputs..."</span>
-<span class="co">## [1] "Performing 50000 simulations"</span></code></pre>
+<span class="co">## [1] "Performing 5000 simulations"</span></code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">power_test</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
 <p><img src="InteractionPoweRvignette_files/figure-html/fig9-1.png" width="576" style="display: block; margin: auto;"></p>
@@ -455,7 +455,7 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                 <span class="co"># correlation between x1x2 and y</span>
                   skew.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span>,by<span class="op">=</span><span class="fl">.25</span><span class="op">)</span>,      <span class="co"># x1 skew </span>
                   adjust.correlations <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># Adjust correlations for skew?</span>
-                  cl <span class="op">=</span> <span class="fl">6</span> ,                        <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span> ,                        <span class="co"># number of clusters for parallel analyses</span>
                   seed <span class="op">=</span> <span class="fl">73070</span>      <span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "Checking for errors in inputs..."</span>
 <span class="co">## [1] "Adjusting correlations for variable transformations..."</span>
@@ -483,44 +483,44 @@ Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_1X_2\beta_3 + \epsilon
                   r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span>
                   r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span>
                   r.x1x2.y <span class="op">=</span> <span class="fl">.4</span>,                 <span class="co"># correlation between x1x2 and y</span>
-                  cl <span class="op">=</span> <span class="fl">4</span>,                        <span class="co"># number of clusters for parallel analyses</span>
+                  cl <span class="op">=</span> <span class="fl">2</span>,                        <span class="co"># number of clusters for parallel analyses</span>
                   detailed_results <span class="op">=</span> <span class="cn">TRUE</span>        <span class="co"># return detailed results       </span>
                    <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "Seed is 548071"</span>
+<pre><code><span class="co">## [1] "Seed is 8564"</span>
 <span class="co">## [1] "Checking for errors in inputs..."</span>
 <span class="co">## [1] "Performing 4000 simulations"</span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">power_test</span></code></pre></div>
 <pre><code><span class="co">##     N   pwr x1_pwr x2_pwr x1x2_est_mean x1x2_r2_mean crossover_mean shape_mean</span>
-<span class="co">## 4  50 0.766  0.721  0.910     0.4536953    0.1848429     -0.1444144   3.694219</span>
-<span class="co">## 2 100 0.977  0.497  0.897     0.3972518    0.1531496     -0.1873501   2.723308</span>
-<span class="co">## 3 150 0.996  0.294  0.872     0.3859812    0.1498095     -0.1632499   2.853891</span>
-<span class="co">## 1 200 1.000  0.187  0.827     0.3905487    0.1536894     -0.1665251   2.472277</span>
+<span class="co">## 1  50 0.784  0.724  0.934     0.4396218    0.1755323     -0.1768402   2.778960</span>
+<span class="co">## 2 100 0.975  0.514  0.898     0.4000345    0.1557723     -0.1727934   3.125164</span>
+<span class="co">## 3 150 0.997  0.330  0.859     0.3935693    0.1536631     -0.1777844   8.743583</span>
+<span class="co">## 4 200 1.000  0.205  0.823     0.3900645    0.1534402     -0.1752575   2.637965</span>
 <span class="co">##   shape_q_2.5 shape_q_97.5 crossover_q_2.5 crossover_q_97.5    min.lwr</span>
-<span class="co">## 4 -18.3021533    21.120756      -0.9254724        0.5590299 -0.5876968</span>
-<span class="co">## 2   0.7119457    12.184385      -0.6994125        0.3219036 -0.4075435</span>
-<span class="co">## 3   0.9317086     8.328247      -0.6397440        0.2422763 -0.3482220</span>
-<span class="co">## 1   1.0668059     7.205046      -0.5444196        0.1849277 -0.3208586</span>
+<span class="co">## 1   -7.402391    25.714963      -0.9012369        0.4309545 -0.5372973</span>
+<span class="co">## 2   -5.538762    10.500007      -0.7753002        0.3325565 -0.4444916</span>
+<span class="co">## 3    0.983842     8.178442      -0.6103052        0.2283472 -0.3815869</span>
+<span class="co">## 4    1.078535     7.039999      -0.5469701        0.1513282 -0.3440493</span>
 <span class="co">##      min.upr   max.lwr   max.upr x1x2_95_CI_2.5_mean x1x2_95_CI_97.5_mean</span>
-<span class="co">## 4 0.22025919 0.1779296 0.9671159           0.1850766            0.7223140</span>
-<span class="co">## 2 0.15915727 0.2311796 0.7998286           0.2131116            0.5813920</span>
-<span class="co">## 3 0.10378754 0.2583628 0.7640846           0.2389831            0.5329792</span>
-<span class="co">## 1 0.06685582 0.3048985 0.7085100           0.2645307            0.5165668</span>
+<span class="co">## 1 0.21347774 0.1543921 0.9334462           0.1715979            0.7076457</span>
+<span class="co">## 2 0.16010414 0.2160005 0.8039076           0.2158121            0.5842568</span>
+<span class="co">## 3 0.11317787 0.2744178 0.7448703           0.2457943            0.5413442</span>
+<span class="co">## 4 0.07411264 0.2878489 0.7230726           0.2638026            0.5163264</span>
 <span class="co">##   x1x2_95_CI_width_mean r_y_x1x2_q_2.5 r_y_x1x2_q_50.0 r_y_x1x2_q_97.5</span>
-<span class="co">## 4             0.5372373      0.2511221       0.4486917       0.6632277</span>
-<span class="co">## 2             0.3682805      0.2178719       0.4036040       0.5745655</span>
-<span class="co">## 3             0.2939960      0.2238670       0.3938605       0.5373888</span>
-<span class="co">## 1             0.2520361      0.2585531       0.3966941       0.5290486</span>
+<span class="co">## 1             0.5360477      0.2363389       0.4291214       0.6617950</span>
+<span class="co">## 2             0.3684447      0.2231182       0.4017803       0.5740193</span>
+<span class="co">## 3             0.2955499      0.2341655       0.3996251       0.5487754</span>
+<span class="co">## 4             0.2525239      0.2560891       0.3965004       0.5297396</span>
 <span class="co">##   x1_est_mean x2_est_mean r_x1_y_mean r_x2_y_mean r_x1_x2_mean r_y_x1x2_mean</span>
-<span class="co">## 4   0.1881823  0.06141081   0.1960492  0.09581274    0.2036743     0.4464441</span>
-<span class="co">## 2   0.1872613  0.07114802   0.1996491  0.10831640    0.1989920     0.3988255</span>
-<span class="co">## 3   0.1891991  0.06136325   0.2016675  0.09795822    0.1996625     0.3920269</span>
-<span class="co">## 1   0.1866205  0.06324363   0.1997234  0.09952032    0.1993793     0.3956262</span>
+<span class="co">## 1   0.1858322  0.07120646   0.1944123  0.10839836    0.2072784     0.4343746</span>
+<span class="co">## 2   0.1846094  0.06539229   0.1927725  0.09836801    0.1998706     0.4011194</span>
+<span class="co">## 3   0.1831947  0.06753903   0.1960705  0.10578625    0.1991194     0.3964611</span>
+<span class="co">## 4   0.1816829  0.06666561   0.1943286  0.10210319    0.1992850     0.3945857</span>
 <span class="co">##   r_x1_x1x2_mean r_x2_x1x2_mean</span>
-<span class="co">## 4  -0.0001681784  -2.044926e-05</span>
-<span class="co">## 2   0.0001481677   1.385871e-03</span>
-<span class="co">## 3   0.0026179166  -3.026054e-03</span>
-<span class="co">## 1   0.0032776196  -1.337665e-03</span></code></pre>
+<span class="co">## 1  -0.0083153420   0.0003857908</span>
+<span class="co">## 2  -0.0065243208  -0.0064658513</span>
+<span class="co">## 3   0.0015769269   0.0067135435</span>
+<span class="co">## 4  -0.0002570351  -0.0015671365</span></code></pre>
 <p>What is all this?</p>
 <p>The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have <code>x1_pwr1</code> and <code>x2_pwr</code>. This is the power to detect an effect of x1 and x2 <em>in the interaction model</em>. <code>x1x2_est_mean</code> and <code>x1x2_r2_mean</code> are then the <em>mean</em> effect size (<span class="math inline">\(B_3\)</span>) and mean change in the adjusted <span class="math inline">\(R^2\)</span> (or pseudo-<span class="math inline">\(R^2\)</span> when <span class="math inline">\(Y\)</span> is binary) when the interaction term <span class="math inline">\(X_1X_2\)</span> is added to the model. <code>crossover</code> and <code>shape</code> are the value of <span class="math inline">\(X_1\)</span> where the <span class="math inline">\(X_2\)</span> simple slopes intersect, and the shape of the interaction (<span class="math inline">\(B_3 / B_1\)</span>), which reflects whether it is a knock-out, attenuated, or crossover interaction. We also give the mean upper and lower bounds of the 95% confidence interval of the shape and crossover.</p>
 <p>For example, one interesting insight we can gain here is that even though <code>n=50</code> has <em>76%</em> power in this analysis, the <em>observed</em> <code>shape</code> will vary widely. The confidence interval indicates that it is even likely that we will observe significant effects where the interaction has the <em>opposite</em> shape from anticipated. In fact, we don’t see 95% of simulations yielding a shape that is consistent with our hypothesis that <code>r.x1x2.y &gt; r.x1.y</code>, until <code>N=200</code>, which has <em>99.99%</em> power!</p>

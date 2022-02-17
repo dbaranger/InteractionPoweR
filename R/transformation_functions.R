@@ -27,23 +27,23 @@ norm2binary = function(x,skew){
 
 
 
-#' norm2likert
+#' norm2ordinal
 #'
 #' Transforms a vector with a normal distribution to a binomial distribution with two values.
 #'
 #' @param x Input vector
 #' @param skew Desired output skew
-#' @param k Number of discrete values (e.g., 2=binary, 5=likert scale)
+#' @param k Number of discrete values (e.g., 2=binary, 5=ordinal scale)
 
 #'
-#' @return A likert or binary variable
+#' @return A ordinal or binary variable
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' norm2likert(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
+#' norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
 #'}
-norm2likert = function(x,skew,k){
+norm2ordinal = function(x,skew,k){
 
   k=k-1
 

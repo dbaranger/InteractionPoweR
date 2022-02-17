@@ -69,4 +69,4 @@ We see that we have 80.9% power to detect the effect of interest.
 
 ## Changelog
 
-* **0.1.0.5** *2/17/2022* Adds functions to handle variables with >2 discrete values (e.g., a likert scale). Also, a speed-up and minor bug-fixes. 
+* **0.1.0.5** *2/17/2022* Adds functions to simulate ordinal variables (e.g., a likert scale). Also, a speed-up and minor bug-fixes. 

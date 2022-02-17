@@ -213,7 +213,7 @@ i=NULL
                                    .combine = 'rbind',
                                    .packages = c('dplyr','MASS'),
                                    .export=c("test_interaction","generate_interaction",
-                                             "norm2binary","norm2gamma","norm2likert",
+                                             "norm2binary","norm2gamma","norm2ordinal",
                                              "compute_adjustment"  )) %dopar% {
 
 
@@ -327,7 +327,7 @@ if(dim(settings)[1] == 0){
   power_test<-foreach::foreach(d = 1: length(settings_chunks),
                               .combine = 'rbind',
                               .packages = c('dplyr','MASS'),
-                              .export=c("test_interaction","generate_interaction","norm2likert",
+                              .export=c("test_interaction","generate_interaction","norm2ordinal",
                                         "norm2binary","norm2gamma" )) %dopar% {
 
                                           base::set.seed(seed.list3[d])
