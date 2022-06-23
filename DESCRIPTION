@@ -1,6 +1,6 @@
 Package: InteractionPoweR
 Title: Power analysis for interactions via simulation
-Version: 0.1.0.5
+Version: 0.1.0.6
 Authors@R: 
     c(person(given = "David",
            family = "Baranger",

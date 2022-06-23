@@ -48,6 +48,9 @@ install.packages("devtools")
 devtools::install_github("dbaranger/InteractionPoweR/@HEAD")
 ```
 
+If you get an error about a corrupt .rdb file, try restarting your R
+session.
+
 ## Basic Usage
 
 The simplest use-case is when all the input parameters are known. We
@@ -55,37 +58,66 @@ know the population-level correlation between our predictors (x1 and x2)
 and our outcome, we have a smallest effect size of interest in mind for
 our interaction effect size, and our sample size is already set (maybe
 we are conducting secondary data analysis). Power can be determined with
-a single command. **NB** In all these examples we use 1000 simulations
-for speed (`n.iter = 1000`), but for robust results we recommend 10,000
-simulations (`n.iter = 10000`).
+a single command.
+
+First - analytic power, using variable correlations (and reliability, if
+provided) to estimate how much additional variance is explained by the
+interaction term.
 
 ``` r
 library(InteractionPoweR)
-library(tictoc)
-tic()
+
+test_power<-power_interaction_r2(
+  alpha = 0.05,             # alpha, for the power analysis
+  N = 350,                  # sample size
+  r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
+  r.x1.y = .2,              # correlation between x1 and y
+  r.x2.y = .1,              # correlation between x2 and y
+  r.x1.x2 = .2              # correlation between x1 and x2
+)
+#> [1] "Checking for errors in inputs..."
+
+test_power
+#>         pwr shape
+#> 1 0.8055776  0.75
+```
+
+We see that we have 80% power.
+
+We can also use simulations to estimate power. Simulations are
+particularly useful because they can account for non-normal data,
+including variable skew, binary variables, and likert variables.
+
+**NB** In all these examples we use 1000 simulations for speed
+(`n.iter = 1000`), but for robust results we recommend 10,000
+simulations (`n.iter = 10000`).
+
+``` r
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
   alpha = 0.05,             # alpha, for the power analysis
   N = 350,                  # sample size
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
   r.x1.y = .2,              # correlation between x1 and y
-  r.x2.y = .1,              # correlation between x2 and y
-  r.x1.x2 = .2,             # correlation between x1 and x2
-  seed = 581827             # seed, for reproducibility - this generally should not be set
+  r.x2.y = .1,              # correlation between x2 and y  
+  r.x1.x2 = .2,             # correlation between x1 and x2 
+  k.x1 =  2,                # x1 is binary (has 2 levels)
+  seed = 581827             # seed, for reproducibility 
 )
 #> [1] "Checking for errors in inputs..."
+#> [1] "Adjusting correlations for variable transformations..."
 #> [1] "Performing 1000 simulations"
-toc()
-#> 17.72 sec elapsed
+
 test_power
 #>     N   pwr
-#> 1 350 0.806
+#> 1 350 0.834
 ```
 
-We see that we have 80.9% power to detect the effect of interest.
+The simulation estimates 83% power - it’s accuracy will increase with
+more iterations.
 
 ## Changelog
 
--   **0.1.0.5** *2/16/2022* Adds functions to handle variables with >2
-    discrete values (e.g., a likert scale). Also, a speed-up and minor
-    bug-fixes.
+-   **0.1.0.5** *2/17/2022* Adds functions to simulate ordinal variables
+    (e.g., a likert scale). Also, a speed-up and minor bug-fixes.
+-   **0.1.0.6** *6/22/2022* Added function for analytic power.

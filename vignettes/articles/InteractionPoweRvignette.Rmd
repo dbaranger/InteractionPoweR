@@ -75,7 +75,21 @@ test_interaction(data = example_data, # simulated data
 
 # A simple power analysis
 
-The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. The power analysis is run with the function `power_interaction()`. We additionally specify `alpha`, which is the p-value we're using (0.05 is default), and `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results. Also note that in all these examples the parameter `seed` is set. This is the seed for the random number generator, which will allow you to obtain the same results. However, we recommend not setting `seed` when running your own power analyses, at least until you are ready to share the results. Each time an analysis is run a new seed will be chosen and echoed, so that you will be able to reproduce your results.
+The simplest power analysis we can run is one in which all the parameters are already known. All the correlations are known, the sample size is known, and the interaction effect size is known. We additionally specify `alpha`, which is the p-value we're using (0.05 is default). We can compute power analytically using the `power_interaction_r2()` function.
+
+```{r message=F}
+power_interaction_r2(
+                  alpha = 0.05,   # p-value
+                  N = 350,        # sample size
+                  r.x1.y = .2,    # correlation between x1 and y
+                  r.x2.y =  .1,   # correlation between x2 and y
+                  r.x1.x2 = .2,   # correlation between x1 and x2
+                  r.x1x2.y = .15) # correlation between x1x2 and y
+```
+
+We find that our analysis has 80% power (`pwr`), and the interaction has a shape of 0.75 (the interaction effect `x1x2` is 75% of the magnitude of `x1` - the interaction is an attenuated effect where the simple-slope lines are all in the same direction).
+
+We can also use the function `power_interaction` to compute power via monte-carlo simulation. Additional parameters include `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results. Also note that in all these examples the parameter `seed` is set. This is the seed for the random number generator, which will allow you to obtain the same results. However, we recommend not setting `seed` when running your own power analyses, at least until you are ready to share the results. Each time an analysis is run a new seed will be chosen and echoed, so that you will be able to reproduce your results.
 
 ```{r message=F}
 power_interaction(n.iter = 1000,  # number of simulations
@@ -92,7 +106,7 @@ We find that our analysis has 82% power (`pwr`).
 
 # Exploring the parameter space
 
-Typically not all variables are known in a power analysis. For example, we know the magnitude of the interaction effect we're interested in, and we want to learn what sample size would be needed to detect that effect with 90% power. Or we have a sample already, and we want to learn what is the smallest effect we can detect with 90% power. To answer these questions, the user simply needs to provide the range of parameters that they would like the analysis to use. Almost any of the input parameters can be ranges, and the analysis runs `n.iter` simulations for every combination of input parameters.
+Typically not all variables are known in a power analysis. For example, we know the magnitude of the interaction effect we're interested in, and we want to learn what sample size would be needed to detect that effect with 90% power. Or we have a sample already, and we want to learn what is the smallest effect we can detect with 90% power. To answer these questions, the user simply needs to provide the range of parameters that they would like the analysis to use. Almost any of the input parameters can be ranges, and the `power_interaction` runs `n.iter` simulations for every combination of input parameters.
 
 As the number of input parameters increase, so too does the total number of simulations. To reduce the amount of time an analysis takes, `power_interaction()` supports running simulations in parallel. The number of cores to be used for the parallel simulation is indicated by the `cl` flag (we recommend a number between 4 - 6 on most personal computers).
 
@@ -101,51 +115,78 @@ As the number of input parameters increase, so too does the total number of simu
 For example, to explore multiple sample sizes we can set `N = seq(200,600,by = 50)`, which runs a simulation for N = 200, 250, 300 etc, up to N=500. Equivalently, we could also set `N  = c(200,250,300,350,400,450,500,550,600)`, but the former is faster to write.
 
 ```{r message=F}
-power_test = power_interaction(n.iter = 1000,    # number of simulations
+power_test = power_interaction_r2(
                   alpha = 0.05,                  # p-value
-                  N = seq(200,600,by = 50),      # sample size
+                  N = seq(200,600,by = 10),      # sample size
                   r.x1.y = .2,                   # correlation between x1 and y
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
-                  r.x1x2.y = .15,                # correlation between x1x2 and y
-                  cl = 2,                        # number of clusters for parallel analyses
-                  seed = 507421        )         # seed
+                  r.x1x2.y = .15)                # correlation between x1x2 and y
+                 
 power_test
+
 ```
 
 We can plot these results using the function `plot_power_curve()`:
 
 ```{r fig2, fig.height = 4, fig.width = 6, fig.align = "center"}
 plot_power_curve(power_data = power_test, # output from power_interaction()
-                 power_target = .9        # the power we want to achieve 
+                 power_target = .9,        # the power we want to achieve 
+                 x = "N" # x variable
                  )
 ```
 
-By eye-balling this plot, we can see that N=450 yields approximately 90% power, and N=330 yields approximately 80% power. The function `power_estimate()` can be used to obtain a more precise answer. This function fits a regression model to the power results to estimate when a specific power will be achieved.
+By eye-balling this plot, we can see that N=450 yields approximately 90% power, and N=330 yields approximately 80% power. Since it is so fast to compute analytic power, we can re-run the analysis over a restricted range to get the exact N.
+
+```{r message=F}
+power_test = power_interaction_r2(
+                  alpha = 0.05,                  # p-value
+                  N = seq(450,470,by = 1),      # sample size
+                  r.x1.y = .2,                   # correlation between x1 and y
+                  r.x2.y =  .1,                  # correlation between x2 and y
+                  r.x1.x2 = .2,                  # correlation between x1 and x2
+                  r.x1x2.y = .15)                # correlation between x1x2 and y
+                 
+power_test
+
+```
+
+We achieve 90% power with N=460.
+
+In the case where we are using simulations, running a lot of simulations is computationally quite expensive. The function `power_estimate()` can thus be used to obtain a more precise answer when we haven't sampled the parameter space as densely. This function fits a regression model to the power results to estimate when a specific power will be achieved.
 
 ```{r}
+
+power_test = power_interaction_r2(
+                  alpha = 0.05,                  # p-value
+                  N = seq(200,600,by = 50),      # sample size
+                  r.x1.y = .2,                   # correlation between x1 and y
+                  r.x2.y =  .1,                  # correlation between x2 and y
+                  r.x1.x2 = .2,                  # correlation between x1 and x2
+                  r.x1x2.y = .15)                # correlation between x1x2 and y
+                
+
 power_estimate(power_data = power_test, # output from power_interaction()
                         x = "N",        # the variable we want a precise number for
              power_target = 0.9         # the power we want to achieve 
 )
 ```
 
-Our guess turned out to be accurate in this case, and N=443 yields approximately 90% power.
+With only 9 samples of the parameter space, we can estimate that we nee N=453 to achieve 90% power, which isn't that far off.
 
 ## Finding the smallest detectable effect size
 
 Another common use-case is when the sample size and variables-of-interest are known, and we want to know how small of an interaction effect can be detected at a certain power level. We can repeat the same steps as above, except this time `r.x1x2.y` will be a range of values.
 
 ```{r message=F}
-power_test = power_interaction(n.iter = 1000,    # number of simulations
+power_test = power_interaction_r2(
                   alpha = 0.05,                  # p-value
                   N = 350                ,       # sample size
                   r.x1.y = .2,                   # correlation between x1 and y
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
-                  r.x1x2.y = seq(.1,.2,by=.01),  # correlation between x1x2 and y
-                  cl = 2,                        # number of clusters for parallel analyses
-                  seed = 387455        )         # seed
+                  r.x1x2.y = seq(.1,.2,by=.005))  # correlation between x1x2 and y
+                  
 power_test
 ```
 
@@ -155,16 +196,9 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
                  )
 ```
 
-```{r}
-power_estimate(power_data = power_test, # output from power_interaction()
-                        x = "r.x1x2.y",        # the variable we want a precise number for
-             power_target = 0.9         # the power we want to achieve 
-)
-```
+We see that we have approximately 90% power to detect effects as small as `r.x1x2.y` = 0.1725.
 
-We see that we have approximately 90% power to detect effects as small as `r.x1x2.y` = 0.17.
-
-In some cases it may also be useful to take a look the distribution of simple slopes across the range of parameters tested. If we re-run our simulation using `detailed_results=T`, we can look at the distribution of effect sizes and simple slopes.
+In some cases it may also be useful to take a look the distribution of simple slopes across the range of parameters tested. If we run our analysis as a simulation and use `detailed_results=T`, we can look at the distribution of effect sizes and simple slopes.
 
 ```{r fig6, fig.height = 4, fig.width = 6, fig.align = "center"}
 
@@ -186,50 +220,72 @@ From this we can learn that the range of slopes that would be consistent with th
 
 ## Varying multiple parameters
 
-It is not uncommon that multiple parameters in the simulation are unknown. To find the power at every combination of the parameters, simply input a range of values for every unknown parameter in the simulation. We generally recommend to only vary up to 3 parameters at a time, any more and the simulation can take a *very* long time to run. For example, lets say there's a range of plausible effect sizes for the interaction, and we want to know how large of a sample we would need to detect each of them. To test this, we can vary both `N` and `r.x1x2.y`:
+It is not uncommon that multiple parameters in the simulation are unknown. To find the power at every combination of the parameters, simply input a range of values for every unknown parameter in the simulation. We generally recommend to only vary up to 3 parameters at a time, any more and it can be difficult to parse the results (and simulations can take a *very* long time to run). For example, lets say there's a range of plausible effect sizes for the interaction, and we want to know how large of a sample we would need to detect each of them. To test this, we can vary both `N` and `r.x1x2.y`:
 
 ```{r message=F, fig4, fig.height = 4, fig.width = 6, fig.align = "center"}
-power_test = power_interaction(n.iter = 1000,     # number of simulations
+power_test = power_interaction_r2(
                   alpha = 0.05,                   # p-value
-                  N = seq(100,600,by = 50),       # sample size
+                  N = seq(100,600,by = 10),       # sample size
                   r.x1.y = .2,                    # correlation between x1 and y
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2       ,            # correlation between x1 and x2
-                  r.x1x2.y = seq(.15,.2,by=.025), # correlation between x1x2 and y
-                  cl = 2,                         # number of clusters for parallel analyses
-                  detailed_results = T,
-                  seed = 742425)
+                  r.x1x2.y = seq(.15,.2,by=.005), # correlation between x1x2 and y
+                  detailed_results = T)
 
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9,       # the power we want to achieve 
                  x = "N",                 # x-axis
                  group = "r.x1x2.y"       # grouping variable
                  )
-power_estimate(power_data = power_test, # output from power_interaction()
+power_estimate(power_data = power_test ,#%>% dplyr::select(c("N","r.x1x2.y","pwr")), # select the variables used for the estimate
                         x = "N",        # the variable we want a precise number for
              power_target = 0.9         # the power we want to achieve 
 )
 ```
 
-From this we've learned that, depending on exactly what effect size we're aiming for, we'll need an `N` between 260 and 460.
+From this we've learned that, depending on exactly what effect size we're aiming for, we'll need an `N` between 260 and 450.
+
+## Why correlations are important
+
+Users may wonder why this package requires so many effect sizes and correlations. Here is a simple example, where the magnitude of the correlation between `x1` and `x2`, as well as their main effects, jointly influence power, in somewhat surprising ways.
+
+```{r message=F, fig4b, fig.height = 4, fig.width = 6, fig.align = "center"}
+power_test = power_interaction_r2(
+                  alpha = 0.05,                   # p-value
+                  N = 600,                       # sample size
+                  r.x1.y = c(-.3,0,.3),                    # correlation between x1 and y
+                  r.x2.y = round(seq(-.3,.3,.05),2),                    # correlation between x2 and y
+                  r.x1.x2 = seq(-.8,.8,.05),        # correlation between x1 and x2
+                  r.x1x2.y = .1,                  # correlation between x1x2 and y
+                  detailed_results = T)
+
+plot_power_curve(power_data = power_test, # output from power_interaction()
+                 power_target = .8,       # the power we want to achieve 
+                 x = "r.x1.x2",
+                 group = "r.x2.y",
+                 facets =  "r.x1.y"          
+                 )
+
+```
+
+Each line shows how power varies depending on the correlation between `x1` and `x2`. This effect then also depends on the main effects of `x1` and `x2`. Thus, ignoring correlations could result in a very inaccurate power calculation.
 
 # Reliability
 
 Reliability is an important issue in statistics. Even if effects are large, if your measurements are unreliable, then you'll be under-powered. This is especially true for interactions, as the reliability of both $X_1$ and $X_2$ influence power, as well as the reliability of $Y$. In the context of `InteractionPoweR`, "reliability" means the proportion of the variance of each variable that is attributable to true signal, as opposed to measurement error. A reliability of '1' (the default), means that your variables were measured with no error (reliability must be greater than 0, and less than or equal to 1). Common statistics that reflect reliability include test-retest reliability, inter-rater reliability, and Cronbach's alpha. The flags `rel.x1`, `rel.x2`, and `rel.y` control the reliability of each simulated variable. We recommend exploring how much reliability will affect your power. For example:
 
 ```{r fig5, warning=F,message=F,error=F,fig.height = 4, fig.width = 6, fig.align = "center"}
-power_test = power_interaction(n.iter = 1000,     # number of simulations
+power_test = power_interaction_r2(
                   alpha = 0.05,                   # p-value
                   N = 450,                        # sample size
                   r.x1.y = .2,                    # correlation between x1 and y
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2,                   # correlation between x1 and x2
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
-                  rel.x1 =  seq(.4,1,by=.2),      # x1 reliability    
-                  rel.x2 =  seq(.4,1,by=.2),      # x2 reliability          
-                  rel.y  =  seq(.4,1,by=.2),      # y reliability          
-                  cl = 2,                         # number of clusters for parallel analyses
-                  seed = 293437        )
+                  rel.x1 =  seq(.2,1,by=.1),      # x1 reliability    
+                  rel.x2 =  seq(.2,1,by=.1),      # x2 reliability          
+                  rel.y  =  seq(.2,1,by=.2))      # y reliability          
+
 plot_power_curve(power_data = power_test, # output from power_interaction()
                  power_target = .9,       # the power we want to achieve 
                  x     = "rel.x1",        # x-axis
@@ -238,15 +294,15 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
                  )
 ```
 
-These plots make it clear how large of an effect reliability will have on your results. In this simulation, even a reliability of "acceptable" or "good" (reliability = 0.8), is enough to bring our power down, from 0.9 to 0.63!
+These plots make it clear how large of an effect reliability will have on your results. In this simulation, even a reliability of "acceptable" or "good" (reliability = 0.8), is enough to bring our power down, from 0.9 to 0.636!
 
 # Binary/ordinal and skewed variables
 
-`InteractionPoweR` simulates all variables as continuous and normal (skew=0). However, variables can be transformed so that they are binary/ordinal (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/ordinal and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable or to measure that trait with a ordinal scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
+`power_interaction_r2()` assumes all variables are continuous, with a normal distribution. `power_interaction()` simulates all variables as continuous and normal (skew=0). **However**, variables can be transformed so that they are binary/ordinal (e.g., 5 discrete levels, though any value under 20 is possible) and/or skewed. Typically, when a continuous and normal variable is transformed to be binary/ordinal and/or skewed, the correlations between that variable and all other variables are reduced or altered. Sometimes, it makes sense for this to happen in the power analysis. For example, say a variable is continuous in the literature, and the effect sizes in the power analysis are drawn from prior work with the continuous variable, but in your analysis you've chosen to dichotomize that variable or to measure that trait with a ordinal scale. In that case, the reduction in correlations makes sense, because that accurately reflects your data analysis and what your power will be. On the other hand, say a variable *is* binary (at least in the literature), maybe you're looking at sex or diagnosis for a disorder. Or maybe you are looking at a variable that is skewed in the literature, such as alcohol consumption or depressive symptoms in the general population. In that case, your input correlations are the correlations *with the binary/skewed variable*, so you don't want them to be reduced or altered.
 
-`InteractionPoweR` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/ordinal/skewed variables. To circumvent the problem of variable transformations altering correlations, `InteractionPoweR` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
+`power_interaction()` distinguishes between these cases with the `adjust.correlations` flag. The default is `adjust.correlations = TRUE`. This indicates that the input correlations are with the binary/ordinal/skewed variables. To circumvent the problem of variable transformations altering correlations, `power_interaction()` runs a function to compute how much the input correlations need to be adjusted so that the final output variables have the correlation structure specified by the user. When `adjust.correlations = FALSE`, this function is not run, allowing the user to see the impact of variable transformations on the correlation structure, and on their power.
 
-The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags `k.x1`, `k.x2`, and `k.y` control the number of discrete values each variable takes (i.e., `k.x1 =2` means that `x1` is a binary variable, while `k.x2 = 5` means that `x2` is a ordinal-variable). If a variable is binary (i.e., `k=2`), the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default. The flags `transform.x1`, `transform.x2`, and `transform.y`are retained for backwards compatibility with prior versions of the package. Setting one of these to `"binary"` is equivalent to `k=2`.  
+The flags `skew.x1`, `skew.x2`, and `skew.y` control the skew of $X_1$, $X_2$, and $Y$. We achieve skew by transforming the normally distributed variable to a skewed gamma distribution. The flags `k.x1`, `k.x2`, and `k.y` control the number of discrete values each variable takes (i.e., `k.x1 =2` means that `x1` is a binary variable, while `k.x2 = 5` means that `x2` is a ordinal-variable). If a variable is binary (i.e., `k=2`), the `binary.p2skew()` convenience function can be used to compute the skew from the proportion of 0's and 1's (i.e. 50/50 = 0.5 = a skew of 0). If a variable is binarized but no skew is specified, skew will be set to `0` by default. The flags `transform.x1`, `transform.x2`, and `transform.y`are retained for backwards compatibility with prior versions of the package. Setting one of these to `"binary"` is equivalent to `k=2`.
 
 ## Binary
 
@@ -270,7 +326,7 @@ plot_interaction(data =test_data )
 
 ## ordinal
 
-Here's an example showing the effects of artificially discretizing `x1` on power. We see that power is lower when there are fewer discrete values. 
+Here's an example showing the effects of artificially discretizing `x1` on power. We see that power is lower when there are fewer discrete values.
 
 ```{r fig9, warning=F,message=F,error=F,fig.height = 4, fig.width = 6, fig.align = "center"}
 
@@ -286,7 +342,6 @@ power_test = power_interaction(
 
 plot_power_curve(power_test,power_target = .9)
 ```
-
 
 ## Skew
 
@@ -311,7 +366,7 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
 
 # Detailed and full results
 
-Beyond power and the range of simple slopes, `InteractionPoweR` generates a lot of additional information about the simulations. These can be optionally returned using `detailed_results = TRUE` and `full_simulation = TRUE`. By default, both of these flags are `FALSE`. `detailed_results` returns additional information for each unique setting combination, including the mean correlation structure between the simulated variables across `niter` simulations, and the mean regression coefficients. `full_simulation`, as the name suggests, returns the output of `test_interaction()` for every single simulated data set that `power_interaction()` generates. The output can be quite large (i.e. if 10,000 simulations are run, it will have 10,000 rows).
+Beyond power and the range of simple slopes, `power_interaction()` and `power_interaction_r2()` generate a lot of additional information about the simulations. These can be optionally returned using `detailed_results = TRUE` and `full_simulation = TRUE` (for `power_interaction()` only). By default, both of these flags are `FALSE`. `detailed_results` returns additional information for each unique setting combination, including the mean correlation structure between the simulated variables across `niter` simulations, and the mean regression coefficients. `full_simulation`, as the name suggests, returns the output of `test_interaction()` for every single simulated data set that `power_interaction()` generates. The output can be quite large (i.e. if 10,000 simulations are run, it will have 10,000 rows).
 
 ## Detailed results
 
@@ -333,9 +388,9 @@ power_test
 
 What is all this?
 
-The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `x1_pwr1` and `x2_pwr`. This is the power to detect an effect of x1 and x2 *in the interaction model*. `x1x2_est_mean` and `x1x2_r2_mean` are then the *mean* effect size ($B_3$) and mean change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. `crossover` and `shape` are the value of $X_1$ where the $X_2$ simple slopes intersect, and the shape of the interaction ($B_3 / B_1$), which reflects whether it is a knock-out, attenuated, or crossover interaction. We also give the mean upper and lower bounds of the 95% confidence interval of the shape and crossover. 
+The first two columns are our standard output, the setting that was varied across simulations, and the power. Next we have `x1_pwr1` and `x2_pwr`. This is the power to detect an effect of x1 and x2 *in the interaction model*. `x1x2_est_mean` and `x1x2_r2_mean` are then the *mean* effect size ($B_3$) and mean change in the adjusted $R^2$ (or pseudo-$R^2$ when $Y$ is binary) when the interaction term $X_1X_2$ is added to the model. `crossover` and `shape` are the value of $X_1$ where the $X_2$ simple slopes intersect, and the shape of the interaction ($B_3 / B_1$), which reflects whether it is a knock-out, attenuated, or crossover interaction. We also give the mean upper and lower bounds of the 95% confidence interval of the shape and crossover.
 
-For example, one interesting insight we can gain here is that even though `n=50` has *76%* power in this analysis, the *observed* `shape` will vary widely. The confidence interval indicates that it is even likely that we will observe significant effects where the interaction has the *opposite* shape from anticipated. In fact, we don't see 95% of simulations yielding a shape that is consistent with our hypothesis that `r.x1x2.y > r.x1.y`, until `N=200`, which has *99.99%* power!  
+For example, one interesting insight we can gain here is that even though `n=50` has *76%* power in this analysis, the *observed* `shape` will vary widely. The confidence interval indicates that it is even likely that we will observe significant effects where the interaction has the *opposite* shape from anticipated. In fact, we don't see 95% of simulations yielding a shape that is consistent with our hypothesis that `r.x1x2.y > r.x1.y`, until `N=200`, which has *99.99%* power!
 
 Next we have `min.lwr`, `min.upr`, `max.lwr`, and `max.upr`. These reflect the range of simple-slopes that were observed in the simulations where the interaction was significant. By default, the number of simple slopes (`q`) is 2 (i.e. a 50/50 split), and $X_2$ is the variable being conditioned on. The ranges reflect that the majority of the lower simple slope ranges from -0.05 to .2, and the upper simple slope ranges from .2 to .45. The proportion of the simple slopes reflected by these ranges can be controlled with the `IQR` flag. The default value for `IQR` is 1.5, which means that the output ranges are the median lower and upper simple slope, +/- 1.5 IQRs (an IQR is the 75th percentile - 25th percentile). This output is intended to give further insight into the effect sizes detected by the simulation.
 

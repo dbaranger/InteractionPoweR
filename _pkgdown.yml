@@ -25,8 +25,9 @@ articles:
 reference:
 - title: "Power analysis"
   desc: >
-    Function to run a power analysis
+    Functions to run a power analysis
 - contents:
+  - power_interaction_r2
   - power_interaction
 - title: "Next steps"
   desc: >
