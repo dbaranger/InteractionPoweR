@@ -35,6 +35,10 @@ This is a non-exhaustive list of common questions and error messages:
 
     -   Another way that a correlation matrix can be "impossible". Any true correlation matrix will have this property (by definition). This error can be caused when correlations are too large or when variables are skewed and correlations are transformed. If you encounter this error, reduce your correlations or skews.
 
+6.  Something else not covered...
+
+    -   If you get a different confusing error, first check that your packages are up to date. Most frequently this occurs with the `{dplyr}` and `{ggplot2}` packages, so make sure those are updated first (i.e., re-install them).
+
 # Strange results
 
 1.  `power_estimate()` produces `NA`.

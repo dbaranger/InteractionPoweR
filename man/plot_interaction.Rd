@@ -4,7 +4,7 @@
 \alias{plot_interaction}
 \title{Plot interaction}
 \usage{
-plot_interaction(data, q = 2)
+plot_interaction(data, q = 3)
 }
 \arguments{
 \item{data}{Output of generate_interaction().}

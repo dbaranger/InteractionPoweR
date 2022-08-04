@@ -122,11 +122,25 @@ generate_interaction <- function(N,
   }
 
 
-
-
   # if(skew.x1 == 0 & skew.x2 == 0 & skew.y == 0 &
   #    transform.x1 == "default" & transform.x2 == "default" & transform.y == "default"){
   #   adjust.correlations<-F}
+
+  ## reliability
+
+  rel.x1x2 = ((rel.x1 *   rel.x2) + (  r.x1.x2^2))/(1 + (  r.x1.x2^2))
+
+  obs.r.x1.y = r.x1.y*sqrt(rel.x1*rel.y)
+  obs.r.x2.y = r.x2.y*sqrt(rel.x2*rel.y)
+  obs.r.x1.x2 = r.x1.x2*sqrt(rel.x1*rel.x2)
+  obs.r.x1x2.y = r.x1x2.y*sqrt(rel.x1x2*rel.y)
+
+  r.x1.y   = obs.r.x1.y
+  r.x2.y   = obs.r.x2.y
+  r.x1.x2  = obs.r.x1.x2
+  r.x1x2.y = obs.r.x1x2.y
+
+  ###
 
   if(adjust.correlations == T){
     adjustments<-compute_adjustment(r.x1.y = r.x1.y,r.x2.y = r.x2.y,tol = tol,iter = iter,
@@ -236,17 +250,21 @@ generate_interaction <- function(N,
 
   # Add measurement error from reliability
 
-  std_x1_err=sqrt((1-rel.x1)/rel.x1)
-  std_x2_err=sqrt((1-rel.x2)/rel.x2)
-  std_y_err=sqrt((1-rel.y)/rel.y)
+  # std_x1_err=sqrt((1-rel.x1)/rel.x1)
+  # std_x2_err=sqrt((1-rel.x2)/rel.x2)
+  # std_y_err=sqrt((1-rel.y)/rel.y)
+  #
+  # error_x1=stats::rnorm(N, 0, std_x1_err)
+  # error_x2=stats::rnorm(N, 0, std_x2_err)
+  # error_y=stats::rnorm(N, 0, std_y_err)
 
-  error_x1=stats::rnorm(N, 0, std_x1_err)
-  error_x2=stats::rnorm(N, 0, std_x2_err)
-  error_y=stats::rnorm(N, 0, std_y_err)
+  # y <- base::scale(x = (y+error_y),center = T,scale = T)
+  # x1<- base::scale(x = (x1+error_x1),center = T,scale = T)
+  # x2<- base::scale(x = (x2+error_x2),center = T,scale = T)
 
-  y <- base::scale(x = (y+error_y),center = T,scale = T)
-  x1<- base::scale(x = (x1+error_x1),center = T,scale = T)
-  x2<- base::scale(x = (x2+error_x2),center = T,scale = T)
+  y <- base::scale(x = (y),center = T,scale = T)
+  x1<- base::scale(x = (x1),center = T,scale = T)
+  x2<- base::scale(x = (x2),center = T,scale = T)
 
   # add levels
 
@@ -271,7 +289,9 @@ generate_interaction <- function(N,
   # if(transform.x2 == "beta"){x2 = norm2gamma2beta(x = x2,skew = skew.x2)}
   # if(transform.y == "beta"){y = norm2gamma2beta(x = y,skew = skew.y)}
 
-
+  y <- base::scale(x = (y),center = T,scale = T)
+  x1<- base::scale(x = (x1),center = T,scale = T)
+  x2<- base::scale(x = (x2),center = T,scale = T)
 
   x1x2<-x1*x2
 

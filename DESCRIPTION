@@ -1,5 +1,5 @@
 Package: InteractionPoweR
-Title: Power analysis for interactions via simulation
+Title: Power analyses for interaction effects in cross-sectional regressions
 Version: 0.1.0.6
 Authors@R: 
     c(person(given = "David",
@@ -32,8 +32,8 @@ Description: Power analysis for regression models which test the interaction
     of two independent variables on a single dependent variable. Includes 
     options for continuous, binary, and/or skewed variables, as well as 
     correlated interacting variables. Also includes options to specify 
-    variable reliability. Power analysis is done via simulation. 
-    Includes tools for simulating single data sets and 
+    variable reliability. Power analyses can be done either analytically
+    or via simulation.  Includes tools for simulating single data sets and 
     visualizing power analysis results. 
 URL: https://dbaranger.github.io/InteractionPoweR
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues

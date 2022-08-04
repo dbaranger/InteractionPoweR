@@ -1,0 +1,13 @@
+citHeader("To cite InteractionPoweR in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Tutorial: Power analyses for interaction effects in cross-sectional regressions",
+  author   = "David A. A. Baranger and Megan C. Finsaas and Brandon L. Goldstein and Colin E. Vize and Donald R. Lynam  and Thomas M. Olino",
+  journal  = "PsyArxiv",
+  year     = "2022",
+  doi      = "10.31234/osf.io/5ptd7",
+  textVersion = paste(
+
+  )
+)
