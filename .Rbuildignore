@@ -10,3 +10,7 @@
 ^pkgdown$
 ^~/InteractionPoweR/_pkgdown\.yml$
 ^~/InteractionPoweR/docs$
+cran-comments.md
+cran-comments.Rmd
+NEWS.Rmd
+^CRAN-SUBMISSION$

@@ -25,7 +25,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' power_interaction_ana(N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
+#' power_interaction_r2(N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 #'}
 #'
 power_interaction_r2<-function(N,

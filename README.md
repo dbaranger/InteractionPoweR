@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR'><img src="man/figures/logo.png" align="right" height="139"/></a>
+# InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR/'><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -31,23 +31,22 @@ which implements the major functions in a user-friendly point-and-click
 interface.
 
 Please report bugs, issues, or questions as an [Issue on
-Github](https://github.com/dbaranger/InteractionPoweR/issues).
+Github](https://github.com/dbaranger/InteractionPoweR/issues/).
 
 ## Installation
 
-You can install InteractionPoweR from github with:
+You can install InteractionPoweR from CRAN with:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("dbaranger/InteractionPoweR")
+install.packages("InteractionPoweR")
 ```
 
-Sometimes there will be a minor installation error, which can be
-resolved by using:
+You can also install the development version of InteractionPoweR from
+github with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("dbaranger/InteractionPoweR/@HEAD")
+devtools::install_github("dbaranger/InteractionPoweR/")
 ```
 
 If you get an error about a corrupt .rdb file, try restarting your R
@@ -133,6 +132,7 @@ cross-sectional regressions.” *PsyArxiv*. doi:
 
 ## Changelog
 
+-   **0.1.1.0** *8/05/2022* First CRAN release. Equivalent to 1.0.0.6.
 -   **0.1.0.6** *6/22/2022* Added function for analytic power.
 -   **0.1.0.5** *2/17/2022* Adds functions to simulate ordinal variables
     (e.g., a likert scale). Also, a speed-up and minor bug-fixes.

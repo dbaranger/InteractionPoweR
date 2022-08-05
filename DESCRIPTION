@@ -1,6 +1,6 @@
 Package: InteractionPoweR
-Title: Power analyses for interaction effects in cross-sectional regressions
-Version: 0.1.0.6
+Title: Power Analyses for Interaction Effects in Cross-Sectional Regressions
+Version: 0.1.1
 Authors@R: 
     c(person(given = "David",
            family = "Baranger",
@@ -28,14 +28,18 @@ Authors@R:
            role = "ctb",
            email = "dlynam@purdue.edu")  
            )
-Description: Power analysis for regression models which test the interaction 
-    of two independent variables on a single dependent variable. Includes 
-    options for continuous, binary, and/or skewed variables, as well as 
-    correlated interacting variables. Also includes options to specify 
-    variable reliability. Power analyses can be done either analytically
-    or via simulation.  Includes tools for simulating single data sets and 
-    visualizing power analysis results. 
-URL: https://dbaranger.github.io/InteractionPoweR
+Description: Power analysis for regression models which test the interaction of
+    two independent variables on a single dependent variable. Includes options 
+    for continuous, binary, and/or skewed variables, as well as correlated 
+    interacting variables. Also includes options to specify variable reliability.
+    Power analyses can be done either analytically or via simulation.  Includes 
+    tools for simulating single data sets and visualizing power analysis results.
+    The primary functions are 'power_interaction_r2' and 'power_interaction'. 
+    Please cite as: Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR,
+    Olino TM (2022). Tutorial: Power analyses for interaction effects in 
+    cross-sectional regressions. PsyArxiv. <doi: 10.31234/osf.io/5ptd7>. 
+Maintainer: David Baranger <dbaranger@gmail.com>
+URL: https://dbaranger.github.io/InteractionPoweR/, https://doi.org/10.31234/osf.io/5ptd7
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -55,5 +59,4 @@ Imports:
   rlang,
   tidyr,
   stats,
-  e1071,
   ggbeeswarm
