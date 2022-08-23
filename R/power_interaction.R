@@ -27,8 +27,8 @@
 #' @param cl Number of clusters to use for running simulations in parallel (recommended). Default is 1 (i.e. not in parallel).
 #' @param detailed_results Default is FALSE. Should detailed results be reported?
 #' @param full_simulation Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.
-#' @param seed Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.
-#' @param tol Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
+#' @param tol Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
+#' @param N.adjustment Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000
 #' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
 #'
 #' @importFrom dplyr "%>%"
@@ -42,10 +42,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
-#'}
-#'
+#' power_interaction(n.iter=10, N=10,r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  rel.x1=1,rel.x2=1,rel.y=1,
                                  skew.x1 = 0,
@@ -57,16 +54,11 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  transform.x1 = "default",
                                  transform.x2 = "default",
                                  transform.y = "default",
-                                 adjust.correlations = T,
-                                 alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,
-                                 detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10,
-                                 seed=NULL){
+                                 adjust.correlations = TRUE,
+                                 alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,N.adjustment =1000000,
+                                 detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10){
 
-if(is.null(seed)){
-  seed =  base::sample(c(1:1000000),1)
-  print(paste("Seed is",seed))
-}
-  base::set.seed(seed = seed)
+
 
   settings<-expand.grid(list( N=N,
                               r.x1.y = r.x1.y,
@@ -88,7 +80,6 @@ if(is.null(seed)){
 
   settings$N <- round(settings$N )
 
-  base::print("Checking for errors in inputs...")
 
   if(min(c(settings$rel.x1,settings$rel.x2,settings$rel.y)) <= 0 |
      max(c(settings$rel.x1,settings$rel.x2,settings$rel.y)) > 1 ){
@@ -114,7 +105,7 @@ if(is.null(seed)){
   for(i in 1: dim(set2)[1]){
     out<-base::tryCatch(expr = {
       data<-generate_interaction(N = 10,
-                                     adjust.correlations = F,
+                                     adjust.correlations = FALSE,
                                      r.x1.y = set2$r.x1.y[i],
                                      r.x2.y = set2$r.x2.y[i],
                                      r.x1x2.y= set2$r.x1x2.y [i],
@@ -135,12 +126,12 @@ if(is.null(seed)){
 
     to_be_removed<-set2[bad_ones,]
     to_be_removed$Removed = 1
-    settings2<-merge(settings,to_be_removed,all.x=T)
+    settings2<-merge(settings,to_be_removed,all.x=TRUE)
     removed<-settings2[!is.na(settings2$Removed),]
 
-    print(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations are impossible, n=",dim(removed)[1],
+    warning(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations are impossible, n=",dim(removed)[1],
                 ". Removing from list.",sep=""))
-    print(to_be_removed)
+    warning(to_be_removed)
 
     settings<-settings2[is.na(settings2$Removed),-14]
 
@@ -174,18 +165,18 @@ if(is.null(seed)){
 
 
 
-  if(adjust.correlations == T){
+  if(adjust.correlations == TRUE){
     if(min(settings$skew.x1) == 0 & max(settings$skew.x1) == 0 &
        min(settings$skew.x2) == 0 & max(settings$skew.x2) == 0 &
        min(settings$skew.y) == 0 & max(settings$skew.y)   == 0 &
        max(settings$k.x1) == 0 &  max(settings$k.x2) == 0 & max(settings$k.y) == 0 &
        transform.x1 == "default" & transform.x2 == "default" & transform.y == "default"){
-      adjust.correlations <- F
+      adjust.correlations <- FALSE
     }
   }
 
 
-  if(adjust.correlations == F){
+  if(adjust.correlations == FALSE){
     settings$r.x1.y.adjust = NULL
     settings$r.x2.y.adjust = NULL
     settings$r.x1.x2.adjust = NULL
@@ -199,17 +190,15 @@ if(is.null(seed)){
   }
 
 
-  if(adjust.correlations == T) {
+  if(adjust.correlations == TRUE) {
 
-    base::print("Adjusting correlations for variable transformations...")
 
     settingsa<-base::unique(settings[,c(2:5,9:14)])
 
-    seed.list1 = base::sample(c(1:1000000),dim(settingsa)[1],replace = F)
 
 
 i=NULL
-    new_settings<-foreach::foreach(i = 1: dim(settingsa)[1],.inorder = F,
+    new_settings<-foreach::foreach(i = 1: dim(settingsa)[1],.inorder = FALSE,
                                    .combine = 'rbind',
                                    .packages = c('dplyr','MASS'),
                                    .export=c("test_interaction","generate_interaction",
@@ -217,7 +206,6 @@ i=NULL
                                              "compute_adjustment"  )) %dopar% {
 
 
-                                                base::set.seed(seed.list1[i])
                                                  settingsb<-settingsa[i,]
 
 
@@ -226,7 +214,7 @@ i=NULL
                                                     transform.x1 != "default" | transform.x2 != "default" | transform.y != "default"){
 
                                                    adjustments<-base::tryCatch(expr = {
-                                                   adjustments<-compute_adjustment(tol = tol,iter = iter,
+                                                   adjustments<-compute_adjustment(tol = tol,iter = iter,N.adjustment = N.adjustment,
                                                                                    r.x1.y = settingsb$r.x1.y,
                                                                                    r.x2.y = settingsb$r.x2.y,
                                                                                    r.x1x2.y = settingsb$r.x1x2.y,
@@ -257,7 +245,7 @@ i=NULL
 
 
 
-    settings<-base::merge(settings,new_settings,all.x=T)
+    settings<-base::merge(settings,new_settings,all.x=TRUE)
 
   }
 
@@ -265,8 +253,8 @@ if( sum(base::is.na(settings$r.x1x2.y.adjust)) > 0){
   error_out = base::paste(sum(base::is.na(settings$r.x1x2.y.adjust))," correlations cannot be adjusted as adjusting results in |r|>1, ",
                     sum(base::is.na(settings$r.x1x2.y.adjust))/dim(settings)[1],"% of settings. These will be removed from simulations" ,sep="")
 
-print(error_out)
-print(base::unique(settings[base::is.na(settings$r.x1x2.y.adjust),c(1:7)]))
+warning(error_out)
+warning(base::unique(settings[base::is.na(settings$r.x1x2.y.adjust),c(1:7)]))
 settings = stats::na.omit(settings)
 
 if(dim(settings)[1] == 0){
@@ -297,17 +285,16 @@ if(dim(settings)[1] == 0){
   }
 
 
-  print(paste("Performing",(dim(settings)[1]*n.iter) ,"simulations",sep=" "))
+  message(paste("Performing",(dim(settings)[1]*n.iter) ,"simulations",sep=" "))
 
 
   if(!is.null(cl)){
-    settings$chunk<-  base::sample(base::rep(c(1:cl),length=dim(settings)[1]),replace = F)
+    settings$chunk<-  base::sample(base::rep(c(1:cl),length=dim(settings)[1]),replace = FALSE)
 
   }else{settings$chunk<-1}
 
   settings_chunks<-base::split(x = settings,f = settings$chunk)
 
-  seed.list3 = base::sample(c(1:10000000),length(settings_chunks),replace = F)
 
   dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
   grouping_variables<-colnames(settings)[dimnum>1]
@@ -330,14 +317,13 @@ if(dim(settings)[1] == 0){
                               .export=c("test_interaction","generate_interaction","norm2ordinal",
                                         "norm2binary","norm2gamma" )) %dopar% {
 
-                                          base::set.seed(seed.list3[d])
 
                                           settingsd<-settings_chunks[[d]]
 
                                           for (i in 1:dim(settingsd)[1] ){
 
                                               test_data =  generate_interaction(
-                                              adjust.correlations = F,
+                                              adjust.correlations = FALSE,
                                               N = settingsd$N[i] * n.iter,
                                               r.x1.y = settingsd$r.x1.y[i],
                                               r.x2.y = settingsd$r.x2.y[i],
@@ -368,7 +354,7 @@ if(dim(settings)[1] == 0){
                                               colnames(a1) = c("x1","x2","y","x1x2")
 
                                               temp = test_interaction( alpha = settingsd$alpha[i],
-                                                                       simple = T,
+                                                                       simple = TRUE,
                                                                        data = a1,
                                                                        q = settingsd$q[i])
 

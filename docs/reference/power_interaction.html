@@ -83,16 +83,16 @@
   transform.x1 <span class="op">=</span> <span class="st">"default"</span>,
   transform.x2 <span class="op">=</span> <span class="st">"default"</span>,
   transform.y <span class="op">=</span> <span class="st">"default"</span>,
-  adjust.correlations <span class="op">=</span> <span class="cn">T</span>,
+  adjust.correlations <span class="op">=</span> <span class="cn">TRUE</span>,
   alpha <span class="op">=</span> <span class="fl">0.05</span>,
   q <span class="op">=</span> <span class="fl">2</span>,
   cl <span class="op">=</span> <span class="cn">NULL</span>,
   ss.IQR <span class="op">=</span> <span class="fl">1.5</span>,
+  N.adjustment <span class="op">=</span> <span class="fl">1e+06</span>,
   detailed_results <span class="op">=</span> <span class="cn">FALSE</span>,
   full_simulation <span class="op">=</span> <span class="cn">FALSE</span>,
   tol <span class="op">=</span> <span class="fl">0.005</span>,
-  iter <span class="op">=</span> <span class="fl">10</span>,
-  seed <span class="op">=</span> <span class="cn">NULL</span>
+  iter <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -144,16 +144,16 @@
 <dd><p>Number of clusters to use for running simulations in parallel (recommended). Default is 1 (i.e. not in parallel).</p></dd>
 <dt>ss.IQR</dt>
 <dd><p>Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.</p></dd>
+<dt>N.adjustment</dt>
+<dd><p>Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000</p></dd>
 <dt>detailed_results</dt>
 <dd><p>Default is FALSE. Should detailed results be reported?</p></dd>
 <dt>full_simulation</dt>
 <dd><p>Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.</p></dd>
 <dt>tol</dt>
-<dd><p>Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.</p></dd>
+<dd><p>Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.</p></dd>
 <dt>iter</dt>
 <dd><p>Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.</p></dd>
-<dt>seed</dt>
-<dd><p>Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -162,10 +162,10 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">power_interaction</span><span class="op">(</span>n.iter<span class="op">=</span><span class="fl">1000</span>, N<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">300</span>,by<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,r.x1.y<span class="op">=</span><span class="fl">0.2</span>, r.x2.y<span class="op">=</span><span class="fl">.2</span>,r.x1x2.y<span class="op">=</span><span class="fl">0.5</span>,r.x1.x2<span class="op">=</span><span class="fl">.2</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">power_interaction</span><span class="op">(</span>n.iter<span class="op">=</span><span class="fl">10</span>, N<span class="op">=</span><span class="fl">10</span>,r.x1.y<span class="op">=</span><span class="fl">0.2</span>, r.x2.y<span class="op">=</span><span class="fl">.2</span>,r.x1x2.y<span class="op">=</span><span class="fl">0.5</span>,r.x1.x2<span class="op">=</span><span class="fl">.2</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Performing 10 simulations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N pwr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10 0.2</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

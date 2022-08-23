@@ -12,11 +12,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' dataset <- generate_interaction(N = seq(100,300,by=10),
-#' r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
-#' simple_slope_plot(dataset)
-#' }
+#' power_analysis <- power_interaction(n.iter = 10,N = seq(100,300,by=100),
+#' r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3,detailed_results = TRUE)
+#' plot_simple_slope(power_analysis)
 plot_simple_slope<-function(power_data,x=NULL,facets=NULL){
 
 
@@ -30,8 +28,8 @@ plot_simple_slope<-function(power_data,x=NULL,facets=NULL){
     if(dim(power_data2)[2]>2){ facets = colnames(power_data2)[2] }
     #if(dim(power_data2)[2]>3){ facets = colnames(power_data2)[3] }
     if(dim(power_data2)[2]>3){
-      print("Too many variable combinations in input data. Please select a subset of data to plot")
-      stop()
+      stop("Too many variable combinations in input data. Please select a subset of data to plot")
+
     }
   }
 

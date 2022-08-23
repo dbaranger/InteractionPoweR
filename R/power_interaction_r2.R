@@ -24,9 +24,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' power_interaction_r2(N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
-#'}
+#' power_interaction_r2(N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.2,r.x1.x2=.2)
 #'
 power_interaction_r2<-function(N,
                                 r.x1.y,
@@ -49,7 +47,6 @@ power_interaction_r2<-function(N,
 
   settings$N <- round(settings$N )
 
-  base::print("Checking for errors in inputs...")
 
 
   if(min(c(settings$rel.x1,settings$rel.x2,settings$rel.y)) <= 0 |
@@ -106,9 +103,9 @@ power_interaction_r2<-function(N,
     settings2<-merge(settings,to_be_removed,all.x=T)
     removed<-settings2[!is.na(settings2$Removed),]
 
-    print(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations are impossible, n=",dim(removed)[1],
+    warning(paste(round(dim(removed)[1]/dim(settings)[1]*100,2)," % of requested simulations are impossible, n=",dim(removed)[1],
                 ". Removing from list.",sep=""))
-    print(to_be_removed)
+    warning(to_be_removed)
 
     settings<-settings2[is.na(settings2$Removed),-14]
 

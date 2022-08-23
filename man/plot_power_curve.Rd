@@ -30,9 +30,7 @@ A ggplot2 object
 Plot the output of power_interaction().
 }
 \examples{
-\dontrun{
-dataset <- generate_interaction(N = seq(100,300,by=10),
-r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
-power_curve(dataset)
-}
+ power_analysis <- power_interaction(n.iter = 10,N = seq(100,300,by=100),
+ r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3,detailed_results = TRUE)
+ plot_power_curve(power_analysis)
 }

@@ -22,7 +22,7 @@ generate_interaction(
   transform.x1 = "default",
   transform.x2 = "default",
   transform.y = "default",
-  adjust.correlations = T,
+  adjust.correlations = TRUE,
   r.x1.y.adjust = NULL,
   r.x2.y.adjust = NULL,
   r.x1x2.y.adjust = NULL,
@@ -76,7 +76,7 @@ generate_interaction(
 
 \item{r.x1.x2.adjust}{Internal use only}
 
-\item{tol}{Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
+\item{tol}{Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
 
 \item{iter}{Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.}
 }
@@ -87,7 +87,5 @@ A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. 
 Simulate a single data set with an interaction (y ~ x1 + x2 + x1*x2). All values other than 'N' are population-level effects - the values within any single simulated data set will vary around the defined values.
 }
 \examples{
-\dontrun{dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
-cor(dataset)
-}
+dataset <- generate_interaction(N = 10,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 }

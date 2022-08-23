@@ -76,7 +76,6 @@ test_power<-power_interaction_r2(
   r.x2.y = .1,              # correlation between x2 and y
   r.x1.x2 = .2              # correlation between x1 and x2
 )
-#> [1] "Checking for errors in inputs..."
 
 test_power
 #>         pwr
@@ -94,6 +93,7 @@ including variable skew, binary variables, and likert variables.
 simulations (`n.iter = 10000`).
 
 ``` r
+set.seed(581827)
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
   alpha = 0.05,             # alpha, for the power analysis
@@ -105,16 +105,12 @@ test_power<-power_interaction(
   k.y =  2,                 # y is binary (has 2 levels) - analyses are run as logistic regressions
   k.x1 = 5,                 # x1 has 5 levels (is a likert variable)
   skew.x1 = .5,             # x1 has a skew of 0.5
-  skew.x2 = 1.5,            # x2 is a continuous variable and has a skew of 1.5
-  seed = 581827             # seed, for reproducibility 
+  skew.x2 = 1.5             # x2 is a continuous variable and has a skew of 1.5
 )
-#> [1] "Checking for errors in inputs..."
-#> [1] "Adjusting correlations for variable transformations..."
-#> [1] "Performing 1000 simulations"
 
 test_power
-#>     N  pwr
-#> 1 350 0.75
+#>     N   pwr
+#> 1 350 0.763
 ```
 
 The simulation estimates 75% power - it’s accuracy will increase with
@@ -129,10 +125,3 @@ Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM
 (2022). “Tutorial: Power analyses for interaction effects in
 cross-sectional regressions.” *PsyArxiv*. doi:
 [10.31234/osf.io/5ptd7](https://doi.org/10.31234/osf.io/5ptd7)
-
-## Changelog
-
--   **0.1.1.0** *8/05/2022* First CRAN release. Equivalent to 1.0.0.6.
--   **0.1.0.6** *6/22/2022* Added function for analytic power.
--   **0.1.0.5** *2/17/2022* Adds functions to simulate ordinal variables
-    (e.g., a likert scale). Also, a speed-up and minor bug-fixes.

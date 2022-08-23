@@ -18,7 +18,5 @@ A vector with a (skewed) gamma distribution
 Transforms a vector with a normal distribution to a gamma distribution.
 }
 \examples{
-\dontrun{
 norm2gamma(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-}
 }

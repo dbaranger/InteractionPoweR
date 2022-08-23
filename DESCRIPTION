@@ -34,10 +34,10 @@ Description: Power analysis for regression models which test the interaction of
     interacting variables. Also includes options to specify variable reliability.
     Power analyses can be done either analytically or via simulation.  Includes 
     tools for simulating single data sets and visualizing power analysis results.
-    The primary functions are 'power_interaction_r2' and 'power_interaction'. 
+    The primary functions are power_interaction_r2() and power_interaction(). 
     Please cite as: Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR,
-    Olino TM (2022). Tutorial: Power analyses for interaction effects in 
-    cross-sectional regressions. PsyArxiv. <doi: 10.31234/osf.io/5ptd7>. 
+    Olino TM (2022). "Tutorial: Power analyses for interaction effects in 
+    cross-sectional regressions." <doi:10.31234/osf.io/5ptd7>. 
 Maintainer: David Baranger <dbaranger@gmail.com>
 URL: https://dbaranger.github.io/InteractionPoweR/, https://doi.org/10.31234/osf.io/5ptd7
 BugReports: https://github.com/dbaranger/InteractionPoweR/issues

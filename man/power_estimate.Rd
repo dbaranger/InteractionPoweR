@@ -20,8 +20,7 @@ A data frame containing the value of x that achieves the target power for each c
 Uses regression to estimate the value needed to attain the target power, given a set of simulation results.
 }
 \examples{
-\dontrun{
-power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
+simulation_results = power_interaction_r2(N=seq(100,300,by=10),
+r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.2,r.x1.x2=.2)
 power_estimate(power_data = simulation_results, x = "N", power_target = .8)
-}
 }

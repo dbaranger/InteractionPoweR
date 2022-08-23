@@ -63,7 +63,9 @@ Correlation adjustments.
 Computes how much variable correlations need to be adjusted so that they have the desired correlation structure after transformation. Intended for internal use only.
 }
 \examples{
-\dontrun{
-compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,transform.y = "binary")
+\donttest{
+compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,
+skew.x1 = 0,skew.x2=0,skew.y=0,k.x1 = 0,k.x2=0,k.y=2,transform.x1 = "default",
+transform.x2 = "default",transform.y = "binary")
 }
 }

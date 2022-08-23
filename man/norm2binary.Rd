@@ -18,7 +18,5 @@ A binary variable
 Transforms a vector with a normal distribution to a binomial distribution with two values.
 }
 \examples{
-\dontrun{
 norm2binary(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-}
 }

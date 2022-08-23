@@ -16,7 +16,5 @@ Skew
 Converts the probability parameter of a binomial distribution to the skew, assuming n=1.
 }
 \examples{
- \dontrun{
 binary.p2skew(p=.5)
-}
 }

@@ -9,9 +9,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' norm2binary(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-#'}
 norm2binary = function(x,skew){
 
   fnToFindRoot = function(s,n,p) {return(((1-2*p)/sqrt(n*p*(1-p)))-s)}
@@ -40,9 +38,7 @@ norm2binary = function(x,skew){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
-#'}
 norm2ordinal = function(x,skew,k){
 
   k=k-1
@@ -70,9 +66,7 @@ norm2ordinal = function(x,skew,k){
 #' @export
 #'
 #' @examples
-#'  \dontrun{
 #' binary.p2skew(p=.5)
-#'}
 binary.p2skew = function(p){
   if(min(p) <= 0 |max(p) >= 1){stop("p must be greater than 0 and less than 1")}
   q=1-p
@@ -95,9 +89,7 @@ binary.p2skew = function(p){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' norm2gamma(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-#'}
 norm2gamma = function(x,skew){
   if(skew ==0){skew<-0.00000001}
   if(skew<0){x=x*-1}
@@ -136,10 +128,13 @@ norm2gamma = function(x,skew){
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,transform.y = "binary")
+#' \donttest{
+#' compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,
+#' skew.x1 = 0,skew.x2=0,skew.y=0,k.x1 = 0,k.x2=0,k.y=2,transform.x1 = "default",
+#' transform.x2 = "default",transform.y = "binary")
 #'}
-compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,N.adjustment=1000000,tol=0.005,iter=10,
+compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
+                             N.adjustment=1000000,tol=0.005,iter=10,
                              skew.x1,
                              skew.x2,
                              skew.y,
@@ -149,7 +144,9 @@ compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,N.adjustment=1000000
                              transform.x1,
                              transform.x2,
                              transform.y,
-                             k.x1,k.x2,k.y
+                             k.x1,
+                             k.x2,
+                             k.y
 ){
 
   target_matrix<-c(r.x1.x2,

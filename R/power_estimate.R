@@ -11,10 +11,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
+#' simulation_results = power_interaction_r2(N=seq(100,300,by=10),
+#' r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.2,r.x1.x2=.2)
 #' power_estimate(power_data = simulation_results, x = "N", power_target = .8)
-#' }
 power_estimate<-function(power_data,x,power_target){
   #power_data2 = power_data
   power_data2<-power_data[,c(1: which(colnames(power_data) == "pwr"))]

@@ -12,11 +12,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' dataset <- generate_interaction(N = seq(100,300,by=10),
-#' r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
-#' power_curve(dataset)
-#' }
+#'  power_analysis <- power_interaction(n.iter = 10,N = seq(100,300,by=100),
+#'  r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3,detailed_results = TRUE)
+#'  plot_power_curve(power_analysis)
 plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target=.8){
 
   y = "pwr"
@@ -29,8 +27,8 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
     if(dim(power_data2)[2]>2){ group = colnames(power_data2)[2] }
     if(dim(power_data2)[2]>3){ facets = colnames(power_data2)[3] }
     if(dim(power_data2)[2]>4){
-      print("Too many variable combinations in input data. Please select a subset of data to plot")
-      stop()
+      stop("Too many variable combinations in input data. Please select a subset of data to plot")
+
     }
   }
 
@@ -56,7 +54,7 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
       ggplot2::geom_hline(yintercept = 0.05,color="darkgrey")+
       ggplot2::geom_hline(yintercept = 1,color="darkgrey")+
       ggplot2::geom_line(linetype="solid",size=.5,color = "darkblue")+
-      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=T,alpha=0,size=1,
+      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=TRUE,alpha=0,size=1,
                   color = "darkblue")+
       ggplot2::xlab(label = x_name)+
       ggplot2::ylab(label = y_name)+
@@ -86,7 +84,7 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
       ggplot2::geom_hline(yintercept = 0.05,color="darkgrey")+
       ggplot2::geom_hline(yintercept = 1,color="darkgrey")+
       ggplot2::geom_line(linetype="solid",size=.5,show.legend = F)+
-      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=T,alpha=0,size=1)+
+      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=TRUE,alpha=0,size=1)+
       ggplot2::xlab(label = x_name)+
       ggplot2::ylab(label = y_name)+
       ggplot2::geom_point(shape=21,color="black",show.legend = F)+
@@ -118,7 +116,7 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
       ggplot2::geom_hline(yintercept = 0.05,color="darkgrey")+
       ggplot2::geom_hline(yintercept = 1,color="darkgrey")+
       ggplot2::geom_line(linetype="solid",size=.5,show.legend = F)+
-      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=T,alpha=0,size=1)+
+      ggplot2::geom_smooth(formula = y ~ x,method = 'loess',se=TRUE,alpha=0,size=1)+
       ggplot2::xlab(label = x_name)+
       ggplot2::ylab(label = y_name)+
       ggplot2::geom_point(shape=21,color="black",show.legend = F)+

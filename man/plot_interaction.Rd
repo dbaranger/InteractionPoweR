@@ -18,8 +18,6 @@ A ggplot2 object
 Plots a single simulated interaction data set
 }
 \examples{
-\dontrun{
 dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 plot_interaction(dataset,q=3)
-}
 }

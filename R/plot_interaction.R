@@ -10,10 +10,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' plot_interaction(dataset,q=3)
-#' }
 plot_interaction<-function(data,q=3){
 
   if(length(table(data$x2)) == 2 | length(table(data$x1)) == 2){q=2}
@@ -39,7 +37,7 @@ plot_interaction<-function(data,q=3){
     if(length(table(data$x2)) > 2 & length(table(data$x1)) > 2) {
     data$simpleslopes<-
       as.factor(as.numeric(cut(data$x2,
-                                                include.lowest = T,
+                                                include.lowest = TRUE,
                                                 breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q)))))
     data$plotx =  data$x1
     xlabel="x1"
@@ -53,7 +51,7 @@ plot_interaction<-function(data,q=3){
 
     data$simpleslopes<-
       as.factor(as.numeric(cut(data$x2,
-                               include.lowest = T,
+                               include.lowest = TRUE,
                                breaks = stats::quantile(data$x2,probs = seq(0,1,by = 1/q)))))
     data$plotx =  data$x1
     xlabel="x1"
@@ -78,7 +76,7 @@ plot_interaction<-function(data,q=3){
         ggplot2::scale_fill_viridis_d(option = c("D"))+
         ggplot2::geom_hline(yintercept = 0,color="grey",size=1,linetype="solid")+
         ggplot2::geom_violin(alpha=0.25, position = ggplot2::position_dodge(width = .75),size=0,color=NA) +
-        ggplot2::geom_boxplot(notch = T,  outlier.size = -1, color="black",lwd=1, alpha = 0.5,show.legend = F)+
+        ggplot2::geom_boxplot(notch = TRUE,  outlier.size = -1, color="black",lwd=1, alpha = 0.5,show.legend = F)+
         ggbeeswarm::geom_quasirandom(shape = 21,alpha=.5,dodge.width = .75,color="black",
                          width = .2,show.legend = F)+
         ggplot2::theme_minimal()+
@@ -108,7 +106,7 @@ plot_interaction<-function(data,q=3){
                   formula = y~x,se=F,size=1.5,color="black",linetype="dashed")+
       ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
       ggplot2::geom_smooth(method = stats::lm,alpha=.5,
-                           formula = y~x,se=T,size=1.5,linetype="solid")+
+                           formula = y~x,se=TRUE,size=1.5,linetype="solid")+
       ggplot2::theme_minimal()+
       ggplot2::xlab(label = xlabel)+
       ggplot2::ylab(label = "y")+
@@ -156,7 +154,7 @@ plot_interaction<-function(data,q=3){
         ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
         ggplot2::geom_smooth(method = stats::glm,alpha=.5,
                               method.args=list(family="binomial"),
-                             formula = y~x,se=T,size=1,linetype="solid")+
+                             formula = y~x,se=TRUE,size=1,linetype="solid")+
         ggplot2::geom_point(alpha=0.5,shape=21,color="black",size=2,show.legend = F)+
         ggplot2::theme_minimal()+
         ggplot2::xlab(label = xlabel)+
@@ -189,7 +187,7 @@ plot_interaction<-function(data,q=3){
         ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
         ggplot2::geom_smooth(method = stats::glm,alpha=.5,
                              method.args=list(family="binomial"),
-                             formula = y~x,se=T,size=1.5,linetype="solid")+
+                             formula = y~x,se=TRUE,size=1.5,linetype="solid")+
         ggplot2::theme_minimal()+
         ggplot2::xlab(label = xlabel)+
         ggplot2::ylab(label = ylabel)+

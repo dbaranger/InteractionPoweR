@@ -72,7 +72,7 @@ We can also use simulations to estimate power. Simulations are particularly usef
 **NB** In all these examples we use 1000 simulations for speed (`n.iter = 1000`), but for robust results we recommend 10,000 simulations (`n.iter = 10000`).
 
 ```{r example2, message=F,warning=F}
-
+set.seed(581827)
 test_power<-power_interaction(
   n.iter = 1000,            # number of simulations per unique combination of input parameters
   alpha = 0.05,             # alpha, for the power analysis
@@ -84,14 +84,13 @@ test_power<-power_interaction(
   k.y =  2,                 # y is binary (has 2 levels) - analyses are run as logistic regressions
   k.x1 = 5,                 # x1 has 5 levels (is a likert variable)
   skew.x1 = .5,             # x1 has a skew of 0.5
-  skew.x2 = 1.5,            # x2 is a continuous variable and has a skew of 1.5
-  seed = 581827             # seed, for reproducibility 
+  skew.x2 = 1.5             # x2 is a continuous variable and has a skew of 1.5
 )
 
 test_power
 ```
 
-The simulation estimates 75% power - it's accuracy will increase with more iterations.
+The simulation estimates 76% power - it's accuracy will increase with more iterations.
 
 ## Citation
 

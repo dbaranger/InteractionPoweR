@@ -13,6 +13,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is a non-exhaustive list of common questions and error messages:
 
+## Questions
+
+1.  "Does this package currently support power analyses for 3-way interactions?"
+
+    -   No. This is the most common question we get. We would love to expand the package to include 3-way interactions, but it will not be easy. There are several steps in the analysis where we do not know exactly what to do for 3-way interactions. If you know the answer to any of these, or know of any papers that have worked these out, please send them our way:
+
+        1.  Variance of a 3-way interaction term when variables are correlated.
+
+        2.  Expected value of $Y$ when there is a 3-way interaction between correlated variables.
+
+        3.  Reliability of a 3-way interaction term when variables are correlated.
+
 # Error messages
 
 1.  "All reliabilities must be greater than 0 and less than or equal to 1"

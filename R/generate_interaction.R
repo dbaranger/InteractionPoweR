@@ -25,15 +25,13 @@
 #' @param r.x2.y.adjust Internal use only
 #' @param r.x1x2.y.adjust Internal use only
 #' @param r.x1.x2.adjust Internal use only
-#' @param tol Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
+#' @param tol Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
 #' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
 #' @return A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values.
 #' @export
 #'
 #' @examples
-#' \dontrun{dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
-#' cor(dataset)
-#' }
+#' dataset <- generate_interaction(N = 10,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 
 generate_interaction <- function(N,
                                      r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
@@ -47,7 +45,7 @@ generate_interaction <- function(N,
                                      transform.x1 = "default",
                                      transform.x2 = "default",
                                      transform.y = "default",
-                                     adjust.correlations = T,
+                                     adjust.correlations = TRUE,
                                      r.x1.y.adjust=NULL,
                                      r.x2.y.adjust=NULL,
                                      r.x1x2.y.adjust=NULL,
@@ -142,7 +140,7 @@ generate_interaction <- function(N,
 
   ###
 
-  if(adjust.correlations == T){
+  if(adjust.correlations == TRUE){
     adjustments<-compute_adjustment(r.x1.y = r.x1.y,r.x2.y = r.x2.y,tol = tol,iter = iter,
                                     r.x1x2.y = r.x1x2.y,r.x1.x2 = r.x1.x2,
                                     skew.x1 = skew.x1,skew.x2 = skew.x2,skew.y = skew.y,
@@ -177,7 +175,7 @@ generate_interaction <- function(N,
   # compute sd of x1x2 (interaction term) using x1 and x2
 
   cor.mat = matrix(data = c(1,r.x1.x2,
-                            r.x1.x2,1),nrow = 2,byrow = T)
+                            r.x1.x2,1),nrow = 2,byrow = TRUE)
   sd = c(sd.x1,sd.x2  )
 
   cov_x1x2<- diag(sd) %*% cor.mat %*% diag(sd) # cor 2 cov
@@ -198,7 +196,7 @@ generate_interaction <- function(N,
                                   r.x1.y,    r.x2.y,     r.x1x2.y,   1),       #y
                          ncol = 4, byrow = TRUE)
 
-  if(min(base::eigen(x = cormat,only.values = T)$values) < 0){
+  if(min(base::eigen(x = cormat,only.values = TRUE)$values) < 0){
     stop("Correlation matrix is impossible - is not positive semi-definite.")
   }
 
@@ -258,13 +256,11 @@ generate_interaction <- function(N,
   # error_x2=stats::rnorm(N, 0, std_x2_err)
   # error_y=stats::rnorm(N, 0, std_y_err)
 
-  # y <- base::scale(x = (y+error_y),center = T,scale = T)
-  # x1<- base::scale(x = (x1+error_x1),center = T,scale = T)
-  # x2<- base::scale(x = (x2+error_x2),center = T,scale = T)
 
-  y <- base::scale(x = (y),center = T,scale = T)
-  x1<- base::scale(x = (x1),center = T,scale = T)
-  x2<- base::scale(x = (x2),center = T,scale = T)
+
+  y <- base::scale(x = (y),center = TRUE,scale = TRUE)
+  x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+  x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
 
   # add levels
 
@@ -289,9 +285,9 @@ generate_interaction <- function(N,
   # if(transform.x2 == "beta"){x2 = norm2gamma2beta(x = x2,skew = skew.x2)}
   # if(transform.y == "beta"){y = norm2gamma2beta(x = y,skew = skew.y)}
 
-  y <- base::scale(x = (y),center = T,scale = T)
-  x1<- base::scale(x = (x1),center = T,scale = T)
-  x2<- base::scale(x = (x2),center = T,scale = T)
+  y <- base::scale(x = (y),center = TRUE,scale = TRUE)
+  x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+  x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
 
   x1x2<-x1*x2
 

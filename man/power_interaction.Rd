@@ -23,16 +23,16 @@ power_interaction(
   transform.x1 = "default",
   transform.x2 = "default",
   transform.y = "default",
-  adjust.correlations = T,
+  adjust.correlations = TRUE,
   alpha = 0.05,
   q = 2,
   cl = NULL,
   ss.IQR = 1.5,
+  N.adjustment = 1e+06,
   detailed_results = FALSE,
   full_simulation = FALSE,
   tol = 0.005,
-  iter = 10,
-  seed = NULL
+  iter = 10
 )
 }
 \arguments{
@@ -82,15 +82,15 @@ power_interaction(
 
 \item{ss.IQR}{Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.}
 
+\item{N.adjustment}{Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000}
+
 \item{detailed_results}{Default is FALSE. Should detailed results be reported?}
 
 \item{full_simulation}{Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.}
 
-\item{tol}{Correlation adjustment tolerance. When adjust.correlations = T, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
+\item{tol}{Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
 
 \item{iter}{Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.}
-
-\item{seed}{Simulation seed. Default is NULL, in which case a seed will be chosen at random and echoed to the user. This seed can then be used to repeat the simulation with identical results.}
 }
 \value{
 A data frame containing the power (\% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.
@@ -99,8 +99,5 @@ A data frame containing the power (\% significant results) for each unique setti
 Power analysis for interaction models, by simulation. A set of n.iter simulations is run for each unique combination of model settings.
 }
 \examples{
-\dontrun{
-power_interaction(n.iter=1000, N=seq(100,300,by=10),r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
-}
-
+power_interaction(n.iter=10, N=10,r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 }
