@@ -15,7 +15,7 @@
 #' @examples
 #' dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' test_interaction(data = dataset, alpha=0.05, q=2)
-test_interaction<-function(data,alpha=0.05,q=2,simple=F){
+test_interaction<-function(data,alpha=0.05,q=2,simple=FALSE){
 
   #out = list()
 
@@ -129,6 +129,6 @@ shape = int.shape$shape
             )
 
 
-  if(simple == T){return(results2)}else{return(out)}
+  if(simple == TRUE){return(results2)}else{return(out)}
 
 }

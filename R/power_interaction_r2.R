@@ -32,7 +32,7 @@ power_interaction_r2<-function(N,
                                 r.x1x2.y,
                                 r.x1.x2,
                             rel.x1=1,rel.x2=1,rel.y=1,
-                            alpha=0.05,detailed_results = F){
+                            alpha=0.05,detailed_results = FALSE){
 
   settings<-expand.grid(list( N=N,
                               r.x1.y = r.x1.y,

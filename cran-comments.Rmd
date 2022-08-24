@@ -1,7 +1,7 @@
 ---
 title: "cran-comments"
 author: "David AA Baranger"
-date: "8/4/2022"
+date: "8/24/2022"
 output: md_document
 ---
 
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is a resubmission. In this version I have addressed the recommended changes to the package:
 
+* Changed T/F to TRUE/FALSE in Rd.-files
 * Added () behind function names in the DESCRIPTION.
 * Reformatted the reference in the DESCRIPTION.
 * Use TRUE or FALSE instead of T/F.

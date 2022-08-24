@@ -14,7 +14,7 @@ power_interaction_r2(
   rel.x2 = 1,
   rel.y = 1,
   alpha = 0.05,
-  detailed_results = F
+  detailed_results = FALSE
 )
 }
 \arguments{

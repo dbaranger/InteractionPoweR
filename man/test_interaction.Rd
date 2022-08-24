@@ -4,7 +4,7 @@
 \alias{test_interaction}
 \title{Test interaction}
 \usage{
-test_interaction(data, alpha = 0.05, q = 2, simple = F)
+test_interaction(data, alpha = 0.05, q = 2, simple = FALSE)
 }
 \arguments{
 \item{data}{Simulated data set. Output of 'generate_interaction()'.}
