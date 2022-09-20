@@ -32,9 +32,13 @@ paper](https://doi.org/10.31234/osf.io/5ptd7), the package
 and the
 [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
 
-We also have a [**Shiny app**](https://intmoddev.shinyapps.io/intPower/)
-which implements the major functions in a user-friendly point-and-click
-interface.
+We have a [**Shiny
+app**](https://mfinsaas.shinyapps.io/InteractionPoweR/) which implements
+the major functions for simulation-based power analyses in a
+user-friendly point-and-click interface. We also have a [**simpler Shiny
+app**](https://david-baranger.shinyapps.io/InteractionPoweR_analytic/)
+for computing analytic power. We recommend this app particularly for
+beginners and users who are new to power analyses.
 
 Please report bugs, issues, or questions as an [Issue on
 Github](https://github.com/dbaranger/InteractionPoweR/issues/).
