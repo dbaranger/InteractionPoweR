@@ -102,7 +102,7 @@ power_interaction(n.iter = 1000,  # number of simulations
                   r.x1x2.y = .15) # correlation between x1x2 and y
 ```
 
-We find that our analysis has 82% power (`pwr`).
+We find that our analysis has 80% power (`pwr`).
 
 # Exploring the parameter space
 

@@ -163,6 +163,9 @@ power_interaction_r2<-function(N,
     b2<-betas[2]
     b3<-betas[3]
 
+    b1a=b1
+    b2a=b2
+
     # solve for total model r2
     totalr2 = (b1*r.x1.y) + (b2*r.x2.y) + (b3*r.x1x2.y)
     # l1$r.squared
@@ -192,6 +195,9 @@ power_interaction_r2<-function(N,
     null2 = (b1*r.x1.y) + (b2*r.x2.y)
 
 
+    b1=b1a
+    b2=b2a
+
     #######################################
   # from the MBESS package
 
@@ -201,7 +207,7 @@ power_interaction_r2<-function(N,
     minusalpha<-1-alpha
     Ft<-stats::qf(minusalpha, 1, df_denom)
     Power<-1-stats::pf(Ft, 1, df_denom,lambda)
-    return(Power)
+    return(c(Power,b1,b2,b3))
   }
 
 
@@ -209,22 +215,28 @@ power_interaction_r2<-function(N,
 settings$pwr=NA
 
 for(i in 1: dim(settings)[1]){
-  settings$pwr[i] = analytic_pwr(N=settings$N[i],
+
+  power_result = analytic_pwr(N=settings$N[i],
                                  r.x1.y = settings$obs.r.x1.y[i],
                                  r.x2.y = settings$obs.r.x2.y[i],
                                  r.x1x2.y = settings$obs.r.x1x2.y[i],
                                  r.x1.x2 = settings$obs.r.x1.x2[i],
                                  alpha = settings$alpha[i]
                                   )
+settings$pwr[i] = power_result[1]
+settings$b1[i] = power_result[2]
+settings$b2[i] = power_result[3]
+settings$b3[i] = power_result[4]
+
 }
 
-settings = cbind(settings$pwr,settings[,c(1:14)])
+settings = cbind(settings$pwr,settings[,c(1:14,16:18)])
 colnames(settings)[1] = "pwr"
 settings$shape = settings$obs.r.x1x2.y/settings$obs.r.x1.y
 
 if(detailed_results ==F){
 
-settings = settings[,-c(12:16)]
+settings = settings[,-c(11:19)]
 dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
 
 grouping_variables<-colnames(settings)[dimnum>1]
@@ -240,7 +252,7 @@ settings = settings[,match(x = grouping_variables,colnames(settings))]
 #colnames(settings)[dim(settings)[2]] = "pwr"
 }else{
   dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
-  dimnum[c(12:16)] = 1
+  dimnum[c(11:19)] = 1
   grouping_variables<-colnames(settings)[dimnum>1]
   if(length(grouping_variables) > 1){
     grouping_variables = c(grouping_variables[-1],grouping_variables[1])

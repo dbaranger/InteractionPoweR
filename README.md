@@ -4,6 +4,12 @@
 # InteractionPoweR <a href='https://dbaranger.github.io/InteractionPoweR/'><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/InteractionPoweR)](https://CRAN.R-project.org/package=InteractionPoweR)
+[![metacran
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/InteractionPoweR)](https://cran.r-project.org/package=InteractionPoweR)
+
 <!-- badges: end -->
 
 The `{InteractionPoweR}` package conducts power analyses for regression
@@ -113,7 +119,7 @@ test_power
 #> 1 350 0.763
 ```
 
-The simulation estimates 75% power - it’s accuracy will increase with
+The simulation estimates 76% power - it’s accuracy will increase with
 more iterations.
 
 ## Citation
