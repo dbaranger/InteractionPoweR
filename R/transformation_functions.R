@@ -1,46 +1,18 @@
-#' norm2binary
-#'
-#' Transforms a vector with a normal distribution to a binomial distribution with two values.
-#'
-#' @param x Input vector
-#' @param skew Desired output skew
-#'
-#' @return A binary variable
-#' @export
-#'
-#' @examples
-#' norm2binary(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-norm2binary = function(x,skew){
-
-  fnToFindRoot = function(s,n,p) {return(((1-2*p)/sqrt(n*p*(1-p)))-s)}
-  binomial_p <- stats::uniroot(f = fnToFindRoot, interval = c(0, 1), tol = 0.0001, s=skew,n=1)$root
-  p <- stats::pnorm(x, 0, 1)
-  p2<-stats::qbinom(p, 1, binomial_p )
-  x.new<-base::scale(p2,center = T,scale = T)
-  return(x.new)
-
-}
-
-
-
-
-
 #' norm2ordinal
 #'
 #' Transforms a vector with a normal distribution to a binomial distribution with two values.
 #'
 #' @param x Input vector
-#' @param skew Desired output skew
-#' @param k Number of discrete values (e.g., 2=binary, 5=ordinal scale)
+#' @param k Number of discrete values (e.g., 2=binary, 5=likert scale)
 
 #'
 #' @return A ordinal or binary variable
 #' @export
 #'
 #' @examples
-#' norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
-norm2ordinal = function(x,skew,k){
-
+#' norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1),k=2)
+norm2ordinal = function(x,k){
+  skew=0
   k=k-1
 
   fnToFindRoot = function(s,n,p) {return(((1-2*p)/sqrt(n*p*(1-p)))-s)}
@@ -51,56 +23,6 @@ norm2ordinal = function(x,skew,k){
   return(x.new)
 
 }
-
-
-
-
-
-#' binary.p2skew
-#'
-#' Converts the probability parameter of a binomial distribution to the skew, assuming n=1.
-#'
-#' @param p The binomial probability
-#'
-#' @return Skew
-#' @export
-#'
-#' @examples
-#' binary.p2skew(p=.5)
-binary.p2skew = function(p){
-  if(min(p) <= 0 |max(p) >= 1){stop("p must be greater than 0 and less than 1")}
-  q=1-p
-  n=1
-  skew = (q-p)/base::sqrt(n*p*q)
-  return(skew)
-}
-
-
-
-
-#' norm2gamma
-#'
-#' Transforms a vector with a normal distribution to a gamma distribution.
-#'
-#' @param x Input vector
-#' @param skew Desired skew
-#'
-#' @return A vector with a (skewed) gamma distribution
-#' @export
-#'
-#' @examples
-#' norm2gamma(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1)
-norm2gamma = function(x,skew){
-  if(skew ==0){skew<-0.00000001}
-  if(skew<0){x=x*-1}
-  shape = (2/skew)^2
-  p <- stats::pnorm(x, 0, 1)
-  p2<- stats::qgamma(p, shape, scale = 1)
-  x.new<-base::scale(p2,center = T,scale = T)
-  if(skew<0){x.new=x.new*-1}
-  return(x.new)
-}
-
 
 
 #' compute_adjustment
@@ -114,12 +36,6 @@ norm2gamma = function(x,skew){
 #' @param N.adjustment Internal use only
 #' @param tol Internal use only
 #' @param iter Internal use only
-#' @param skew.x1 Internal use only
-#' @param skew.x2 Internal use only
-#' @param skew.y Internal use only
-#' @param transform.x1 Internal use only
-#' @param transform.x2 Internal use only
-#' @param transform.y Internal use only
 #' @param k.x1 Internal use only
 #' @param k.x2 Internal use only
 #' @param k.y Internal use only
@@ -130,20 +46,10 @@ norm2gamma = function(x,skew){
 #' @examples
 #' \donttest{
 #' compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,
-#' skew.x1 = 0,skew.x2=0,skew.y=0,k.x1 = 0,k.x2=0,k.y=2,transform.x1 = "default",
-#' transform.x2 = "default",transform.y = "binary")
+#'k.x1 = 0,k.x2=0,k.y=2)
 #'}
 compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                              N.adjustment=1000000,tol=0.005,iter=10,
-                             skew.x1,
-                             skew.x2,
-                             skew.y,
-                             # levels.x1,
-                             # levels.x2,
-                             # levels.y,
-                             transform.x1,
-                             transform.x2,
-                             transform.y,
                              k.x1,
                              k.x2,
                              k.y
@@ -164,17 +70,13 @@ compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
 
 
     a2<-generate_interaction(N = N.adjustment,
-                                 adjust.correlations = F,
-                                 r.x1.y = (r.x1.y+adjustments[2]), # wrong
-                                 r.x2.y = (r.x2.y+adjustments[4]), # right
-                                 r.x1x2.y = (r.x1x2.y+adjustments[6]), #right
-                                 r.x1.x2 = (r.x1.x2+adjustments[1]), # right
-                                 transform.x1 = transform.x1,
-                                 skew.x1= skew.x1,
-                                 transform.x2 = transform.x2,
-                                 skew.x2= skew.x2,
-                                 transform.y = transform.y,
-                                 skew.y= skew.y,
+                                 adjust.correlations = FALSE,
+                                 r.x1.y = (r.x1.y+adjustments[2]),
+                                 r.x2.y = (r.x2.y+adjustments[4]),
+                                 r.x1x2.y = (r.x1x2.y+adjustments[6]),
+                                 r.x1.x2 = (r.x1.x2+adjustments[1]),
+
+                             internal.adjust=TRUE,
                              k.x1 = k.x1,k.x2=k.x2,k.y=k.y)
     c1<-stats::cor(a2)
 
@@ -193,8 +95,16 @@ compute_adjustment<-function(r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
     })
 
     adjustments<-adjustments + (adjust - b[,1])
+
+    if(max(adjustments+target_matrix)>1){
+
+          stop("Data cannot be transformed to desired distribution")
+    }
+
     i=i+1
-  }
+
+    }
+
   return(adjustments)
 }
 

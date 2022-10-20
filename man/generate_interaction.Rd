@@ -13,22 +13,18 @@ generate_interaction(
   rel.x1 = 1,
   rel.x2 = 1,
   rel.y = 1,
-  skew.x1 = 0,
-  skew.x2 = 0,
-  skew.y = 0,
   k.x1 = 0,
   k.x2 = 0,
   k.y = 0,
-  transform.x1 = "default",
-  transform.x2 = "default",
-  transform.y = "default",
   adjust.correlations = TRUE,
+  tol = 0.005,
+  iter = 10,
+  N.adjustment = 1e+06,
   r.x1.y.adjust = NULL,
   r.x2.y.adjust = NULL,
-  r.x1x2.y.adjust = NULL,
   r.x1.x2.adjust = NULL,
-  tol = 0.005,
-  iter = 10
+  r.x1x2.y.adjust = NULL,
+  internal.adjust = FALSE
 )
 }
 \arguments{
@@ -48,40 +44,32 @@ generate_interaction(
 
 \item{rel.y}{Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{skew.x1}{Skew of x1. Default is 0 (normally distributed).}
+\item{k.x1}{Number of discrete values for x1. Can be used to make a variable binary or ordinal.}
 
-\item{skew.x2}{Skew of x2. Default is 0 (normally distributed).}
+\item{k.x2}{Number of discrete values for x2. Can be used to make a variable binary or ordinal.}
 
-\item{skew.y}{Skew of y. Default is 0 (normally distributed).}
+\item{k.y}{Number of discrete values for y.Can be used to make a variable binary or ordinal.}
 
-\item{k.x1}{Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{k.x2}{Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{k.y}{Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{transform.x1}{Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variable is skewed.}
-
-\item{transform.x2}{Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variable is skewed.}
-
-\item{transform.y}{Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variable is skewed.}
-
-\item{adjust.correlations}{If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.}
-
-\item{r.x1.y.adjust}{Internal use only}
-
-\item{r.x2.y.adjust}{Internal use only}
-
-\item{r.x1x2.y.adjust}{Internal use only}
-
-\item{r.x1.x2.adjust}{Internal use only}
+\item{adjust.correlations}{If variables are ordinal or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.}
 
 \item{tol}{Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
 
 \item{iter}{Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.}
+
+\item{N.adjustment}{Sample size to use when adjusting correlations. Default = 1000000.}
+
+\item{r.x1.y.adjust}{Internal use only.}
+
+\item{r.x2.y.adjust}{Internal use only.}
+
+\item{r.x1.x2.adjust}{Internal use only.}
+
+\item{r.x1x2.y.adjust}{Internal use only.}
+
+\item{internal.adjust}{Internal use only.}
 }
 \value{
-A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values.
+A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values. Output variables are all z-scored (mean=0, sd=1).
 }
 \description{
 Simulate a single data set with an interaction (y ~ x1 + x2 + x1*x2). All values other than 'N' are population-level effects - the values within any single simulated data set will vary around the defined values.

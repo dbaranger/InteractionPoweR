@@ -4,12 +4,20 @@
 \alias{test_interaction}
 \title{Test interaction}
 \usage{
-test_interaction(data, alpha = 0.05, q = 2, simple = FALSE)
+test_interaction(
+  data,
+  alpha = 0.05,
+  detailed_results = FALSE,
+  q = 2,
+  simple = FALSE
+)
 }
 \arguments{
 \item{data}{Simulated data set. Output of 'generate_interaction()'.}
 
 \item{alpha}{The alpha. At what p-value is the interaction deemed significant? Default is 0.05.}
+
+\item{detailed_results}{Should results beyond the linear model (change in R2, simple slopes, correlations, and confidence intervals) be returned? Default is FALSE.}
 
 \item{q}{Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
 Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.

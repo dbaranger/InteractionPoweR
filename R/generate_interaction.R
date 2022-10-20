@@ -11,23 +11,20 @@
 #' @param rel.x1 Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #' @param rel.x2 Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #' @param rel.y Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
-#' @param skew.x1 Skew of x1. Default is 0 (normally distributed).
-#' @param skew.x2 Skew of x2. Default is 0 (normally distributed).
-#' @param skew.y Skew of y. Default is 0 (normally distributed).
-#' @param k.x1 Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param k.x2 Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param k.y Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param adjust.correlations If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.
-#' @param transform.x1 Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variable is skewed.
-#' @param transform.x2 Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variable is skewed.
-#' @param transform.y Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variable is skewed.
-#' @param r.x1.y.adjust Internal use only
-#' @param r.x2.y.adjust Internal use only
-#' @param r.x1x2.y.adjust Internal use only
-#' @param r.x1.x2.adjust Internal use only
+#' @param k.x1 Number of discrete values for x1. Can be used to make a variable binary or ordinal.
+#' @param k.x2 Number of discrete values for x2. Can be used to make a variable binary or ordinal.
+#' @param k.y Number of discrete values for y.Can be used to make a variable binary or ordinal.
+#' @param adjust.correlations If variables are ordinal or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.
 #' @param tol Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
 #' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
-#' @return A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values.
+#' @param N.adjustment Sample size to use when adjusting correlations. Default = 1000000.
+#' @param r.x1.y.adjust Internal use only.
+#' @param r.x2.y.adjust Internal use only.
+#' @param r.x1x2.y.adjust Internal use only.
+#' @param r.x1.x2.adjust Internal use only.
+#' @param internal.adjust Internal use only.
+
+#' @return A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values. Output variables are all z-scored (mean=0, sd=1).
 #' @export
 #'
 #' @examples
@@ -36,20 +33,14 @@
 generate_interaction <- function(N,
                                      r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                      rel.x1=1,rel.x2=1,rel.y=1,
-                                     skew.x1 = 0,
-                                     skew.x2 = 0,
-                                     skew.y = 0,
                                      k.x1 = 0,
                                      k.x2 = 0,
                                      k.y = 0,
-                                     transform.x1 = "default",
-                                     transform.x2 = "default",
-                                     transform.y = "default",
                                      adjust.correlations = TRUE,
-                                     r.x1.y.adjust=NULL,
-                                     r.x2.y.adjust=NULL,
-                                     r.x1x2.y.adjust=NULL,
-                                     r.x1.x2.adjust=NULL,tol=0.005,iter=10
+                                     tol=0.005,iter=10,N.adjustment=1000000,
+                                     r.x1.y.adjust = NULL,r.x2.y.adjust=NULL,
+                                     r.x1.x2.adjust=NULL,r.x1x2.y.adjust=NULL,
+                                     internal.adjust=FALSE
 ) {
 
   # order of operations
@@ -59,23 +50,23 @@ generate_interaction <- function(N,
   #  4. Path tracing
   #  5. Simulate data as continuous normal variables
   #  6. Add in noise from reliability
-  #  7. Transform variables (skew & number of levels)
+  #  7. Transform variables (number of levels)
   #  8. Output
 
 
-
+  if(adjust.correlations == TRUE){internal.adjust=TRUE}
 
   # check for input errors
   if(rel.x1 <= 0 | rel.x1 >1 |rel.x2 <= 0 | rel.x2 >1 | rel.y <= 0 | rel.y >1){
     stop("All reliabilities must be greater than 0 and less than or equal to 1")}
 
   if(max(abs(c( r.x1.y,r.x2.y,r.x1.x2,r.x1x2.y)))> 1 ){
-    stop("All correlations must be within [-1,1]")}
+    stop("All correlations must be within [-1,1].")}
 
 
-  if(k.x1 != round(k.x1)){stop("k.x1 must be an integer, or 0")}
-  if(k.x2 != round(k.x2)){stop("k.x2 must be an integer, or 0")}
-  if(k.y != round(k.y)){stop("k.y must be an integer, or 0")}
+  if(k.x1 != round(k.x1) | k.x1 == 1 | k.x1 < 0){stop("k.x1 must be a positive integer greater than 1, or 0.")}
+  if(k.x2 != round(k.x2)| k.x2 == 1 | k.x2 < 0){stop("k.x2 must be a positive integer greater than 1, or 0.")}
+  if(k.y != round(k.y)| k.y == 1 | k.y < 0){stop("k.y must be a positive integer greater than 1, or 0.")}
 
   # defaults
 
@@ -89,42 +80,7 @@ generate_interaction <- function(N,
   r.x2.x1x2 = 0
 
 
-  if(transform.x1 == "binary"){k.x1 = 2}
-  if(transform.x2 == "binary"){k.x2 = 2}
-  if(transform.y == "binary") {k.y = 2}
-
-  if(k.x1 < 2){k.x1 = 0}
-  if(k.x2 < 2){k.x2 = 0}
-  if(k.y < 2){k.y = 0}
-
-  if(k.x1 >= 2){transform.x1 == "default"}
-  if(k.x2 >= 2){transform.x2 == "default"}
-  if(k.y >= 2) {transform.y == "default"}
-
-
-
-  if(transform.x1 == "default"){
-    if(skew.x1 != 0 & k.x1 == 0){transform.x1 = "gamma"}
-    # if(skew.x1 < 0 & skew.x1 >= -1){transform.x1 ="sn"}
-    #if(skew.x1 < -1){transform.x1 = "beta"}
-  }
-  if(transform.x2 == "default"){
-    if(skew.x2 != 0 & k.x2 == 0){transform.x2 = "gamma"}
-    # if(skew.x2 < 0 & skew.x2 >= -1){transform.x2 ="sn"}
-   # if(skew.x2 < -1){transform.x2 = "beta"}
-  }
-  if(transform.y == "default"){
-    if(skew.y != 0 & k.y == 0){transform.y = "gamma"}
-    #  if(skew.y < 0 & skew.y >= -1){transform.y = "sn"}
-   # if(skew.y < -1){transform.y = "beta"}
-  }
-
-
-  # if(skew.x1 == 0 & skew.x2 == 0 & skew.y == 0 &
-  #    transform.x1 == "default" & transform.x2 == "default" & transform.y == "default"){
-  #   adjust.correlations<-F}
-
-  ## reliability
+  ###### reliability ##########
 
   rel.x1x2 = ((rel.x1 *   rel.x2) + (  r.x1.x2^2))/(1 + (  r.x1.x2^2))
 
@@ -138,15 +94,15 @@ generate_interaction <- function(N,
   r.x1.x2  = obs.r.x1.x2
   r.x1x2.y = obs.r.x1x2.y
 
-  ###
+  ################################
 
-  if(adjust.correlations == TRUE){
-    adjustments<-compute_adjustment(r.x1.y = r.x1.y,r.x2.y = r.x2.y,tol = tol,iter = iter,
+  if(k.x1>0 | k.x2>0 | k.y >0 ){needs.adjustment = TRUE}else{needs.adjustment = FALSE}
+
+  if(adjust.correlations == TRUE & needs.adjustment == TRUE){
+    adjustments<-compute_adjustment(r.x1.y = r.x1.y,r.x2.y = r.x2.y,tol = tol,iter = iter,N.adjustment=N.adjustment,
                                     r.x1x2.y = r.x1x2.y,r.x1.x2 = r.x1.x2,
-                                    skew.x1 = skew.x1,skew.x2 = skew.x2,skew.y = skew.y,
-                                    k.x1 = k.x1, k.x2 = k.x2, k.y = k.y,
-                                    #levels.x1 = levels.x1, levels.x2 = levels.x2, levels.y = levels.y,
-                                    transform.x1 = transform.x1,transform.x2 = transform.x2,transform.y = transform.y
+
+                                    k.x1 = k.x1, k.x2 = k.x2, k.y = k.y
     )
 
     r.x1.y.adjust = adjustments[2]
@@ -156,7 +112,7 @@ generate_interaction <- function(N,
 
   }
 
-  # add adjustment to correlations for subsequent skew attenuation
+  # add adjustment to correlations for subsequent attenuation
 
   if(!is.null(r.x1.y.adjust) & !is.null(r.x1.y.adjust) & !is.null(r.x1.y.adjust) & !is.null(r.x1.y.adjust)){
     r.x1.y = r.x1.y + r.x1.y.adjust
@@ -168,7 +124,7 @@ generate_interaction <- function(N,
 
 
   if(max(abs(c( r.x1.y,r.x2.y,r.x1.x2,r.x1x2.y)))> 1 ){
-    stop("All correlations must be within [-1,1], this could be due to skew being too high.")
+    stop("All correlations must be within [-1,1].")
   }
 
 
@@ -197,7 +153,7 @@ generate_interaction <- function(N,
                          ncol = 4, byrow = TRUE)
 
   if(min(base::eigen(x = cormat,only.values = TRUE)$values) < 0){
-    stop("Correlation matrix is impossible - is not positive semi-definite.")
+    stop("Correlation matrix is not positive semi-definite. Try reducing one or more correlations.")
   }
 
   sd = c(sd.x1,sd.x2,sd.x1x2,sd.y   )
@@ -222,6 +178,20 @@ generate_interaction <- function(N,
   x1    = data[, 1]
   x2    = data[, 2]
 
+  x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+  x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+
+  if(adjust.correlations == TRUE | internal.adjust == TRUE){
+
+    if(k.x1 >= 2){
+      x1 = norm2ordinal(x = x1,k = k.x1)
+    }
+    if(k.x2 >= 2){
+      x2 = norm2ordinal(x = x2,k = k.x2)
+      x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+    }
+}
+
   var.y<-covmat[4,4]
   var.x1<-covmat[1,1]
   var.x2<-covmat[2,2]
@@ -236,7 +206,7 @@ generate_interaction <- function(N,
 
   if(yvar < 0){
     #print()
-    stop("Settings produce a negative y-variance")
+    stop("Settings produce a negative y-variance. Try reducing one or more correlations.")
   }
 
   ysd <- base::sqrt(yvar)
@@ -244,62 +214,34 @@ generate_interaction <- function(N,
 
   y <- stats::rnorm(N, ymean , ysd)
 
-
-
-  # Add measurement error from reliability
-
-  # std_x1_err=sqrt((1-rel.x1)/rel.x1)
-  # std_x2_err=sqrt((1-rel.x2)/rel.x2)
-  # std_y_err=sqrt((1-rel.y)/rel.y)
-  #
-  # error_x1=stats::rnorm(N, 0, std_x1_err)
-  # error_x2=stats::rnorm(N, 0, std_x2_err)
-  # error_y=stats::rnorm(N, 0, std_y_err)
-
-
-
   y <- base::scale(x = (y),center = TRUE,scale = TRUE)
-  x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
-  x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
 
-  # add levels
+  if(adjust.correlations == FALSE & internal.adjust == FALSE){
 
+    if(k.x1 >= 2){
+      x1 = norm2ordinal(x = x1,k = k.x1)
+      x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+    }
+    if(k.x2 >= 2){
+      x2 = norm2ordinal(x = x2,k = k.x2)
+      x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+      }
 
-  #x1x2<-x1*x2
+  }
 
-  ### skew ###
-
-  # if(transform.x1 == "binary"){x1 = norm2binary(x = x1,skew = skew.x1)}
-  # if(transform.x2 == "binary"){x2 = norm2binary(x = x2,skew = skew.x2)}
-  # if(transform.y == "binary"){y = norm2binary(x = y,skew = skew.y)}
-
-  if(k.x1 >= 2){x1 = norm2ordinal(x = x1,skew = skew.x1,k = k.x1)}
-  if(k.x2 >= 2){x2 = norm2ordinal(x = x2,skew = skew.x2,k = k.x2)}
-  if(k.y >= 2){y = norm2ordinal(x = y,skew = skew.y,k = k.y)}
-
-  if(transform.x1 == "gamma"){x1 = norm2gamma(x = x1,skew = skew.x1)}
-  if(transform.x2 == "gamma"){x2 = norm2gamma(x = x2,skew = skew.x2)}
-  if(transform.y == "gamma"){y = norm2gamma(x = y,skew = skew.y)}
-
-  # if(transform.x1 == "beta"){x1 = norm2gamma2beta(x = x1,skew = skew.x1)}
-  # if(transform.x2 == "beta"){x2 = norm2gamma2beta(x = x2,skew = skew.x2)}
-  # if(transform.y == "beta"){y = norm2gamma2beta(x = y,skew = skew.y)}
-
+  if(k.y >= 2){
+  y = norm2ordinal(x = y,k = k.y)
   y <- base::scale(x = (y),center = TRUE,scale = TRUE)
-  x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
-  x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+  }
+
 
   x1x2<-x1*x2
 
   #################################
 
+  # output data frame
 
-  # output dataframe
-
-
-  dat<-as.data.frame(cbind(x1,x2,y,x1x2))
-  colnames(dat)<-c("x1","x2","y","x1x2")
-
+  dat<-data.frame(x1=x1,x2=x2,y=y,x1x2=x1x2)
   return(dat)
 }
 

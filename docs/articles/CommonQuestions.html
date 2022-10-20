@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Questions &amp; Errors</h1>
                         <h4 data-toc-skip class="author">David AA Baranger</h4>
             
@@ -135,9 +135,9 @@
 </ul>
 </li>
 <li>
-<p>“All correlations must be within [-1,1], this could be due to skew being too high.” or “No valid settings”</p>
+<p>“All correlations must be within [-1,1],.” or “No valid settings”</p>
 <ul>
-<li>If <code>adjust.correlations = TRUE</code>, and a variable is binary or skew is not 0, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or skewed reduces their correlations with the other variables. However, it can happen that a variable is <em>so</em> skewed that this is impossible, as it would require correlations greater than |1|. If you encounter this error, reduce your skew, or your correlations between variables. <code><a href="../reference/power_interaction.html">power_interaction()</a></code> automatically removes these settings from the input.</li>
+<li>If <code>adjust.correlations = TRUE</code>, and a variable is binary or ordinal, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or ordinal reduces their correlations with the other variables. However, it can happen that this is impossible, as it would require correlations greater than |1|. If you encounter this error, reduce your your correlations between variables. <code><a href="../reference/power_interaction.html">power_interaction()</a></code> automatically removes these settings from the input.</li>
 </ul>
 </li>
 <li>
@@ -149,7 +149,7 @@
 <li>
 <p>“Correlation matrix is impossible - is not positive semi-definite.”</p>
 <ul>
-<li>Another way that a correlation matrix can be “impossible”. Any true correlation matrix will have this property (by definition). This error can be caused when correlations are too large or when variables are skewed and correlations are transformed. If you encounter this error, reduce your correlations or skews.</li>
+<li>Another way that a correlation matrix can be “impossible”. This error means that the smallest eigenvalue is negative. This error can be caused when correlations are too large or when variables are binary/ordinal and correlations are transformed. If you encounter this error, reduce your correlations.</li>
 </ul>
 </li>
 <li>
@@ -198,7 +198,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

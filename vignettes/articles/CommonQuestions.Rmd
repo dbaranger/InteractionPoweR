@@ -35,9 +35,9 @@ This is a non-exhaustive list of common questions and error messages:
 
     -   The main input effect sizes are Pearson's correlations, which range from [-1,1]. If you see this error, check for typos in your input.
 
-3.  "All correlations must be within [-1,1], this could be due to skew being too high." or "No valid settings"
+3.  "All correlations must be within [-1,1],." or "No valid settings"
 
-    -   If `adjust.correlations = TRUE`, and a variable is binary or skew is not 0, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or skewed reduces their correlations with the other variables. However, it can happen that a variable is *so* skewed that this is impossible, as it would require correlations greater than \|1\|. If you encounter this error, reduce your skew, or your correlations between variables. `power_interaction()` automatically removes these settings from the input.
+    -   If `adjust.correlations = TRUE`, and a variable is binary or ordinal, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or ordinal reduces their correlations with the other variables. However, it can happen that this is impossible, as it would require correlations greater than \|1\|. If you encounter this error, reduce your your correlations between variables. `power_interaction()` automatically removes these settings from the input.
 
 4.  "Settings produce a negative y-variance" or "No valid settings"
 
@@ -45,7 +45,7 @@ This is a non-exhaustive list of common questions and error messages:
 
 5.  "Correlation matrix is impossible - is not positive semi-definite."
 
-    -   Another way that a correlation matrix can be "impossible". Any true correlation matrix will have this property (by definition). This error can be caused when correlations are too large or when variables are skewed and correlations are transformed. If you encounter this error, reduce your correlations or skews.
+    -   Another way that a correlation matrix can be "impossible". This error means that the smallest eigenvalue is negative. This error can be caused when correlations are too large or when variables are binary/ordinal and correlations are transformed. If you encounter this error, reduce your correlations.
 
 6.  Something else not covered...
 

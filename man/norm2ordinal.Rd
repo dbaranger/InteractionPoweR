@@ -4,14 +4,12 @@
 \alias{norm2ordinal}
 \title{norm2ordinal}
 \usage{
-norm2ordinal(x, skew, k)
+norm2ordinal(x, k)
 }
 \arguments{
 \item{x}{Input vector}
 
-\item{skew}{Desired output skew}
-
-\item{k}{Number of discrete values (e.g., 2=binary, 5=ordinal scale)}
+\item{k}{Number of discrete values (e.g., 2=binary, 5=likert scale)}
 }
 \value{
 A ordinal or binary variable
@@ -20,5 +18,5 @@ A ordinal or binary variable
 Transforms a vector with a normal distribution to a binomial distribution with two values.
 }
 \examples{
-norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1), skew = 1,k=2)
+norm2ordinal(x = rnorm(n = 100,mean = 0,sd = 1),k=2)
 }

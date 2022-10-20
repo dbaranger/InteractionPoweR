@@ -23,8 +23,8 @@ the cross-sectional Pearson’s correlation, (3) simulations do not assume
 that the interacting variables are independent, (4) any variable in the
 model, including the outcome, can have anywhere from 2 (i.e., binary) to
 20 discrete values, and (5) analyses can incorporate the effects of
-reliability and skew, both of the interacting variables, as well as of
-the outcome variable.
+reliability, both of the interacting variables, as well as of the
+outcome variable.
 
 **For more information see our [tutorial
 paper](https://doi.org/10.31234/osf.io/5ptd7), the package
@@ -96,35 +96,32 @@ We see that we have 80% power.
 
 We can also use simulations to estimate power. Simulations are
 particularly useful because they can account for non-normal data,
-including variable skew, binary variables, and likert variables.
+including binary and likert variables.
 
 **NB** In all these examples we use 1000 simulations for speed
 (`n.iter = 1000`), but for robust results we recommend 10,000
 simulations (`n.iter = 10000`).
 
 ``` r
-set.seed(581827)
+set.seed(2022)
 test_power<-power_interaction(
-  n.iter = 1000,            # number of simulations per unique combination of input parameters
+  n.iter = 10000,            # number of simulations per unique combination of input parameters
   alpha = 0.05,             # alpha, for the power analysis
   N = 350,                  # sample size
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
   r.x1.y = .2,              # correlation between x1 and y
   r.x2.y = .1,              # correlation between x2 and y  
   r.x1.x2 = .2,             # correlation between x1 and x2 
-  k.y =  2,                 # y is binary (has 2 levels) - analyses are run as logistic regressions
-  k.x1 = 5,                 # x1 has 5 levels (is a likert variable)
-  skew.x1 = .5,             # x1 has a skew of 0.5
-  skew.x2 = 1.5             # x2 is a continuous variable and has a skew of 1.5
+  k.y =  5,                 # y is likert
+  k.x1 = 2                  # x1 is binary
 )
 
 test_power
-#>     N   pwr
-#> 1 350 0.763
+#>     N    pwr
+#> 1 350 0.8149
 ```
 
-The simulation estimates 76% power - it’s accuracy will increase with
-more iterations.
+The simulation’s accuracy will increase with more iterations.
 
 ## Citation
 

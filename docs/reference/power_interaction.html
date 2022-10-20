@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,15 +74,9 @@
   rel.x1 <span class="op">=</span> <span class="fl">1</span>,
   rel.x2 <span class="op">=</span> <span class="fl">1</span>,
   rel.y <span class="op">=</span> <span class="fl">1</span>,
-  skew.x1 <span class="op">=</span> <span class="fl">0</span>,
-  skew.x2 <span class="op">=</span> <span class="fl">0</span>,
-  skew.y <span class="op">=</span> <span class="fl">0</span>,
   k.x1 <span class="op">=</span> <span class="fl">0</span>,
   k.x2 <span class="op">=</span> <span class="fl">0</span>,
   k.y <span class="op">=</span> <span class="fl">0</span>,
-  transform.x1 <span class="op">=</span> <span class="st">"default"</span>,
-  transform.x2 <span class="op">=</span> <span class="st">"default"</span>,
-  transform.y <span class="op">=</span> <span class="st">"default"</span>,
   adjust.correlations <span class="op">=</span> <span class="cn">TRUE</span>,
   alpha <span class="op">=</span> <span class="fl">0.05</span>,
   q <span class="op">=</span> <span class="fl">2</span>,
@@ -100,64 +94,97 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>n.iter</dt>
 <dd><p>Number of iterations. The number of simulations to run for each unique setting combination. Must be a positive integer.</p></dd>
+
+
 <dt>N</dt>
 <dd><p>Sample size. Must be a positive integer. Has no default value. Can be a single value or a vector of values.</p></dd>
+
+
 <dt>r.x1.y</dt>
 <dd><p>Pearson's correlation between x1 and y. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.</p></dd>
+
+
 <dt>r.x2.y</dt>
 <dd><p>Pearson's correlation between x2 and y. Must be between -1 and 1.. Assumed to be the 'moderator' in some functions. Has no default value. Can be a single value or a vector of values.</p></dd>
+
+
 <dt>r.x1x2.y</dt>
 <dd><p>Pearson's correlation between the interaction term x1x2 (x1 * x2) and y. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.</p></dd>
+
+
 <dt>r.x1.x2</dt>
 <dd><p>Pearson's correlation between x1 and x2. Must be between -1 and 1.. Has no default value. Can be a single value or a vector of values.</p></dd>
+
+
 <dt>rel.x1</dt>
 <dd><p>Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.</p></dd>
+
+
 <dt>rel.x2</dt>
 <dd><p>Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.</p></dd>
+
+
 <dt>rel.y</dt>
 <dd><p>Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.</p></dd>
-<dt>skew.x1</dt>
-<dd><p>Skew of x1. Default is 0 (normally distributed).</p></dd>
-<dt>skew.x2</dt>
-<dd><p>Skew of x2. Default is 0 (normally distributed).</p></dd>
-<dt>skew.y</dt>
-<dd><p>Skew of y. Default is 0 (normally distributed).</p></dd>
+
+
 <dt>k.x1</dt>
-<dd><p>Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k&lt;= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.</p></dd>
+<dd><p>Number of discrete values for x1. Can be used to make a variable binary or ordinal.</p></dd>
+
+
 <dt>k.x2</dt>
-<dd><p>Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k&lt;= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.</p></dd>
+<dd><p>Number of discrete values for x2. Can be used to make a variable binary or ordinal.</p></dd>
+
+
 <dt>k.y</dt>
-<dd><p>Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k&lt;= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.</p></dd>
-<dt>transform.x1</dt>
-<dd><p>Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.</p></dd>
-<dt>transform.x2</dt>
-<dd><p>Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.</p></dd>
-<dt>transform.y</dt>
-<dd><p>Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.</p></dd>
+<dd><p>Number of discrete values for y. Can be used to make a variable binary or ordinal.</p></dd>
+
+
 <dt>adjust.correlations</dt>
-<dd><p>If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.</p></dd>
+<dd><p>If variables are ordinal or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>The alpha. At what p-value is the interaction deemed significant? Default is 0.05.</p></dd>
+
+
 <dt>q</dt>
 <dd><p>Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.</p></dd>
+
+
 <dt>cl</dt>
 <dd><p>Number of clusters to use for running simulations in parallel (recommended). Default is 1 (i.e. not in parallel).</p></dd>
+
+
 <dt>ss.IQR</dt>
 <dd><p>Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.</p></dd>
+
+
 <dt>N.adjustment</dt>
-<dd><p>Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000</p></dd>
+<dd><p>Sample size for simulations where correlation matrix is corrected to allow for binary/ordinal variables. Default is 1000000</p></dd>
+
+
 <dt>detailed_results</dt>
 <dd><p>Default is FALSE. Should detailed results be reported?</p></dd>
+
+
 <dt>full_simulation</dt>
 <dd><p>Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.</p></dd>
+
+
 <dt>tol</dt>
 <dd><p>Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.</p></dd>
+
+
 <dt>iter</dt>
 <dd><p>Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame containing the power (% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.</p>
+    
+
+<p>A data frame containing the power (% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.</p>
     </div>
 
     <div class="section level2">
@@ -177,7 +204,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>

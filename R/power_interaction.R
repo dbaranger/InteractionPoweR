@@ -11,16 +11,10 @@
 #' @param rel.x1 Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #' @param rel.x2 Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
 #' @param rel.y Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.
-#' @param skew.x1 Skew of x1. Default is 0 (normally distributed).
-#' @param skew.x2 Skew of x2. Default is 0 (normally distributed).
-#' @param skew.y Skew of y. Default is 0 (normally distributed).
-#' @param k.x1 Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param k.x2 Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param k.y Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.
-#' @param adjust.correlations If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.
-#' @param transform.x1 Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.
-#' @param transform.x2 Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.
-#' @param transform.y Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.
+#' @param k.x1 Number of discrete values for x1. Can be used to make a variable binary or ordinal.
+#' @param k.x2 Number of discrete values for x2. Can be used to make a variable binary or ordinal.
+#' @param k.y Number of discrete values for y. Can be used to make a variable binary or ordinal.
+#' @param adjust.correlations If variables are ordinal or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.
 #' @param alpha The alpha. At what p-value is the interaction deemed significant? Default is 0.05.
 #' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2. Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2. If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
 #' @param ss.IQR Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.
@@ -28,7 +22,7 @@
 #' @param detailed_results Default is FALSE. Should detailed results be reported?
 #' @param full_simulation Default is FALSE. If TRUE, will return a list that includes the full per-simulation results.
 #' @param tol Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
-#' @param N.adjustment Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000
+#' @param N.adjustment Sample size for simulations where correlation matrix is corrected to allow for binary/ordinal variables. Default is 1000000
 #' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
 #'
 #' @importFrom dplyr "%>%"
@@ -45,15 +39,9 @@
 #' power_interaction(n.iter=10, N=10,r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.5,r.x1.x2=.2)
 power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  rel.x1=1,rel.x2=1,rel.y=1,
-                                 skew.x1 = 0,
-                                 skew.x2 = 0,
-                                 skew.y = 0,
                                  k.x1 = 0,
                                  k.x2 = 0,
                                  k.y = 0,
-                                 transform.x1 = "default",
-                                 transform.x2 = "default",
-                                 transform.y = "default",
                                  adjust.correlations = TRUE,
                                  alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,N.adjustment =1000000,
                                  detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10){
@@ -68,9 +56,6 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                               rel.x1=rel.x1,
                               rel.x2=rel.x2,
                               rel.y=rel.y,
-                              skew.x1 = skew.x1,
-                              skew.x2 = skew.x2,
-                              skew.y = skew.y,
                               k.x1 = k.x1,
                               k.x2 = k.x2,
                               k.y =  k.y,
@@ -142,35 +127,10 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
     }
   }
 
-  if(base::max(settings$k.x1)  >= 2){transform.x1 == "default"}
-  if(base::max(settings$k.x2)  >= 2){transform.x2 == "default"}
-  if(base::max(settings$k.y)  >= 2) {transform.y == "default"}
-
-
-  if(transform.x1 == "default"){
-    if(base::max(settings$skew.x1) != 0 & base::max(settings$k.x1) == 0 ){transform.x1 = "gamma"}
-    # if(skew.x1 < 0 & skew.x1 >= -1){transform.x1 ="sn"}
-   # if(min(settings$skew.x1) < 0){transform.x1 = "beta"}
-  }
-  if(transform.x2 == "default"){
-    if(base::max(settings$skew.x2) != 0  & base::max(settings$k.x2) == 0 ){transform.x2 = "gamma"}
-    # if(skew.x2 < 0 & skew.x2 >= -1){transform.x2 ="sn"}
-  #  if(min(settings$skew.x2) < 0){transform.x2 = "beta"}
-  }
-  if(transform.y == "default"){
-    if(base::max(settings$skew.y) != 0  & base::max(settings$k.y) == 0 ){transform.y = "gamma"}
-    #  if(skew.y < 0 & skew.y >= -1){transform.y = "sn"}
-   # if(min(settings$skew.y) < 0){transform.y = "beta"}
-  }
-
-
+  if(adjust.correlations == TRUE){internal.adjust=TRUE}
 
   if(adjust.correlations == TRUE){
-    if(min(settings$skew.x1) == 0 & max(settings$skew.x1) == 0 &
-       min(settings$skew.x2) == 0 & max(settings$skew.x2) == 0 &
-       min(settings$skew.y) == 0 & max(settings$skew.y)   == 0 &
-       max(settings$k.x1) == 0 &  max(settings$k.x2) == 0 & max(settings$k.y) == 0 &
-       transform.x1 == "default" & transform.x2 == "default" & transform.y == "default"){
+    if(max(settings$k.x1) == 0 &  max(settings$k.x2) == 0 & max(settings$k.y) == 0){
       adjust.correlations <- FALSE
     }
   }
@@ -193,7 +153,8 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
   if(adjust.correlations == TRUE) {
 
 
-    settingsa<-base::unique(settings[,c(2:5,9:14)])
+    settingsa<-base::unique(dplyr::select(settings,dplyr::all_of(c("r.x1.y", "r.x2.y", "r.x1x2.y", "r.x1.x2",
+                                                                   "k.x1", "k.x2", "k.y"))))
 
 
 
@@ -202,29 +163,23 @@ i=NULL
                                    .combine = 'rbind',
                                    .packages = c('dplyr','MASS'),
                                    .export=c("test_interaction","generate_interaction",
-                                             "norm2binary","norm2gamma","norm2ordinal",
+                                             "norm2ordinal",
                                              "compute_adjustment"  )) %dopar% {
 
 
                                                  settingsb<-settingsa[i,]
 
 
-                                                 if(settingsb$skew.x1 != 0 | settingsb$skew.x2 != 0 | settingsb$skew.y != 0 |
-                                                    settingsb$k.x1 != 0 | settingsb$k.x2 != 0 | settingsb$k.y != 0 |
-                                                    transform.x1 != "default" | transform.x2 != "default" | transform.y != "default"){
+                                                 if(settingsb$k.x1 != 0 | settingsb$k.x2 != 0 | settingsb$k.y != 0){
 
                                                    adjustments<-base::tryCatch(expr = {
-                                                   adjustments<-compute_adjustment(tol = tol,iter = iter,N.adjustment = N.adjustment,
+                                                   adjustments<-compute_adjustment(tol = tol,
+                                                                                   iter = iter,
+                                                                                   N.adjustment = N.adjustment,
                                                                                    r.x1.y = settingsb$r.x1.y,
                                                                                    r.x2.y = settingsb$r.x2.y,
                                                                                    r.x1x2.y = settingsb$r.x1x2.y,
                                                                                    r.x1.x2 = settingsb$r.x1.x2,
-                                                                                   skew.x1 = settingsb$skew.x1,
-                                                                                   skew.x2 = settingsb$skew.x2,
-                                                                                   skew.y = settingsb$skew.y,
-                                                                                   transform.x1 = transform.x1,
-                                                                                   transform.x2 = transform.x2,
-                                                                                   transform.y =  transform.y,
                                                                                    k.x1 = settingsb$k.x1,
                                                                                    k.x2 = settingsb$k.x2,
                                                                                    k.y = settingsb$k.y)
@@ -314,16 +269,16 @@ if(dim(settings)[1] == 0){
   power_test<-foreach::foreach(d = 1: length(settings_chunks),
                               .combine = 'rbind',
                               .packages = c('dplyr','MASS'),
-                              .export=c("test_interaction","generate_interaction","norm2ordinal",
-                                        "norm2binary","norm2gamma" )) %dopar% {
+                              .export=c("test_interaction","generate_interaction","norm2ordinal" )) %dopar% {
 
 
                                           settingsd<-settings_chunks[[d]]
 
                                           for (i in 1:dim(settingsd)[1] ){
-
+                                            if(adjust.correlations == TRUE){
                                               test_data =  generate_interaction(
                                               adjust.correlations = FALSE,
+                                              internal.adjust=TRUE,
                                               N = settingsd$N[i] * n.iter,
                                               r.x1.y = settingsd$r.x1.y[i],
                                               r.x2.y = settingsd$r.x2.y[i],
@@ -335,16 +290,32 @@ if(dim(settings)[1] == 0){
                                               k.x1 = settingsd$k.x1[i],
                                               k.x2 = settingsd$k.x2[i],
                                               k.y = settingsd$k.y[i],
-                                              skew.x1 = settingsd$skew.x1[i],
-                                              skew.x2 = settingsd$skew.x2[i],
-                                              skew.y = settingsd$skew.y[i],
-                                              transform.x1 = transform.x1,
-                                              transform.x2 = transform.x2,
-                                              transform.y =  transform.y,
                                               r.x1.y.adjust = settingsd$r.x1.y.adjust[i],
                                               r.x2.y.adjust = settingsd$r.x2.y.adjust[i],
                                               r.x1x2.y.adjust = settingsd$r.x1x2.y.adjust[i],
                                               r.x1.x2.adjust = settingsd$r.x1.x2.adjust[i] )
+                                            }
+                                            if(adjust.correlations == FALSE){
+                                              test_data =  generate_interaction(
+                                                adjust.correlations = FALSE,
+                                                internal.adjust=FALSE,
+                                                N = settingsd$N[i] * n.iter,
+                                                r.x1.y = settingsd$r.x1.y[i],
+                                                r.x2.y = settingsd$r.x2.y[i],
+                                                r.x1x2.y= settingsd$r.x1x2.y [i],
+                                                r.x1.x2  = settingsd$r.x1.x2[i],
+                                                rel.x1=settingsd$rel.x1[i],
+                                                rel.x2=settingsd$rel.x2[i],
+                                                rel.y=settingsd$rel.y[i],
+                                                k.x1 = settingsd$k.x1[i],
+                                                k.x2 = settingsd$k.x2[i],
+                                                k.y = settingsd$k.y[i],
+                                                r.x1.y.adjust = settingsd$r.x1.y.adjust[i],
+                                                r.x2.y.adjust = settingsd$r.x2.y.adjust[i],
+                                                r.x1x2.y.adjust = settingsd$r.x1x2.y.adjust[i],
+                                                r.x1.x2.adjust = settingsd$r.x1.x2.adjust[i] )
+                                            }
+
 
                                             test_data <- aperm(array(t(test_data),
                                                                      list(4,settingsd$N[i],n.iter)), perm = c(2,1,3))
@@ -355,6 +326,7 @@ if(dim(settings)[1] == 0){
 
                                               temp = test_interaction( alpha = settingsd$alpha[i],
                                                                        simple = TRUE,
+                                                                       detailed_results = detailed_results,
                                                                        data = a1,
                                                                        q = settingsd$q[i])
 
@@ -441,7 +413,8 @@ if(dim(settings)[1] == 0){
       dplyr::summarise(.groups  = "keep",
                      pwr = mean(.data$sig_int )
                      )
-  power_results3<-
+  if(detailed_results == TRUE){
+   power_results3<-
     power_test %>%
     dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
     dplyr::summarise(.groups  = "keep",
@@ -483,7 +456,7 @@ if(dim(settings)[1] == 0){
   power_results4 = merge(power_results3,power_results2)
 
   power_results<-base::merge(power_results,power_results4)
-
+}
   results = list()
   results$results = power_results
   #power_test = power_test %>% dplyr::arrange(.vars = dplyr::vars(dplyr::all_of(grouping_variables)))

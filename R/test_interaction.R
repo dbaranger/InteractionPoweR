@@ -5,6 +5,7 @@
 #'
 #' @param data Simulated data set. Output of 'generate_interaction()'.
 #' @param alpha The alpha. At what p-value is the interaction deemed significant? Default is 0.05.
+#' @param detailed_results Should results beyond the linear model (change in R2, simple slopes, correlations, and confidence intervals) be returned? Default is FALSE.
 #' @param q Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
 #'          Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.
 #'          If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.
@@ -15,29 +16,15 @@
 #' @examples
 #' dataset <- generate_interaction(N = 250,r.x1.y = 0,r.x2.y = .1,r.x1x2.y = -.2,r.x1.x2 = .3)
 #' test_interaction(data = dataset, alpha=0.05, q=2)
-test_interaction<-function(data,alpha=0.05,q=2,simple=FALSE){
+test_interaction<-function(data,alpha=0.05,detailed_results=FALSE,q=2,simple=FALSE){
 
   #out = list()
 
   if(length(table(data$y))>2){
     mod<-stats::lm(y ~ x1 + x2 + x1x2, data = data)
-    mod_simple<-stats::lm(y ~ x1 + x2 , data = data)
-    x1x2_r2 = summary(mod)$adj.r.squared - summary(mod_simple)$adj.r.squared
-
-  }else{
+     }else{
     mod<-stats::glm(as.factor(y) ~ x1 + x2 + x1x2, data = data,family = "binomial")
-    mod_simple<-stats::glm(as.factor(y) ~ x1 + x2, data = data,family = "binomial")
-    x1x2_r2 = 1 - mod$deviance/mod_simple$deviance #pseudo r2
     }
-
-
-  c.int = suppressMessages(t(unname(stats::confint(mod)[4,])))
-  x1x2_95confint_25 = c.int[1]
-  x1x2_95confint_975 = c.int[2]
-
-  c.int = data.frame(x1x2_95confint_2.5 = x1x2_95confint_25,
-                     x1x2_95confint_97.5 = x1x2_95confint_975
-                     )
 
   results_out<-stats::coefficients(base::summary(mod))[-1,]
   results<-stats::coefficients(base::summary(mod))[-1,]
@@ -52,6 +39,23 @@ test_interaction<-function(data,alpha=0.05,q=2,simple=FALSE){
   results2$sig_int <- (results2$x1x2_p < alpha)*1
   # data.correlation<-stats::cor(data)[lower.tri(stats::cor(data))]
 
+  if(detailed_results == TRUE){
+
+    if(length(table(data$y))>2){
+      mod_simple<-stats::lm(y ~ x1 + x2 , data = data)
+      x1x2_r2 = summary(mod)$adj.r.squared - summary(mod_simple)$adj.r.squared
+
+    }else{
+      mod_simple<-stats::glm(as.factor(y) ~ x1 + x2, data = data,family = "binomial")
+      x1x2_r2 = 1 - mod$deviance/mod_simple$deviance #pseudo r2
+    }
+    c.int = suppressMessages(t(unname(stats::confint(mod)[4,])))
+    x1x2_95confint_25 = c.int[1]
+    x1x2_95confint_975 = c.int[2]
+
+    c.int = data.frame(x1x2_95confint_2.5 = x1x2_95confint_25,
+                       x1x2_95confint_97.5 = x1x2_95confint_975
+    )
 
   dd = data.frame(cor = as.vector(stats::cor(data)),
                   v1=colnames(data),
@@ -111,7 +115,6 @@ shape = int.shape$shape
   results2$est_max<-stats::coefficients(mod2)[2]
 
 
-  ####
   results2<-cbind(results2,
                   dd,
                   x1x2_r2,
@@ -126,8 +129,17 @@ shape = int.shape$shape
            interaction.shape=int.shape,
            simple.slopes =slopes,
            correlation = dd_out
-            )
+  )
 
+  } # end detailed results
+
+  ####
+  if(detailed_results == FALSE){
+
+  results2<-as.data.frame(results2)
+
+  out=list(linear.model = results_out )
+}
 
   if(simple == TRUE){return(results2)}else{return(out)}
 

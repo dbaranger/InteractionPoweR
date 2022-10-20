@@ -12,12 +12,6 @@ compute_adjustment(
   N.adjustment = 1e+06,
   tol = 0.005,
   iter = 10,
-  skew.x1,
-  skew.x2,
-  skew.y,
-  transform.x1,
-  transform.x2,
-  transform.y,
   k.x1,
   k.x2,
   k.y
@@ -38,18 +32,6 @@ compute_adjustment(
 
 \item{iter}{Internal use only}
 
-\item{skew.x1}{Internal use only}
-
-\item{skew.x2}{Internal use only}
-
-\item{skew.y}{Internal use only}
-
-\item{transform.x1}{Internal use only}
-
-\item{transform.x2}{Internal use only}
-
-\item{transform.y}{Internal use only}
-
 \item{k.x1}{Internal use only}
 
 \item{k.x2}{Internal use only}
@@ -65,7 +47,6 @@ Computes how much variable correlations need to be adjusted so that they have th
 \examples{
 \donttest{
 compute_adjustment(r.x1.y = .2,r.x2.y = .2,r.x1x2.y = .1,r.x1.x2 = .2,
-skew.x1 = 0,skew.x2=0,skew.y=0,k.x1 = 0,k.x2=0,k.y=2,transform.x1 = "default",
-transform.x2 = "default",transform.y = "binary")
+k.x1 = 0,k.x2=0,k.y=2)
 }
 }

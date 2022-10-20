@@ -14,15 +14,9 @@ power_interaction(
   rel.x1 = 1,
   rel.x2 = 1,
   rel.y = 1,
-  skew.x1 = 0,
-  skew.x2 = 0,
-  skew.y = 0,
   k.x1 = 0,
   k.x2 = 0,
   k.y = 0,
-  transform.x1 = "default",
-  transform.x2 = "default",
-  transform.y = "default",
   adjust.correlations = TRUE,
   alpha = 0.05,
   q = 2,
@@ -54,25 +48,13 @@ power_interaction(
 
 \item{rel.y}{Reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). Default is 1 (perfect reliability). Must be greater than 0 and less than or equal to 1.}
 
-\item{skew.x1}{Skew of x1. Default is 0 (normally distributed).}
+\item{k.x1}{Number of discrete values for x1. Can be used to make a variable binary or ordinal.}
 
-\item{skew.x2}{Skew of x2. Default is 0 (normally distributed).}
+\item{k.x2}{Number of discrete values for x2. Can be used to make a variable binary or ordinal.}
 
-\item{skew.y}{Skew of y. Default is 0 (normally distributed).}
+\item{k.y}{Number of discrete values for y. Can be used to make a variable binary or ordinal.}
 
-\item{k.x1}{Number of discrete values for x1. k.x1 = 2 is equivalent to transform.x1 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{k.x2}{Number of discrete values for x2. k.x2 = 2 is equivalent to transform.x2 = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{k.y}{Number of discrete values for y. k.y = 2 is equivalent to transform.y = "binary". Performs best with k<= 5 if variable is skewed. Otherwise, up to k=20. Values less than 2 result in a continuous variable.}
-
-\item{transform.x1}{Transform x1? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.}
-
-\item{transform.x2}{Transform x2? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma"if variables are skewed.}
-
-\item{transform.y}{Transform y? Options are "default", "binary", or "gamma". "binary" will cause variable to be binarized  - 2 unique values. Default ("default") will pick "gamma" if variables are skewed.}
-
-\item{adjust.correlations}{If variables are skewed or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.}
+\item{adjust.correlations}{If variables are ordinal or binary, should correlations be adjusted so that output data has the specified correlation structure? Default is TRUE.}
 
 \item{alpha}{The alpha. At what p-value is the interaction deemed significant? Default is 0.05.}
 
@@ -82,7 +64,7 @@ power_interaction(
 
 \item{ss.IQR}{Simple slope IQR. Multiplier when estimating the distribution of simple slopes within each simulation setting. Default is 1.5.}
 
-\item{N.adjustment}{Sample size for simulations where correlation matrix is corrected to allow for skew. Default is 1,000,000}
+\item{N.adjustment}{Sample size for simulations where correlation matrix is corrected to allow for binary/ordinal variables. Default is 1000000}
 
 \item{detailed_results}{Default is FALSE. Should detailed results be reported?}
 

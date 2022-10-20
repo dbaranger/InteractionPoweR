@@ -48,9 +48,6 @@ reference:
   desc: >
     Internal functions that support the package
 - contents:
-  - binary.p2skew
   - compute_adjustment
   - name_key
-  - norm2binary
-  - norm2gamma
   - norm2ordinal

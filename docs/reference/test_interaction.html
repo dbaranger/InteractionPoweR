@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,25 +64,44 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">test_interaction</span><span class="op">(</span><span class="va">data</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>, q <span class="op">=</span> <span class="fl">2</span>, simple <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">test_interaction</span><span class="op">(</span>
+  <span class="va">data</span>,
+  alpha <span class="op">=</span> <span class="fl">0.05</span>,
+  detailed_results <span class="op">=</span> <span class="cn">FALSE</span>,
+  q <span class="op">=</span> <span class="fl">2</span>,
+  simple <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
 <dd><p>Simulated data set. Output of 'generate_interaction()'.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>The alpha. At what p-value is the interaction deemed significant? Default is 0.05.</p></dd>
+
+
+<dt>detailed_results</dt>
+<dd><p>Should results beyond the linear model (change in R2, simple slopes, correlations, and confidence intervals) be returned? Default is FALSE.</p></dd>
+
+
 <dt>q</dt>
 <dd><p>Simple slopes. How many quantiles should x2 be split into for simple slope testing? Default is 2.
 Simple slope testing returns the effect-size (slope) of y~x1 for the two most extreme quantiles of x2.
 If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of x2.</p></dd>
+
+
 <dt>simple</dt>
 <dd><p>For internal use. Default is FALSE.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Either a named list or a data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.</p>
+    
+
+<p>Either a named list or a data frame containing the results of the regression y~x1+x2+x1*x2, the pearson's correlation between y, x1,x2, and x1x2, and the slopes of the simple slopes.</p>
     </div>
 
     <div class="section level2">
@@ -90,34 +109,10 @@ If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_interaction.html">generate_interaction</a></span><span class="op">(</span>N <span class="op">=</span> <span class="fl">250</span>,r.x1.y <span class="op">=</span> <span class="fl">0</span>,r.x2.y <span class="op">=</span> <span class="fl">.1</span>,r.x1x2.y <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>,r.x1.x2 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">test_interaction</span><span class="op">(</span>data <span class="op">=</span> <span class="va">dataset</span>, alpha<span class="op">=</span><span class="fl">0.05</span>, q<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $linear.model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Estimate Std. Error   t value    Pr(&gt;|t|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x1   -0.07121674 0.06513502 -1.093371 0.275300429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x2    0.17468645 0.06566831  2.660133 0.008324440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x1x2 -0.15599605 0.05690505 -2.741339 0.006568058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $x1x2.adjusted.r2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02487781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $x1x2.confint</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x1x2_95confint_2.5 x1x2_95confint_97.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         -0.2680793         -0.04391278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $interaction.shape</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   crossover.point    shape</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1.119813 2.190441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $simple.slopes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    lower.slope upper.slope</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x2   0.1654821  -0.2278128</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $correlation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           cor v1   v2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   0.3000000 x1   x2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   0.0157794 x1    y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  0.1942301 x2    y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 -0.1974594 x1 x1x2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 -0.2335283 x2 x1x2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 -0.2019081  y x1x2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          Estimate Std. Error     t value     Pr(&gt;|t|)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1    0.004253834 0.06549225  0.06495171 0.9482651978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x2    0.078604908 0.06503028  1.20874313 0.2279220880</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1x2 -0.176853724 0.05041485 -3.50796883 0.0005366893</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
@@ -130,7 +125,7 @@ If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>
