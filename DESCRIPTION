@@ -1,6 +1,6 @@
 Package: InteractionPoweR
 Title: Power Analyses for Interaction Effects in Cross-Sectional Regressions
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     c(person(given = "David",
            family = "Baranger",
@@ -59,4 +59,5 @@ Imports:
   rlang,
   tidyr,
   stats,
-  ggbeeswarm
+  ggbeeswarm,
+  Matrix

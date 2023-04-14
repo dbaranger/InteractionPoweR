@@ -134,14 +134,15 @@ power_interaction_r2<-function(N,
     r.x1.x1x2 = 0
     r.x2.x1x2 = 0
 
-    cor.mat = matrix(data = c(1,r.x1.x2,
-                              r.x1.x2,1),nrow = 2,byrow = T)
-    sd = c(sd.x1,sd.x2  )
+    # cor.mat = matrix(data = c(1,r.x1.x2,
+    #                           r.x1.x2,1),nrow = 2,byrow = T)
+    # sd = c(sd.x1,sd.x2  )
+    #
+    # cov_x1x2<- diag(sd) %*% cor.mat %*% diag(sd) # cor 2 cov
+    #
+    # sd.x1x2     =  base::sqrt((cov_x1x2[1,1]*cov_x1x2[2,2]) + ((cov_x1x2[1,2])^2  ))
 
-    cov_x1x2<- diag(sd) %*% cor.mat %*% diag(sd) # cor 2 cov
-
-    sd.x1x2     =  base::sqrt((cov_x1x2[1,1]*cov_x1x2[2,2]) + ((cov_x1x2[1,2])^2  ))
-
+    sd.x1x2 = 1 ## for standardized betas
 
     cormat <- base::matrix(data = c(1,         r.x1.x2,    r.x1.x1x2,  r.x1.y,   #x1
                                     r.x1.x2,   1,          r.x2.x1x2,  r.x2.y,   #x2
@@ -172,13 +173,12 @@ power_interaction_r2<-function(N,
     # totalr2
 
 
-
     cormat <- base::matrix(data = c(1,         r.x1.x2,    r.x1.y,   #x1
                                     r.x1.x2,   1,          r.x2.y,   #x2
                                     r.x1.y,    r.x2.y,     1),       #y
                            ncol = 3, byrow = TRUE)
 
-    sd = c(sd.x1,sd.x2,sd.y   )
+    sd = c(sd.x1,sd.x2,sd.y)
     covmat<- diag(sd) %*% cormat %*% diag(sd) # cor 2 cov
 
 
@@ -232,11 +232,12 @@ settings$b3[i] = power_result[4]
 
 settings = cbind(settings$pwr,settings[,c(1:14,16:18)])
 colnames(settings)[1] = "pwr"
-settings$shape = settings$obs.r.x1x2.y/settings$obs.r.x1.y
+settings$shape = settings$b3/settings$b1
+settings$crossover = settings$b2/settings$b3 * -1
 
 if(detailed_results ==F){
 
-settings = settings[,-c(11:19)]
+settings = settings[,-c(11:20)]
 dimnum<- sapply(X=c(1:dim(settings)[2]), FUN=function(x){length(table(settings[,x]))})
 
 grouping_variables<-colnames(settings)[dimnum>1]

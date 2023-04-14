@@ -24,7 +24,10 @@ generate_interaction(
   r.x2.y.adjust = NULL,
   r.x1.x2.adjust = NULL,
   r.x1x2.y.adjust = NULL,
-  internal.adjust = FALSE
+  internal.adjust = FALSE,
+  skew.x1 = NA,
+  skew.x2 = NA,
+  skew.y = NA
 )
 }
 \arguments{
@@ -67,6 +70,12 @@ generate_interaction(
 \item{r.x1x2.y.adjust}{Internal use only.}
 
 \item{internal.adjust}{Internal use only.}
+
+\item{skew.x1}{No longer supported.}
+
+\item{skew.x2}{No longer supported.}
+
+\item{skew.y}{No longer supported.}
 }
 \value{
 A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values. Output variables are all z-scored (mean=0, sd=1).

@@ -24,6 +24,9 @@
 #' @param tol Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.
 #' @param N.adjustment Sample size for simulations where correlation matrix is corrected to allow for binary/ordinal variables. Default is 1000000
 #' @param iter Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.
+#' @param skew.x1 No longer supported.
+#' @param skew.x2 No longer supported.
+#' @param skew.y No longer supported.
 #'
 #' @importFrom dplyr "%>%"
 #' @importFrom foreach "%dopar%"
@@ -44,9 +47,13 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                  k.y = 0,
                                  adjust.correlations = TRUE,
                                  alpha=0.05,q=2,cl=NULL,ss.IQR=1.5,N.adjustment =1000000,
-                                 detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10){
+                                 detailed_results=FALSE,full_simulation=FALSE,tol=0.005,iter=10,
+                            skew.x1=NA,skew.x2=NA,skew.y=NA){
 
 
+
+  if (!is.na(skew.x1)|!is.na(skew.x2)|!is.na(skew.y)){
+    stop("Skew is no longer supported")}
 
   settings<-expand.grid(list( N=N,
                               r.x1.y = r.x1.y,
@@ -93,7 +100,7 @@ power_interaction<-function(n.iter,N,r.x1.y,r.x2.y,r.x1x2.y,r.x1.x2,
                                      adjust.correlations = FALSE,
                                      r.x1.y = set2$r.x1.y[i],
                                      r.x2.y = set2$r.x2.y[i],
-                                     r.x1x2.y= set2$r.x1x2.y [i],
+                                     r.x1x2.y= set2$r.x1x2.y[i],
                                      r.x1.x2  = set2$r.x1.x2[i]
       )
       data<-0
@@ -282,7 +289,7 @@ if(dim(settings)[1] == 0){
                                               N = settingsd$N[i] * n.iter,
                                               r.x1.y = settingsd$r.x1.y[i],
                                               r.x2.y = settingsd$r.x2.y[i],
-                                              r.x1x2.y= settingsd$r.x1x2.y [i],
+                                              r.x1x2.y= settingsd$r.x1x2.y[i],
                                               r.x1.x2  = settingsd$r.x1.x2[i],
                                               rel.x1=settingsd$rel.x1[i],
                                               rel.x2=settingsd$rel.x2[i],
@@ -302,7 +309,7 @@ if(dim(settings)[1] == 0){
                                                 N = settingsd$N[i] * n.iter,
                                                 r.x1.y = settingsd$r.x1.y[i],
                                                 r.x2.y = settingsd$r.x2.y[i],
-                                                r.x1x2.y= settingsd$r.x1x2.y [i],
+                                                r.x1x2.y = settingsd$r.x1x2.y[i],
                                                 r.x1.x2  = settingsd$r.x1.x2[i],
                                                 rel.x1=settingsd$rel.x1[i],
                                                 rel.x2=settingsd$rel.x2[i],
@@ -328,7 +335,7 @@ if(dim(settings)[1] == 0){
                                                                        simple = TRUE,
                                                                        detailed_results = detailed_results,
                                                                        data = a1,
-                                                                       q = settingsd$q[i])
+                                                                       q = settingsd$q[i] )
 
                                               if(d ==1){
                                                 out.f = matrix(data = NA,nrow = n.iter,ncol = dim(temp)[2]) %>% as.data.frame()

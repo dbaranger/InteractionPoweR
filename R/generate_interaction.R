@@ -23,6 +23,9 @@
 #' @param r.x1x2.y.adjust Internal use only.
 #' @param r.x1.x2.adjust Internal use only.
 #' @param internal.adjust Internal use only.
+#' @param skew.x1 No longer supported.
+#' @param skew.x2 No longer supported.
+#' @param skew.y No longer supported.
 
 #' @return A data frame containing variables 'x1', 'x2', 'y', and 'x1x2'. 'x1x2' is x1*x2. The correlations between these variables are drawn from the defined population-level values. Output variables are all z-scored (mean=0, sd=1).
 #' @export
@@ -40,7 +43,7 @@ generate_interaction <- function(N,
                                      tol=0.005,iter=10,N.adjustment=1000000,
                                      r.x1.y.adjust = NULL,r.x2.y.adjust=NULL,
                                      r.x1.x2.adjust=NULL,r.x1x2.y.adjust=NULL,
-                                     internal.adjust=FALSE
+                                     internal.adjust=FALSE,skew.x1=NA,skew.x2=NA,skew.y=NA
 ) {
 
   # order of operations
@@ -53,6 +56,9 @@ generate_interaction <- function(N,
   #  7. Transform variables (number of levels)
   #  8. Output
 
+
+  if (!is.na(skew.x1)|!is.na(skew.x2)|!is.na(skew.y)){
+    stop("Skew is no longer supported")}
 
   if(adjust.correlations == TRUE){internal.adjust=TRUE}
 
@@ -183,13 +189,41 @@ generate_interaction <- function(N,
 
   if(adjust.correlations == TRUE | internal.adjust == TRUE){
 
-    if(k.x1 >= 2){
+    if(k.x1 >= 2 & k.x2 == 0){
       x1 = norm2ordinal(x = x1,k = k.x1)
+      x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+
+      xvar = 1 - (r.x1.x2^2)*1
+      xsd <- base::sqrt(xvar)
+      xmean <- (1 + r.x1.x2 * x1)
+
+      x2 <- stats::rnorm(N, xmean , xsd)
+      x2 <- base::scale(x = (x2),center = TRUE,scale = TRUE)
+
+
     }
-    if(k.x2 >= 2){
+    if(k.x2 >= 2 & k.x1 == 0){
       x2 = norm2ordinal(x = x2,k = k.x2)
       x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+
+      xvar = 1 - (r.x1.x2^2)*1
+      xsd <- base::sqrt(xvar)
+      xmean <- (1 + r.x1.x2 * x2)
+
+      x1 <- stats::rnorm(N, xmean , xsd)
+      x1 <- base::scale(x = (x1),center = TRUE,scale = TRUE)
+
     }
+
+    if(k.x2 >= 2 & k.x1 >= 2){
+      x2 = norm2ordinal(x = x2,k = k.x2)
+      x2<- base::scale(x = (x2),center = TRUE,scale = TRUE)
+
+      x1 = norm2ordinal(x = x1,k = k.x1)
+      x1<- base::scale(x = (x1),center = TRUE,scale = TRUE)
+
+    }
+
 }
 
   var.y<-covmat[4,4]

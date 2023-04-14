@@ -28,8 +28,8 @@ reference:
   desc: >
     Functions to run a power analysis
 - contents:
-  - power_interaction_r2
   - power_interaction
+  - power_interaction_r2
 - title: "Next steps"
   desc: >
     Interpret and visualize power analysis results

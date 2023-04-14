@@ -29,6 +29,10 @@ test_interaction<-function(data,alpha=0.05,detailed_results=FALSE,q=2,simple=FAL
   results_out<-stats::coefficients(base::summary(mod))[-1,]
   results<-stats::coefficients(base::summary(mod))[-1,]
 
+  if(dim(results_out)[1] != 3){stop("Multicollinearity in data, regressions cannot be run. The sample size is probbaly too small.")}
+
+
+
   #rownames(results)[3]<-c("x1_x2")
   if(length(table(data$y))>2){colnames(results)<-c("est","se","t","p")}else{colnames(results)<-c("est","se","z","p")}
   results2<-base::as.data.frame(t(c(results[1,],results[2,],results[3,])))

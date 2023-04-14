@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Questions &amp; Errors</h1>
-                        <h4 data-toc-skip class="author">David AA Baranger</h4>
+                        <h4 data-toc-skip class="author">David AA
+Baranger</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/dbaranger/InteractionPoweR/blob/HEAD/vignettes/articles/CommonQuestions.Rmd" class="external-link"><code>vignettes/articles/CommonQuestions.Rmd</code></a></small>
@@ -98,20 +99,30 @@
 
     
     
-<p>This is a non-exhaustive list of common questions and error messages:</p>
+<p>This is a non-exhaustive list of common questions and error
+messages:</p>
 <div class="section level3">
 <h3 id="questions">Questions<a class="anchor" aria-label="anchor" href="#questions"></a>
 </h3>
 <ol style="list-style-type: decimal">
 <li>
-<p>“Does this package currently support power analyses for 3-way interactions?”</p>
+<p>“Does this package currently support power analyses for 3-way
+interactions?”</p>
 <ul>
 <li>
-<p>No. This is the most common question we get. We would love to expand the package to include 3-way interactions, but it will not be easy. There are several steps in the analysis where we do not know exactly what to do for 3-way interactions. If you know the answer to any of these, or know of any papers that have worked these out, please send them our way:</p>
+<p>No. This is the most common question we get. We would love to
+expand the package to include 3-way interactions, but it will not be
+easy. There are several steps in the analysis where we do not know
+exactly what to do for 3-way interactions. If you know the answer to any
+of these, or know of any papers that have worked these out, please send
+them our way:</p>
 <ol style="list-style-type: decimal">
-<li><p>Variance of a 3-way interaction term when variables are correlated.</p></li>
-<li><p>Expected value of <span class="math inline">\(Y\)</span> when there is a 3-way interaction between correlated variables.</p></li>
-<li><p>Reliability of a 3-way interaction term when variables are correlated.</p></li>
+<li><p>Variance of a 3-way interaction term when variables are
+correlated.</p></li>
+<li><p>Expected value of <span class="math inline">\(Y\)</span> when
+there is a 3-way interaction between correlated variables.</p></li>
+<li><p>Reliability of a 3-way interaction term when variables are
+correlated.</p></li>
 </ol>
 </li>
 </ul>
@@ -123,39 +134,67 @@
 </h2>
 <ol style="list-style-type: decimal">
 <li>
-<p>“All reliabilities must be greater than 0 and less than or equal to 1”</p>
+<p>“All reliabilities must be greater than 0 and less than or equal
+to 1”</p>
 <ul>
-<li>Reliability can’t be more than 1 (measurement variance attributable to true signal can’t be more than 100%), and it can’t be less than or equal to 0. If your reliability measure is less than 0, it is probably spuriously low, and you should set reliability to something like 0.001.</li>
+<li>Reliability can’t be more than 1 (measurement variance attributable
+to true signal can’t be more than 100%), and it can’t be less than or
+equal to 0. If your reliability measure is less than 0, it is probably
+spuriously low, and you should set reliability to something like
+0.001.</li>
 </ul>
 </li>
 <li>
 <p>“All correlations must be within [-1,1]”</p>
 <ul>
-<li>The main input effect sizes are Pearson’s correlations, which range from [-1,1]. If you see this error, check for typos in your input.</li>
+<li>The main input effect sizes are Pearson’s correlations, which range
+from [-1,1]. If you see this error, check for typos in your input.</li>
 </ul>
 </li>
 <li>
-<p>“All correlations must be within [-1,1],.” or “No valid settings”</p>
+<p>“All correlations must be within [-1,1],.” or “No valid
+settings”</p>
 <ul>
-<li>If <code>adjust.correlations = TRUE</code>, and a variable is binary or ordinal, the algorithm will increase the correlations so that the output correlations match the effects input by the user. This is necessary because transforming normal variables to be binary or ordinal reduces their correlations with the other variables. However, it can happen that this is impossible, as it would require correlations greater than |1|. If you encounter this error, reduce your your correlations between variables. <code><a href="../reference/power_interaction.html">power_interaction()</a></code> automatically removes these settings from the input.</li>
+<li>If <code>adjust.correlations = TRUE</code>, and a variable is binary
+or ordinal, the algorithm will increase the correlations so that the
+output correlations match the effects input by the user. This is
+necessary because transforming normal variables to be binary or ordinal
+reduces their correlations with the other variables. However, it can
+happen that this is impossible, as it would require correlations greater
+than |1|. If you encounter this error, reduce your your correlations
+between variables. <code><a href="../reference/power_interaction.html">power_interaction()</a></code> automatically
+removes these settings from the input.</li>
 </ul>
 </li>
 <li>
-<p>“Settings produce a negative y-variance” or “No valid settings”</p>
+<p>“Settings produce a negative y-variance” or “No valid
+settings”</p>
 <ul>
-<li>It is possible to specify an impossible correlation matrix. This error indicates that <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, and <span class="math inline">\(X_1X_2\)</span> have settings that result in them explaining more than 100% of the <span class="math inline">\(Y\)</span> variance - obviously impossible. If you encounter this error, reduce your correlations.</li>
+<li>It is possible to specify an impossible correlation matrix. This
+error indicates that <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, and <span class="math inline">\(X_1X_2\)</span> have settings that result in them
+explaining more than 100% of the <span class="math inline">\(Y\)</span>
+variance - obviously impossible. If you encounter this error, reduce
+your correlations.</li>
 </ul>
 </li>
 <li>
-<p>“Correlation matrix is impossible - is not positive semi-definite.”</p>
+<p>“Correlation matrix is impossible - is not positive
+semi-definite.”</p>
 <ul>
-<li>Another way that a correlation matrix can be “impossible”. This error means that the smallest eigenvalue is negative. This error can be caused when correlations are too large or when variables are binary/ordinal and correlations are transformed. If you encounter this error, reduce your correlations.</li>
+<li>Another way that a correlation matrix can be “impossible”. This
+error means that the smallest eigenvalue is negative. This error can be
+caused when correlations are too large or when variables are
+binary/ordinal and correlations are transformed. If you encounter this
+error, reduce your correlations.</li>
 </ul>
 </li>
 <li>
 <p>Something else not covered…</p>
 <ul>
-<li>If you get a different confusing error, first check that your packages are up to date. Most frequently this occurs with the <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a> and <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> packages, so make sure those are updated first (i.e., re-install them).</li>
+<li>If you get a different confusing error, first check that your
+packages are up to date. Most frequently this occurs with the
+<a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a> and <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> packages, so make sure
+those are updated first (i.e., re-install them).</li>
 </ul>
 </li>
 </ol>
@@ -168,11 +207,31 @@
 <p><code><a href="../reference/power_estimate.html">power_estimate()</a></code> produces <code>NA</code>.</p>
 <ul>
 <li>
-<p><code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a regression model to the output of <code><a href="../reference/power_interaction.html">power_interaction()</a></code> to identify when a specified power-level is reached. It will give a result of <code>NA</code> for three related reasons:</p>
+<p><code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a regression model to the
+output of <code><a href="../reference/power_interaction.html">power_interaction()</a></code> to identify when a specified
+power-level is reached. It will give a result of <code>NA</code> for
+three related reasons:</p>
 <ol style="list-style-type: decimal">
-<li><p>The predicted value where power is reached is outside the range of values tested by the simulation. Simply increase the range of values tested.</p></li>
-<li><p>The predicted value is within the range of values tested, but only barely. For example, say <code>power_target = .8</code>, and one simulation achieved a <code>pwr = 0.804</code>. Even though 0.804 was achieved in one round of simulations, the regression analysis may predict, based on the other values tested in the simulation, that an even larger value is needed to achieve 80% power. The solution is again to increase the range of values tested.</p></li>
-<li><p>Power-curves taper-off as power increases, eventually flattening out. <code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a threshold regression model using the <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1863-x" class="external-link">chngpt</a> package, to identify whether the power-curve has flattened, and to remove the flattened portion if so. This is so that the main <code><a href="../reference/power_estimate.html">power_estimate()</a></code> regression model will be more accurate. However, occasionally the threshold regression model is greedy, and it removes too much. This can happen particularly if the simulation only includes a few values. The solution is again to increase the range of values tested.</p></li>
+<li><p>The predicted value where power is reached is outside the range
+of values tested by the simulation. Simply increase the range of values
+tested.</p></li>
+<li><p>The predicted value is within the range of values tested, but
+only barely. For example, say <code>power_target = .8</code>, and one
+simulation achieved a <code>pwr = 0.804</code>. Even though 0.804 was
+achieved in one round of simulations, the regression analysis may
+predict, based on the other values tested in the simulation, that an
+even larger value is needed to achieve 80% power. The solution is again
+to increase the range of values tested.</p></li>
+<li><p>Power-curves taper-off as power increases, eventually flattening
+out. <code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a threshold regression model
+using the <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1863-x" class="external-link">chngpt</a>
+package, to identify whether the power-curve has flattened, and to
+remove the flattened portion if so. This is so that the main
+<code><a href="../reference/power_estimate.html">power_estimate()</a></code> regression model will be more accurate.
+However, occasionally the threshold regression model is greedy, and it
+removes too much. This can happen particularly if the simulation only
+includes a few values. The solution is again to increase the range of
+values tested.</p></li>
 </ol>
 </li>
 </ul>
@@ -180,7 +239,19 @@
 <li>
 <p>Results differ each time I run a simulation</p>
 <ul>
-<li>The examples in this package use <code>n.iter = 1000</code> simulations, as this is enough to give a general sense of the pattern of results. However, we recommend <code>n.iter = 10000</code> for more stable results. <code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a regression model, and as with any regression, the number of observations, as well as their variance, impacts results. So, increasing the range and density of parameters in the simulation will also improve the stability of results. The <code>seed</code> parameter can also be set, so that identical results are given each time. However, this is not recommended until results have stabilized (by increasing <code>n.iter</code>). If <code>seed</code> is set <code>n.iter = 50</code> will yield the same results every time, but that doesn’t mean those results are informative.</li>
+<li>The examples in this package use <code>n.iter = 1000</code>
+simulations, as this is enough to give a general sense of the pattern of
+results. However, we recommend <code>n.iter = 10000</code> for more
+stable results. <code><a href="../reference/power_estimate.html">power_estimate()</a></code> fits a regression model,
+and as with any regression, the number of observations, as well as their
+variance, impacts results. So, increasing the range and density of
+parameters in the simulation will also improve the stability of results.
+The <code>seed</code> parameter can also be set, so that identical
+results are given each time. However, this is not recommended until
+results have stabilized (by increasing <code>n.iter</code>). If
+<code>seed</code> is set <code>n.iter = 50</code> will yield the same
+results every time, but that doesn’t mean those results are
+informative.</li>
 </ul>
 </li>
 </ol>

@@ -129,15 +129,76 @@ plot_interaction<-function(data,q=3){
 
   if(length(table(data$y)) == 2){
     fit = stats::glm(as.factor(y) ~ x1 + x2 + x1x2, data = data,family = "binomial")
-    data$ploty = stats::predict.glm(object = fit,newdata=data, type="response")
     ylabel = "predicted probability y = 1"
-
+    data$ploty = stats::predict.glm(object = fit,newdata=data, type="response")
 
     if(length(table(data$x1)) == 2 && length(table(data$x2)) == 2){
       #data$x1<-as.factor(as.numeric(as.factor( data$x1 )))
       #data$x2<-as.factor(as.numeric(as.factor( data$x2 )))
-      data$plotx<-as.numeric(as.factor(data$plotx))-1
-      levels(data$simpleslopes)<-c("0","1")
+      data$plotx<-as.numeric(as.factor(data$plotx))
+      # levels(data$simpleslopes)<-c("0","1")
+      #
+      # plot1<-ggplot2::ggplot(data = data,ggplot2::aes(x = .data$plotx,
+      #                                                 y=.data$ploty,
+      #                                                 color = .data$simpleslopes,
+      #                                                 fill=.data$simpleslopes))+
+      #   ggplot2::scale_color_viridis_d(option = c("D"))+
+      #   ggplot2::scale_fill_viridis_d(option = c("D"))+
+      #   ggplot2::scale_y_continuous(limits = c(0,1))+
+      #   #   ggplot2::geom_hline(yintercept = 0,color="grey",size=1,linetype="solid")+
+      #   ggplot2::geom_smooth(data = data,ggplot2::aes(x = .data$plotx,y=.data$ploty),
+      #                        method = stats::glm,inherit.aes = F,alpha=.5,
+      #                        method.args=list(family="binomial"),
+      #                        formula = y~x,se=F,size=1.5,color="black",linetype="dashed")+
+      #   ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
+      #   ggplot2::geom_smooth(method = stats::glm,alpha=.5,
+      #                         method.args=list(family="binomial"),
+      #                        formula = y~x,se=TRUE,size=1,linetype="solid")+
+      #   ggplot2::geom_point(alpha=0.5,shape=21,color="black",size=2,show.legend = F)+
+      #   ggplot2::theme_minimal()+
+      #   ggplot2::xlab(label = xlabel)+
+      #   ggplot2::ylab(label = ylabel)+
+      #   ggplot2::theme(
+      #     axis.ticks = ggplot2::element_line(size=1,color="black"),
+      #     axis.ticks.length=ggplot2::unit(0.2,"cm"),
+      #     axis.line.x = ggplot2::element_line(color = "black",size=1),
+      #     axis.line.y = ggplot2::element_line(color = "black",size=1),
+      #     legend.position='top',
+      #     legend.key=ggplot2::element_rect(size=1),
+      #     legend.key.size = ggplot2::unit(1, "lines"))+
+      #   ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(alpha = 1)))+
+      #   ggplot2::labs(fill=ModeratorLabel, color=ModeratorLabel)
+      #
+      #
+      # plot1
+
+    }#else{
+
+      data = data[order(data$simpleslopes,decreasing = F),]
+
+      for(i in 1:q){
+
+        d.temp = data[data$simpleslopes == i,]
+        fit.t = stats::glm(as.factor(y) ~ x1 , data = d.temp,family = "binomial")
+       # d.new = data.frame(x1 = d.temp$x1,x2 = mean(d.temp$x2),x1x2 = d.temp$x1x2)
+        predicted.response =   stats::predict.glm(object = fit.t,newdata=d.temp, type="response",se.fit = T)
+        d.temp$predicted.response = predicted.response$fit
+        d.temp$se.fit = predicted.response$se.fit
+
+
+        if(i ==1){d.out = d.temp}else{d.out = rbind(d.out,d.temp)}
+
+      }
+
+
+      fit2 = stats::glm(as.factor(y) ~ x1 , data = data,family = "binomial")
+      d.out$overall.response = stats::predict.glm(object = fit2,newdata=data, type="response")
+
+
+      data=d.out
+
+      data$y.min = data$predicted.response - data$se.fit
+      data$y.max = data$predicted.response + data$se.fit
 
       plot1<-ggplot2::ggplot(data = data,ggplot2::aes(x = .data$plotx,
                                                       y=.data$ploty,
@@ -146,17 +207,19 @@ plot_interaction<-function(data,q=3){
         ggplot2::scale_color_viridis_d(option = c("D"))+
         ggplot2::scale_fill_viridis_d(option = c("D"))+
         ggplot2::scale_y_continuous(limits = c(0,1))+
-        #   ggplot2::geom_hline(yintercept = 0,color="grey",size=1,linetype="solid")+
-        ggplot2::geom_smooth(data = data,ggplot2::aes(x = .data$plotx,y=.data$ploty),
-                             method = stats::glm,inherit.aes = F,alpha=.5,
-                             method.args=list(family="binomial"),
-                             formula = y~x,se=F,size=1.5,color="black",linetype="dashed")+
+
+        ggplot2::geom_line(ggplot2::aes(y = .data$overall.response,x = .data$plotx),
+                           inherit.aes = F,size=1.5,color="black",linetype="dashed") +
+
         ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
-        ggplot2::geom_smooth(method = stats::glm,alpha=.5,
-                              method.args=list(family="binomial"),
-                             formula = y~x,se=TRUE,size=1,linetype="solid")+
-        ggplot2::geom_point(alpha=0.5,shape=21,color="black",size=2,show.legend = F)+
-        ggplot2::theme_minimal()+
+
+
+        ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$y.min,ymax=.data$y.max,color = .data$simpleslopes,
+                                          fill=.data$simpleslopes),alpha=.5,size=0)+
+
+        ggplot2::geom_line(ggplot2::aes(y = .data$predicted.response),size=1.5,linetype="solid") +
+
+         ggplot2::theme_minimal()+
         ggplot2::xlab(label = xlabel)+
         ggplot2::ylab(label = ylabel)+
         ggplot2::theme(
@@ -170,41 +233,12 @@ plot_interaction<-function(data,q=3){
         ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(alpha = 1)))+
         ggplot2::labs(fill=ModeratorLabel, color=ModeratorLabel)
 
-    }else{
-      plot1<-ggplot2::ggplot(data = data,ggplot2::aes(x = .data$plotx,
-                                                      y=.data$ploty,
-                                                      color = .data$simpleslopes,
-                                                      fill=.data$simpleslopes))+
-        ggplot2::scale_color_viridis_d(option = c("D"))+
-        ggplot2::scale_fill_viridis_d(option = c("D"))+
-        ggplot2::scale_y_continuous(limits = c(0,1))+
+      #plot1
 
-     #   ggplot2::geom_hline(yintercept = 0,color="grey",size=1,linetype="solid")+
-        ggplot2::geom_smooth(data = data,ggplot2::aes(x = .data$plotx,y=.data$ploty),
-                             method = stats::glm,inherit.aes = F,alpha=.5,
-                             method.args=list(family="binomial"),
-                             formula = y~x,se=F,size=1.5,color="black",linetype="dashed")+
-        ggplot2::geom_point(alpha=0.5,shape=21,color="black")+
-        ggplot2::geom_smooth(method = stats::glm,alpha=.5,
-                             method.args=list(family="binomial"),
-                             formula = y~x,se=TRUE,size=1.5,linetype="solid")+
-        ggplot2::theme_minimal()+
-        ggplot2::xlab(label = xlabel)+
-        ggplot2::ylab(label = ylabel)+
-        ggplot2::theme(
-          axis.ticks = ggplot2::element_line(size=1,color="black"),
-          axis.ticks.length=ggplot2::unit(0.2,"cm"),
-          axis.line.x = ggplot2::element_line(color = "black",size=1),
-          axis.line.y = ggplot2::element_line(color = "black",size=1),
-          legend.position='top',
-          legend.key=ggplot2::element_rect(size=1),
-          legend.key.size = ggplot2::unit(1, "lines"))+
-        ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(alpha = 1)))+
-        ggplot2::labs(fill=ModeratorLabel, color=ModeratorLabel)
-    }
+      }
 
 
-  }
+ # }
 
 #################################3
   return(plot1)

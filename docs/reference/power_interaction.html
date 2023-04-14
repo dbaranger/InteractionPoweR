@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,10 @@
   detailed_results <span class="op">=</span> <span class="cn">FALSE</span>,
   full_simulation <span class="op">=</span> <span class="cn">FALSE</span>,
   tol <span class="op">=</span> <span class="fl">0.005</span>,
-  iter <span class="op">=</span> <span class="fl">10</span>
+  iter <span class="op">=</span> <span class="fl">10</span>,
+  skew.x1 <span class="op">=</span> <span class="cn">NA</span>,
+  skew.x2 <span class="op">=</span> <span class="cn">NA</span>,
+  skew.y <span class="op">=</span> <span class="cn">NA</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -179,6 +182,18 @@
 <dt>iter</dt>
 <dd><p>Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.</p></dd>
 
+
+<dt>skew.x1</dt>
+<dd><p>No longer supported.</p></dd>
+
+
+<dt>skew.x2</dt>
+<dd><p>No longer supported.</p></dd>
+
+
+<dt>skew.y</dt>
+<dd><p>No longer supported.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -192,7 +207,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">power_interaction</span><span class="op">(</span>n.iter<span class="op">=</span><span class="fl">10</span>, N<span class="op">=</span><span class="fl">10</span>,r.x1.y<span class="op">=</span><span class="fl">0.2</span>, r.x2.y<span class="op">=</span><span class="fl">.2</span>,r.x1x2.y<span class="op">=</span><span class="fl">0.5</span>,r.x1.x2<span class="op">=</span><span class="fl">.2</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Performing 10 simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    N pwr</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10 0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10 0.3</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

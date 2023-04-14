@@ -26,7 +26,10 @@ power_interaction(
   detailed_results = FALSE,
   full_simulation = FALSE,
   tol = 0.005,
-  iter = 10
+  iter = 10,
+  skew.x1 = NA,
+  skew.x2 = NA,
+  skew.y = NA
 )
 }
 \arguments{
@@ -73,6 +76,12 @@ power_interaction(
 \item{tol}{Correlation adjustment tolerance. When adjust.correlations = TRUE, correlations are adjusted so that the population correlation is within r='tol' of the target. Default = 0.005.}
 
 \item{iter}{Max number of iterations to run the correlation adjustment for. Typically only a couple are needed. Default = 10.}
+
+\item{skew.x1}{No longer supported.}
+
+\item{skew.x2}{No longer supported.}
+
+\item{skew.y}{No longer supported.}
 }
 \value{
 A data frame containing the power (\% significant results) for each unique setting combination. If full_simulation = TRUE will return a list, with one data frame that includes power, and a second that includes raw simulation results.
