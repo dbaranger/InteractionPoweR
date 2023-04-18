@@ -37,9 +37,6 @@
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/compute_adjustment.html</loc>
   </url>
   <url>
-    <loc>https://dbaranger.github.io/InteractionPoweR/reference/generate.interaction.cov.input.html</loc>
-  </url>
-  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/generate_interaction.html</loc>
   </url>
   <url>
@@ -77,9 +74,6 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_r2.html</loc>
-  </url>
-  <url>
-    <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_r2_covs.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/test_interaction.html</loc>
