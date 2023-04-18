@@ -1,3 +1,7 @@
+## Notes
+
+Fixed CITATION file so that it uses bibentry().
+
 ## R CMD check results
 
 There were no ERRORs or WARNINGs. NOTEs are related to the spelling of
