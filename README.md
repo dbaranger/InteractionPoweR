@@ -40,6 +40,9 @@ app**](https://david-baranger.shinyapps.io/InteractionPoweR_analytic/)
 for computing analytic power. We recommend this app particularly for
 beginners and users who are new to power analyses.
 
+Workshop slides can be accessed
+[here](https://docs.google.com/presentation/d/1fgyoZZQLEOD0KqxHgIRwuBnbVrOHdcHzrpOVBoqZPh0/edit?usp=sharing).
+
 Please report bugs, issues, or questions as an [Issue on
 Github](https://github.com/dbaranger/InteractionPoweR/issues/).
 
@@ -89,7 +92,7 @@ test_power<-power_interaction_r2(
 
 test_power
 #>         pwr
-#> 1 0.8055776
+#> 1 0.8131373
 ```
 
 We see that we have 80% power.
@@ -118,7 +121,7 @@ test_power<-power_interaction(
 
 test_power
 #>     N    pwr
-#> 1 350 0.8149
+#> 1 350 0.8086
 ```
 
 The simulation’s accuracy will increase with more iterations.
