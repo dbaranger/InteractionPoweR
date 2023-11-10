@@ -7,6 +7,12 @@
     <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html</loc>
   </url>
   <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPower2waycovsvignette.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweR3wayvignette.html</loc>
+  </url>
+  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html</loc>
   </url>
   <url>
@@ -14,6 +20,12 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPower2waycovsvignette.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweR3wayvignette.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweRvignette.html</loc>
@@ -35,6 +47,12 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/compute_adjustment.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/cor.mat.3way.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/generate.interaction.cov.input.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/generate_interaction.html</loc>
@@ -73,7 +91,16 @@
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction.html</loc>
   </url>
   <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_3way_r2.html</loc>
+  </url>
+  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_r2.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_r2_covs.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/simple.slopes.3way.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/test_interaction.html</loc>

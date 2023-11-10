@@ -362,8 +362,8 @@ if(dim(settings)[1] == 0){
                                                   out.f %>%
                                                   dplyr::group_by_at(.vars = dplyr::vars(dplyr::all_of(grouping_variables))) %>%
                                                   dplyr::summarise(.groups  = "keep",
-                                                                   x1_pwr = mean( .data$x1_p > alpha),
-                                                                   x2_pwr = mean( .data$x2_p > alpha)
+                                                                   x1_pwr = mean( .data$x1_p < alpha),
+                                                                   x2_pwr = mean( .data$x2_p < alpha)
                                                   )
                                                 power_results2<-out.f %>% # effect size
                                                   dplyr::filter(.data$sig_int == 1) %>%

@@ -15,32 +15,46 @@
 #' r.x1.y=0.2, r.x2.y=.2,r.x1x2.y=0.2,r.x1.x2=.2)
 #' power_estimate(power_data = simulation_results, x = "N", power_target = .8)
 power_estimate<-function(power_data,x,power_target){
-  #power_data2 = power_data
-  power_data2<-power_data[,c(1: which(colnames(power_data) == "pwr"))]
-  data_dim<-dim(power_data2)[2]
-  x_col<-which(colnames(power_data2) == x)
-  pwr_col<-which(colnames(power_data2) == "pwr")
-  other_cols<-colnames(power_data2)[-c(x_col,pwr_col)]
+
+  power_data2a = power_data[, which(colnames(power_data) == "pwr" | colnames(power_data) == x)]
+  power_data2b = power_data[, -which(colnames(power_data) == "pwr" | colnames(power_data) == x)] %>% as.data.frame()
+
+  colnames(power_data2b) = colnames(power_data)[-which(colnames(power_data) == "pwr" | colnames(power_data) == x)]
+
+  data_dim2b = dim(power_data2b)[2]
+  data_dim = data_dim2b
+  if(data_dim2b > 0){
+
+    if(!identical( which(colnames(power_data) == "alpha") ,integer(0))){
+      power_data2b = power_data2b[, c(1 : which(colnames(power_data2b) == "alpha")  )]
+    }
+    cols.to.use = apply(power_data2b,2,function(X){dim(table(X)) >  1 },simplify = TRUE)
+    power_data2c = power_data2b[,cols.to.use] %>% as.data.frame()
+    colnames(power_data2c)=    colnames(power_data2b)[cols.to.use]
+    data_dim<-dim(power_data2c)[2]
+    other_cols<-colnames(power_data2c)
+
+    }
+
+
+  x_col<-which(colnames(power_data2a) == x)
+  pwr_col<-which(colnames(power_data2a) == "pwr")
   #power_data$x<-power_data[,x_col]
 
-  if(data_dim==2){power_data2$temp<-1}
+  if(data_dim==0){power_data2a$temp = 1}else{power_data2a = cbind(power_data2a,power_data2c) }
 
-  # if(dim(power_data2)[2] > 2){
-  # power_levels<-as.numeric(names(table(power_data2[,-c(which(colnames(power_data2) == "pwr"),x_col)])))
-  power_levels<-  unique(expand.grid(power_data2[,-c(which(colnames(power_data2) == "pwr"),x_col)]))
+  power_levels<-  unique(expand.grid(    power_data2a[,-c(which(colnames(power_data2a) == "pwr"),x_col)]
+                                     ))
 
   rownames(power_levels)<-NULL
-  #colnames(power)
-  if(data_dim==2){colnames(power_levels)<-"temp"
+
+  if(data_dim==0){colnames(power_levels)<-"temp"
   }  else{
-  #if(dim(power_data2)[2] > 2){
     colnames(power_levels) <- other_cols
   }
   power_out_final<-as.data.frame(power_levels)
 
-  #colnames(power_out)<- colnames(power_data2[,-c(which(colnames(power_data2) == "pwr"),x_col)])
   power_out<-power_out_final
-
 
   power_out_final$estimate<-0
 
@@ -48,7 +62,7 @@ power_estimate<-function(power_data,x,power_target){
     #print(p)
     #filters=paste(  colnames(power_out),"==",power_out[p,])
     filters=paste( "dplyr::near(",colnames(power_levels),",",power_levels[p,],",tol=10^-10)")
-    power_test<-dplyr::filter(power_data2, !!!rlang::parse_exprs(paste(filters, collapse = ";")))
+    power_test<-dplyr::filter(power_data2a, !!!rlang::parse_exprs(paste(filters, collapse = ";")))
     power_test<-as.data.frame(power_test)
 
     if(dim(power_test)[1] > 0){

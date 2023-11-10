@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
+    <a class="dropdown-item" href="../articles/InteractionPower2waycovsvignette.html">Interaction Power: Power analyses for 2-way interactions with covariates</a>
+    <a class="dropdown-item" href="../articles/InteractionPoweR3wayvignette.html">Interaction Power: Power analyses for 3-way interactions</a>
     <a class="dropdown-item" href="../articles/CommonQuestions.html">Questions &amp; Errors</a>
   </div>
 </li>
@@ -107,15 +109,6 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="va">power_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="power_interaction.html">power_interaction</a></span><span class="op">(</span>n.iter <span class="op">=</span> <span class="fl">10</span>,N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">300</span>,by<span class="op">=</span><span class="fl">100</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span> r.x1.y <span class="op">=</span> <span class="fl">0</span>,r.x2.y <span class="op">=</span> <span class="fl">.1</span>,r.x1x2.y <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>,r.x1.x2 <span class="op">=</span> <span class="fl">.3</span>,detailed_results <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Performing 30 simulations</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>executing %dopar% sequentially: no parallel backend registered</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'dplyr'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:base':</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'MASS'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:dplyr':</span>

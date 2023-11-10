@@ -1,0 +1,138 @@
+---
+title: "Interaction Power: Power analyses for 3-way interactions"
+author: "David AA Baranger"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+description: >
+  This article describes how to use InteractionPoweR to run power
+  analyses for 3-way interactions.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette describes how to run power analyses for 3-way interactions. It assumes you are already familiar with power analyses for 2-way interactions. If you aren't, check out our [tutorial paper](https://journals.sagepub.com/doi/full/10.1177/25152459231187531) or the [main vignette](https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweRvignette.html).
+
+# Introduction
+
+Three-way interaction analyses take the form:
+
+$$
+Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + X_3\beta_3 +X_1X_2\beta_4 + X_1X_3\beta_5 +X_2X_3\beta_6 +X_1X_2X_3\beta_7 +\epsilon
+$$
+
+That's a lot of effect sizes! If you think about the correlation matrix for a linear regression with 7 independent variables, that's 28 different correlations. Luckily, because of our assumptions - that everything is mean-centered and that our variables are multivariate normal, only 10 effects need to be specified. See [Urge et al.](https://doi.org/10.5539/ijsp.v5n6p73) for more on this. The user needs to specify the relation between each variable and our dependent variable $Y$ (7 effects), as well as the correlations between $X_1$, $X_2$, and $X_3$ (3 effects). All other correlations are either 0 or are fully determined by the correlations between $X_1$, $X_2$, and $X_3$. In 2-way interactions, our assumptions result in the handy outcome that the interaction term is uncorrelated with the main effects. This is **not** the case for 3-way interactions. In fact, the 3-way interaction term will nearly always be correlated with at least one of the main effects ($X_1$, $X_2$, and $X_3$) unless all of the correlations between $X_1$, $X_2$, and $X_3$ are 0. Luckily, the 3-way interaction term is uncorrelated with the 2-way interaction terms (which are all correlated with each other), so at least there's that. Even so, multicollinearity is a fact of life when you're testing 3-way interactions.
+
+As a result of the multicollinearity inherent to 3-way interactions, the correlation between $Y$ and $X_1X_2X_3$ is not a very useful metric of the interaction effect size. For example, if this correlation is small, the magnitude of the regression coefficient $\beta_7$ could very easily have the opposite sign, and still be significant. Thus, instead of the correlation, our power analysis function for 3-way interactions uses $\beta_7$ as the interaction effect that users specify.
+
+As always, users have the option of specifying the reliability of $Y$, $X_1$, $X_2$, and $X_3$. The default is 1 (perfect reliability), though that is almost guaranteed to be an unreasonable assumption in most observational research. Special thanks to StackExchange user [R Carnell](https://stats.stackexchange.com/questions/605858/reliability-of-3-way-interaction-term-between-correlated-variables) for helping with the formula for the reliability of a 3-way interaction term.
+
+## First steps
+
+Ok, lets run a power analysis for a single regression.
+
+```{r warning=F,error=F}
+  
+library(InteractionPoweR)
+power.results=  power_interaction_3way_r2(N = 800,         # Sample size
+                                            b.x1x2x3 = .05,  # Interaction regression coefficient
+                                            r.x1.y = .4,     # Main effects
+                                            r.x2.y = .3,
+                                            r.x3.y = .2,
+                                            r.x1x2.y = .01,  # 2-way interactions
+                                            r.x1x3.y = .05,
+                                            r.x2x3.y = .1,
+                                            r.x1.x2 = .3,    # Correlation between main effects
+                                            r.x1.x3 = .1,
+                                            r.x2.x3 = .2)
+power.results
+```
+
+We see we have 40% power.
+
+## Getting more information
+
+We can still request `detailed_results = TRUE` to get more information about the analysis:
+
+```{r warning=F,error=F}
+  power.results=  power_interaction_3way_r2(N = 800,         # Sample size
+                                            b.x1x2x3 = .05,  # Interaction regression coefficient
+                                            r.x1.y = .4,     # Main effects
+                                            r.x2.y = .3,
+                                            r.x3.y = .2,
+                                            r.x1x2.y = .01,  # 2-way interactions
+                                            r.x1x3.y = .05,
+                                            r.x2x3.y = .1,
+                                            r.x1.x2 = .3,    # Correlation between main effects
+                                            r.x1.x3 = .1,
+                                            r.x2.x3 = .2,
+                                            detailed_results = TRUE)
+power.results
+```
+
+This yields a lot of information, including the observed $f^2$, the $TotalR^2$ and $NullR^2$, the correlation between all the variables (`obs.r`) and the regression slopes (`obs.b`). We have added some convenience functions to help make sense of this output.
+
+First, we can look at the correlation matrix as a data frame
+
+```{r}
+cor.mat.3way(power.results = power.results)
+```
+
+Or as a plot
+
+```{r}
+cor.mat.3way(power.results = power.results,return.plot = TRUE)
+```
+
+Note here that while $\beta_7$ is 0.05, the pairwise correlation between $Y$ and $X_1X_2X_3$ is 0.198.
+
+We can also look at the simple slopes as a data frame
+
+```{r}
+simple.slopes.3way(power.results)
+```
+
+Or as a plot
+
+```{r}
+simple.slopes.3way(power.results,return.plot = TRUE)
+```
+
+## Running multiple analyses
+
+As always, we can run multiple power analyses at once
+
+```{r}
+
+power.results=  power_interaction_3way_r2(N = seq(800,4000,100),         # Sample size
+                                            b.x1x2x3 = 0.05,  # Interaction regression coefficient
+                                            r.x1.y = .4,     # Main effects
+                                            r.x2.y = .3,
+                                            r.x3.y = .2,
+                                            r.x1x2.y = .01,  # 2-way interactions
+                                            r.x1x3.y = .05,
+                                            r.x2x3.y = .1,
+                                            r.x1.x2 = .3,    # Correlation between main effects
+                                            r.x1.x3 = .1,
+                                            r.x2.x3 = .2,
+                                            detailed_results = TRUE)
+```
+
+And we can plot a power curve
+
+```{r}
+plot_power_curve(power_data = power.results,x = "N",power_target = .9)
+
+```
+
+And solve for what sample size we would need to have 90% power to detect our effect.
+
+```{r}
+power_estimate(power_data = power.results,x = "N",power_target = .9)
+```
+In this example,we would need N=2781 to achieve 90% power. 
+
+Even though analytic power analyses are fast, with so many parameters we can easily reach a point where the analysis will take a long time to run. Say for instance we are interested in testing out 10 different values of 4 different parameters - that's 10,000 power analyses. At that point, it can be helpful to run things in parallel. Parallel analyses can be run using the `cl` flag. `cl=4` is probably a reasonable value for most personal computers.

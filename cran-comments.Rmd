@@ -1,7 +1,7 @@
 ---
 title: "cran-comments"
 author: "David AA Baranger"
-date: "4/17/2023"
+date: "11/9/2023"
 output: md_document
 ---
 
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Notes 
 
-Fixed CITATION file so that it uses bibentry(). 
+Updates to version 0.2.2. Adds additional functions `generate.interaction.cov.input`, `power_interaction_r2_covs`, `power_interaction_3way_r2`, `simple.slopes.3way`, and `cor.mat.3way`.
 
 ## R CMD check results
 

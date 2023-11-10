@@ -21,15 +21,24 @@ articles:
   navbar: ~
   contents:
   - articles/InteractionPoweRvignette
+  - articles/InteractionPower2waycovsvignette
+  - articles/InteractionPoweR3wayvignette
   - articles/CommonQuestions
 
 reference:
-- title: "Power analysis"
+- title: "2-way power analysis"
   desc: >
-    Functions to run a power analysis
+    Functions to run a 2-way power analysis
 - contents:
   - power_interaction
   - power_interaction_r2
+  - generate.interaction.cov.input
+  - power_interaction_r2_covs
+- title: "3-way power analysis"
+  desc: >
+    Functions to run a 3-way power analysis
+- contents:
+  - power_interaction_3way_r2
 - title: "Next steps"
   desc: >
     Interpret and visualize power analysis results
@@ -37,6 +46,8 @@ reference:
   - power_estimate
   - plot_power_curve
   - plot_simple_slope
+  - cor.mat.3way
+  - simple.slopes.3way
 - title: "A single data set"
   desc: >
     Simulate and plot a single data set

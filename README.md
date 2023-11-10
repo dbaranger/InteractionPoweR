@@ -14,20 +14,20 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/InteractionPoweR)](http
 
 The `{InteractionPoweR}` package conducts power analyses for regression
 models in cross-sectional data sets where the term of interest is an
-interaction between two variables, also known as ‘moderation’ analyses.
-The package includes functions for simulating data sets, conducting
-power analyses, and plotting and interpreting results. Notable package
-features include (1) the ability to compute power for interactions
-between two continuous variables, (2) effect sizes are all specified as
-the cross-sectional Pearson’s correlation, (3) simulations do not assume
-that the interacting variables are independent, (4) any variable in the
-model, including the outcome, can have anywhere from 2 (i.e., binary) to
-20 discrete values, and (5) analyses can incorporate the effects of
-reliability, both of the interacting variables, as well as of the
-outcome variable.
+interaction between two or three variables, also known as ‘moderation’
+analyses. The package includes functions for simulating data sets,
+conducting power analyses, and plotting and interpreting results.
+Notable package features include (1) the ability to compute power for
+interactions between two continuous variables, (2) effect sizes are all
+specified as the cross-sectional Pearson’s correlation, (3) simulations
+do not assume that the interacting variables are independent, (4) any
+variable in the model, including the outcome, can have anywhere from 2
+(i.e., binary) to 20 discrete values, and (5) analyses can incorporate
+the effects of reliability, both of the interacting variables, as well
+as of the outcome variable.
 
 **For more information see our [tutorial
-paper](https://doi.org/10.31234/osf.io/5ptd7), the package
+paper](https://doi.org/10.1177/25152459231187531), the package
 [vignette](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html),
 and the
 [FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
@@ -38,10 +38,9 @@ the major functions for simulation-based power analyses in a
 user-friendly point-and-click interface. We also have a [**simpler Shiny
 app**](https://david-baranger.shinyapps.io/InteractionPoweR_analytic/)
 for computing analytic power. We recommend this app particularly for
-beginners and users who are new to power analyses.
-
-Workshop slides can be accessed
-[here](https://docs.google.com/presentation/d/1fgyoZZQLEOD0KqxHgIRwuBnbVrOHdcHzrpOVBoqZPh0/edit?usp=sharing).
+beginners and users who are new to power analyses. We have also recently
+added [**a new shiny app for three-way
+interactions**](https://david-baranger.shinyapps.io/InteractionPoweR_3way_analytic/).
 
 Please report bugs, issues, or questions as an [Issue on
 Github](https://github.com/dbaranger/InteractionPoweR/issues/).
@@ -129,9 +128,10 @@ The simulation’s accuracy will increase with more iterations.
 ## Citation
 
 If you use `{InteractionPoweR}` in a publication, please cite our
-[tutorial paper](https://doi.org/10.31234/osf.io/5ptd7):
+[tutorial paper](https://doi.org/10.1177/25152459231187531):
 
 Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM
-(2022). “Tutorial: Power analyses for interaction effects in
-cross-sectional regressions.” *PsyArxiv*. doi:
-[10.31234/osf.io/5ptd7](https://doi.org/10.31234/osf.io/5ptd7)
+(2023). “Tutorial: Power analyses for interaction effects in
+cross-sectional regressions.” *Advances in Methods and Practices in
+Psychological Science*. 6(3). doi:
+[10.1177/25152459231187531](https://doi.org/10.1177/25152459231187531)

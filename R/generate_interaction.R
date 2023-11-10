@@ -179,7 +179,29 @@ generate_interaction <- function(N,
 
   # simulate x1 and x2 as continuous normal variables
 
-  data = MASS::mvrnorm(n=N, mu=c(mean.x1, mean.x2), Sigma=covmat[c(1:2),c(1:2)], empirical=TRUE)
+ # this is the mvnorm function from the MASS package. https://rdrr.io/cran/MASS/src/R/mvrnorm.R
+  mvrnorm_temp = function(n = 1, mu, Sigma, tol=1e-6, empirical = FALSE, EISPACK = FALSE)
+    {
+      p <- length(mu)
+      if(!all(dim(Sigma) == c(p,p))) stop("incompatible arguments")
+      if(EISPACK) stop("'EISPACK' is no longer supported by R", domain = NA)
+      eS <- eigen(Sigma, symmetric = TRUE)
+      ev <- eS$values
+      if(!all(ev >= -tol*abs(ev[1L]))) stop("'Sigma' is not positive definite")
+      X <- matrix(stats::rnorm(p * n), n)
+      if(empirical) {
+        X <- scale(X, TRUE, FALSE) # remove means
+        X <- X %*% svd(X, nu = 0)$v # rotate to PCs
+        X <- scale(X, FALSE, TRUE) # rescale PCs to unit variance
+      }
+      X <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(X)
+      nm <- names(mu)
+      if(is.null(nm) && !is.null(dn <- dimnames(Sigma))) nm <- dn[[1L]]
+      dimnames(X) <- list(nm, NULL)
+      if(n == 1) drop(X) else t(X)
+    }
+
+  data = mvrnorm_temp(n=N, mu=c(mean.x1, mean.x2), Sigma=covmat[c(1:2),c(1:2)], empirical=TRUE)
 
   x1    = data[, 1]
   x2    = data[, 2]

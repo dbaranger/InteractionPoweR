@@ -1,3 +1,17 @@
+# InteractionPoweR 0.2.2
+
+-   Adds power analysis function for 3-way interactions -
+    `power_interaction_3way_r2()`.
+-   Adds convenience function for visualizing the correlation matrix
+    from a 3-way interaction - `cor.mat.3way()`.
+-   Adds convenience function for visualizing the simple slopes from a
+    3-way interaction - `simple.slopes.3way()`.
+-   Adds power analysis function for 2-way interactions with
+    covariates - `generate.interaction.cov.input()` and
+    `power_interaction_r2_covs()`.
+-   Minor bug fixes.
+-   Removes dependency on the {MASS} package.
+
 # InteractionPoweR 0.2.1
 
 -   Fix bug in `power_interaction_r2()` which effected analyses with a

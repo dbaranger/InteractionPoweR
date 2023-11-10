@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
+    <a class="dropdown-item" href="../articles/InteractionPower2waycovsvignette.html">Interaction Power: Power analyses for 2-way interactions with covariates</a>
+    <a class="dropdown-item" href="../articles/InteractionPoweR3wayvignette.html">Interaction Power: Power analyses for 3-way interactions</a>
     <a class="dropdown-item" href="../articles/CommonQuestions.html">Questions &amp; Errors</a>
   </div>
 </li>
@@ -109,22 +111,10 @@ messages:</p>
 <p>“Does this package currently support power analyses for 3-way
 interactions?”</p>
 <ul>
-<li>
-<p>No. This is the most common question we get. We would love to
-expand the package to include 3-way interactions, but it will not be
-easy. There are several steps in the analysis where we do not know
-exactly what to do for 3-way interactions. If you know the answer to any
-of these, or know of any papers that have worked these out, please send
-them our way:</p>
-<ol style="list-style-type: decimal">
-<li><p>Variance of a 3-way interaction term when variables are
-correlated.</p></li>
-<li><p>Expected value of <span class="math inline">\(Y\)</span> when
-there is a 3-way interaction between correlated variables.</p></li>
-<li><p>Reliability of a 3-way interaction term when variables are
-correlated.</p></li>
-</ol>
-</li>
+<li>Yes! See the new function <code><a href="../reference/power_interaction_3way_r2.html">power_interaction_3way_r2()</a></code>.
+We do not plan on adding simulation-based power analyses for 3-way
+interactions. Please get in touch if you have a research question that
+needs that functionality.</li>
 </ul>
 </li>
 </ol>

@@ -1,8 +1,10 @@
 bibentry(header = "To cite InteractionPoweR in publications use:",
               bibtype = "Article",
               author="David A. A. Baranger and Megan C. Finsaas and Brandon L. Goldstein and Colin E. Vize and Donald R. Lynam and Thomas M. Olino",
-              doi = "10.31234/osf.io/5ptd7",
-              journal = "PsyArxiv",
+              doi = "10.1177/25152459231187531",
+              journal = "Advances in Methods and Practices in Psychological Science",
               title = "Tutorial: Power analyses for interaction effects in cross-sectional regressions",
-              year = "2022"
+              volume = "6",
+              number = "3",
+              year = "2023"
                )

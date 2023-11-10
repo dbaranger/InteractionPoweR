@@ -14,6 +14,8 @@ description: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+This vignette describes the basics of interaction analyses and how to use this package. A more updated version of our discussion of many of the topics listed here can be found in our tutorial paper (open access), which can be found at: <https://journals.sagepub.com/doi/full/10.1177/25152459231187531>
+
 # Introduction
 
 Interaction analyses take the form:
@@ -89,7 +91,7 @@ power_interaction_r2(
 
 We find that our analysis has 80% power (`pwr`), and the interaction has a shape of 0.75 (the interaction effect `x1x2` is 75% of the magnitude of `x1` - the interaction is an attenuated effect where the simple-slope lines are all in the same direction).
 
-We can also use the function `power_interaction` to compute power via monte-carlo simulation. Additional parameters include `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results. 
+We can also use the function `power_interaction` to compute power via monte-carlo simulation. Additional parameters include `n.iter`, which is the number of simulations run. In this example we'll use just 1,000 simulations, but we recommend using 10,000 for more stable results.
 
 ```{r message=F}
 set.seed(290115)
@@ -236,7 +238,7 @@ plot_power_curve(power_data = power_test, # output from power_interaction()
                  x = "N",                 # x-axis
                  group = "r.x1x2.y"       # grouping variable
                  )
-power_estimate(power_data = power_test ,#%>% dplyr::select(c("N","r.x1x2.y","pwr")), # select the variables used for the estimate
+power_estimate(power_data = power_test %>% dplyr::select(c("N","r.x1x2.y","pwr")), # select the variables used for the estimate
                         x = "N",        # the variable we want a precise number for
              power_target = 0.9         # the power we want to achieve 
 )
@@ -336,12 +338,11 @@ power_test = power_interaction(
                   r.x2.y = .1,                    # correlation between x2 and y
                   r.x1.x2 = .2,                   # correlation between x1 and x2
                   r.x1x2.y = .15,                 # correlation between x1x2 and y
-                  k.x1 = seq(2,10,2),             # x1 has 2-10 discrete values
-                  adjust.correlations = FALSE,cl=2)     # Adjust correlations?  
+                  k.x1 = c(2,3,4,6,8),             # x1 has 2-10 discrete values
+                  adjust.correlations = FALSE)    # Adjust correlations?  
 
 plot_power_curve(power_test,power_target = .9)
 ```
-
 
 # Detailed and full results
 
@@ -354,12 +355,11 @@ Let's return to our example of examining a range of interaction effect sizes, ex
 ```{r message=F}
 power_test = power_interaction(n.iter = 1000,    # number of simulations
                   alpha = 0.05,                  # p-value
-                  N = seq(50,200,50)  ,       # sample size
+                  N = seq(50,200,50)  ,          # sample size
                   r.x1.y = .2,                   # correlation between x1 and y
                   r.x2.y =  .1,                  # correlation between x2 and y
                   r.x1.x2 = .2,                  # correlation between x1 and x2
                   r.x1x2.y = .4,                 # correlation between x1x2 and y
-                  cl = 2,                        # number of clusters for parallel analyses
                   detailed_results = TRUE        # return detailed results       
                    )
 power_test

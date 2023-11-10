@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
+    <a class="dropdown-item" href="../articles/InteractionPower2waycovsvignette.html">Interaction Power: Power analyses for 2-way interactions with covariates</a>
+    <a class="dropdown-item" href="../articles/InteractionPoweR3wayvignette.html">Interaction Power: Power analyses for 3-way interactions</a>
     <a class="dropdown-item" href="../articles/CommonQuestions.html">Questions &amp; Errors</a>
   </div>
 </li>
@@ -109,10 +111,10 @@ If q=3 then the two slopes are y~x1 for the bottom 33% of x2, and the top 33% of
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_interaction.html">generate_interaction</a></span><span class="op">(</span>N <span class="op">=</span> <span class="fl">250</span>,r.x1.y <span class="op">=</span> <span class="fl">0</span>,r.x2.y <span class="op">=</span> <span class="fl">.1</span>,r.x1x2.y <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>,r.x1.x2 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">test_interaction</span><span class="op">(</span>data <span class="op">=</span> <span class="va">dataset</span>, alpha<span class="op">=</span><span class="fl">0.05</span>, q<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $linear.model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Estimate Std. Error    t value   Pr(&gt;|t|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x1   -0.07250709 0.06591667 -1.0999810 0.27241564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x2    0.03152674 0.06594199  0.4780981 0.63300494</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x1x2 -0.14564624 0.06022697 -2.4182894 0.01632078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Estimate Std. Error    t value     Pr(&gt;|t|)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1   -0.03329051 0.06601911 -0.5042556 0.6145331298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x2    0.11107539 0.06493561  1.7105468 0.0884255074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1x2 -0.20153332 0.05546821 -3.6333123 0.0003405689</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

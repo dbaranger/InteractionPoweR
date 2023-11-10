@@ -47,6 +47,9 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
     y_name<-InteractionPoweR::name_key[match(colnames(power_data)[2],InteractionPoweR::name_key[,1]  ),2]
     # group_name<-InteractionPoweR::name_key[match(colnames(power_data)[3],InteractionPoweR::name_key[,1] ),2]
 
+    if(is.na(x_name)){x_name = colnames(power_data)[1]}
+    if(is.na(y_name)){x_name = colnames(power_data)[2]}
+
     power_plot<-ggplot2::ggplot(data = power_data,ggplot2::aes(x = power_data[,1],y = power_data[,2] ))+
       #scale_color_viridis_d(option = c("C"),end = .95)+
       #scale_fill_viridis_d(option = c("C"),end = .95)+
@@ -73,6 +76,11 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
     x_name<-InteractionPoweR::name_key[match(colnames(power_data)[1],InteractionPoweR::name_key[,1]  ),2]
     y_name<-InteractionPoweR::name_key[match(colnames(power_data)[2],InteractionPoweR::name_key[,1]  ),2]
     group_name<-InteractionPoweR::name_key[match(colnames(power_data)[3],InteractionPoweR::name_key[,1] ),2]
+
+
+    if(is.na(x_name)){x_name = colnames(power_data)[1]}
+    if(is.na(y_name)){x_name = colnames(power_data)[2]}
+    if(is.na(group_name)){x_name = colnames(power_data)[3]}
 
     power_plot<-ggplot2::ggplot(data = power_data,ggplot2::aes(x = power_data[,1],
                                                                y = power_data[,2],
@@ -104,6 +112,13 @@ plot_power_curve<-function(power_data,x=NULL,group=NULL,facets=NULL,power_target
     y_name<-InteractionPoweR::name_key[match(colnames(power_data)[2],InteractionPoweR::name_key[,1]  ),2]
     group_name<-InteractionPoweR::name_key[match(colnames(power_data)[3],InteractionPoweR::name_key[,1] ),2]
     facets_name<-InteractionPoweR::name_key[match(colnames(power_data)[4],InteractionPoweR::name_key[,1] ),2]
+
+
+
+    if(is.na(x_name)){x_name = colnames(power_data)[1]}
+    if(is.na(y_name)){x_name = colnames(power_data)[2]}
+    if(is.na(group_name)){x_name = colnames(power_data)[3]}
+    if(is.na(facets_name)){x_name = colnames(power_data)[4]}
 
     power_data[,4]<-paste(facets_name,"=", power_data[,4])
 
