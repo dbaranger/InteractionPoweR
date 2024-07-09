@@ -41,7 +41,7 @@ You can also install the development version of InteractionPoweR from github wit
 
 ``` r
 install.packages("devtools")
-devtools::install_github("dbaranger/InteractionPoweR/")
+devtools::install_github("dbaranger/InteractionPoweR")
 ```
 
 If you get an error about a corrupt .rdb file, try restarting your R session.

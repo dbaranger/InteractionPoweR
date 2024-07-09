@@ -94,7 +94,7 @@ test_power
 #> 1 0.8131373
 ```
 
-We see that we have 80% power.
+We see that we have 81% power.
 
 We can also use simulations to estimate power. Simulations are
 particularly useful because they can account for non-normal data,

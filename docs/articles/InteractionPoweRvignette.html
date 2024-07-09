@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="The InteractionPoweR Package">
 <meta property="og:description" content="This article describes how to use InteractionPoweR and also explains how the functions underlying this package work.">
@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
+    <a class="dropdown-item" href="../articles/InteractionPower2waycovsvignette.html">Interaction Power: Power analyses for 2-way interactions with covariates</a>
+    <a class="dropdown-item" href="../articles/InteractionPoweR3wayvignette.html">Interaction Power: Power analyses for 3-way interactions</a>
     <a class="dropdown-item" href="../articles/CommonQuestions.html">Questions &amp; Errors</a>
   </div>
 </li>
@@ -99,6 +101,10 @@ Baranger</h4>
 
     
     
+<p>This vignette describes the basics of interaction analyses and how to
+use this package. A more updated version of our discussion of many of
+the topics listed here can be found in our tutorial paper (open access),
+which can be found at: <a href="https://journals.sagepub.com/doi/full/10.1177/25152459231187531" class="external-link uri">https://journals.sagepub.com/doi/full/10.1177/25152459231187531</a></p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -522,132 +528,22 @@ of them. To test this, we can vary both <code>N</code> and
 <span>                 <span class="op">)</span></span></code></pre></div>
 <p><img src="InteractionPoweRvignette_files/figure-html/fig4-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/power_estimate.html">power_estimate</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span> ,<span class="co">#%&gt;% dplyr::select(c("N","r.x1x2.y","pwr")), # select the variables used for the estimate</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/power_estimate.html">power_estimate</a></span><span class="op">(</span>power_data <span class="op">=</span> <span class="va">power_test</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N"</span>,<span class="st">"r.x1x2.y"</span>,<span class="st">"pwr"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># select the variables used for the estimate</span></span>
 <span>                        x <span class="op">=</span> <span class="st">"N"</span>,        <span class="co"># the variable we want a precise number for</span></span>
 <span>             power_target <span class="op">=</span> <span class="fl">0.9</span>         <span class="co"># the power we want to achieve </span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##     r.x1x2.y  crossover estimate</span></span>
-<span><span class="co">## 1      0.150 -0.4166667 440.7966</span></span>
-<span><span class="co">## 2      0.155 -0.4166667   0.0000</span></span>
-<span><span class="co">## 3      0.160 -0.4166667   0.0000</span></span>
-<span><span class="co">## 4      0.165 -0.4166667   0.0000</span></span>
-<span><span class="co">## 5      0.170 -0.4166667   0.0000</span></span>
-<span><span class="co">## 6      0.175 -0.4166667   0.0000</span></span>
-<span><span class="co">## 7      0.180 -0.4166667   0.0000</span></span>
-<span><span class="co">## 8      0.185 -0.4166667   0.0000</span></span>
-<span><span class="co">## 9      0.190 -0.4166667   0.0000</span></span>
-<span><span class="co">## 10     0.195 -0.4166667   0.0000</span></span>
-<span><span class="co">## 11     0.200 -0.4166667   0.0000</span></span>
-<span><span class="co">## 12     0.150 -0.4032258   0.0000</span></span>
-<span><span class="co">## 13     0.155 -0.4032258 412.6445</span></span>
-<span><span class="co">## 14     0.160 -0.4032258   0.0000</span></span>
-<span><span class="co">## 15     0.165 -0.4032258   0.0000</span></span>
-<span><span class="co">## 16     0.170 -0.4032258   0.0000</span></span>
-<span><span class="co">## 17     0.175 -0.4032258   0.0000</span></span>
-<span><span class="co">## 18     0.180 -0.4032258   0.0000</span></span>
-<span><span class="co">## 19     0.185 -0.4032258   0.0000</span></span>
-<span><span class="co">## 20     0.190 -0.4032258   0.0000</span></span>
-<span><span class="co">## 21     0.195 -0.4032258   0.0000</span></span>
-<span><span class="co">## 22     0.200 -0.4032258   0.0000</span></span>
-<span><span class="co">## 23     0.150 -0.3906250   0.0000</span></span>
-<span><span class="co">## 24     0.155 -0.3906250   0.0000</span></span>
-<span><span class="co">## 25     0.160 -0.3906250 387.7582</span></span>
-<span><span class="co">## 26     0.165 -0.3906250   0.0000</span></span>
-<span><span class="co">## 27     0.170 -0.3906250   0.0000</span></span>
-<span><span class="co">## 28     0.175 -0.3906250   0.0000</span></span>
-<span><span class="co">## 29     0.180 -0.3906250   0.0000</span></span>
-<span><span class="co">## 30     0.185 -0.3906250   0.0000</span></span>
-<span><span class="co">## 31     0.190 -0.3906250   0.0000</span></span>
-<span><span class="co">## 32     0.195 -0.3906250   0.0000</span></span>
-<span><span class="co">## 33     0.200 -0.3906250   0.0000</span></span>
-<span><span class="co">## 34     0.150 -0.3787879   0.0000</span></span>
-<span><span class="co">## 35     0.155 -0.3787879   0.0000</span></span>
-<span><span class="co">## 36     0.160 -0.3787879   0.0000</span></span>
-<span><span class="co">## 37     0.165 -0.3787879 365.0462</span></span>
-<span><span class="co">## 38     0.170 -0.3787879   0.0000</span></span>
-<span><span class="co">## 39     0.175 -0.3787879   0.0000</span></span>
-<span><span class="co">## 40     0.180 -0.3787879   0.0000</span></span>
-<span><span class="co">## 41     0.185 -0.3787879   0.0000</span></span>
-<span><span class="co">## 42     0.190 -0.3787879   0.0000</span></span>
-<span><span class="co">## 43     0.195 -0.3787879   0.0000</span></span>
-<span><span class="co">## 44     0.200 -0.3787879   0.0000</span></span>
-<span><span class="co">## 45     0.150 -0.3676471   0.0000</span></span>
-<span><span class="co">## 46     0.155 -0.3676471   0.0000</span></span>
-<span><span class="co">## 47     0.160 -0.3676471   0.0000</span></span>
-<span><span class="co">## 48     0.165 -0.3676471   0.0000</span></span>
-<span><span class="co">## 49     0.170 -0.3676471 344.5132</span></span>
-<span><span class="co">## 50     0.175 -0.3676471   0.0000</span></span>
-<span><span class="co">## 51     0.180 -0.3676471   0.0000</span></span>
-<span><span class="co">## 52     0.185 -0.3676471   0.0000</span></span>
-<span><span class="co">## 53     0.190 -0.3676471   0.0000</span></span>
-<span><span class="co">## 54     0.195 -0.3676471   0.0000</span></span>
-<span><span class="co">## 55     0.200 -0.3676471   0.0000</span></span>
-<span><span class="co">## 56     0.150 -0.3571429   0.0000</span></span>
-<span><span class="co">## 57     0.155 -0.3571429   0.0000</span></span>
-<span><span class="co">## 58     0.160 -0.3571429   0.0000</span></span>
-<span><span class="co">## 59     0.165 -0.3571429   0.0000</span></span>
-<span><span class="co">## 60     0.170 -0.3571429   0.0000</span></span>
-<span><span class="co">## 61     0.175 -0.3571429 325.8309</span></span>
-<span><span class="co">## 62     0.180 -0.3571429   0.0000</span></span>
-<span><span class="co">## 63     0.185 -0.3571429   0.0000</span></span>
-<span><span class="co">## 64     0.190 -0.3571429   0.0000</span></span>
-<span><span class="co">## 65     0.195 -0.3571429   0.0000</span></span>
-<span><span class="co">## 66     0.200 -0.3571429   0.0000</span></span>
-<span><span class="co">## 67     0.150 -0.3472222   0.0000</span></span>
-<span><span class="co">## 68     0.155 -0.3472222   0.0000</span></span>
-<span><span class="co">## 69     0.160 -0.3472222   0.0000</span></span>
-<span><span class="co">## 70     0.165 -0.3472222   0.0000</span></span>
-<span><span class="co">## 71     0.170 -0.3472222   0.0000</span></span>
-<span><span class="co">## 72     0.175 -0.3472222   0.0000</span></span>
-<span><span class="co">## 73     0.180 -0.3472222 308.7349</span></span>
-<span><span class="co">## 74     0.185 -0.3472222   0.0000</span></span>
-<span><span class="co">## 75     0.190 -0.3472222   0.0000</span></span>
-<span><span class="co">## 76     0.195 -0.3472222   0.0000</span></span>
-<span><span class="co">## 77     0.200 -0.3472222   0.0000</span></span>
-<span><span class="co">## 78     0.150 -0.3378378   0.0000</span></span>
-<span><span class="co">## 79     0.155 -0.3378378   0.0000</span></span>
-<span><span class="co">## 80     0.160 -0.3378378   0.0000</span></span>
-<span><span class="co">## 81     0.165 -0.3378378   0.0000</span></span>
-<span><span class="co">## 82     0.170 -0.3378378   0.0000</span></span>
-<span><span class="co">## 83     0.175 -0.3378378   0.0000</span></span>
-<span><span class="co">## 84     0.180 -0.3378378   0.0000</span></span>
-<span><span class="co">## 85     0.185 -0.3378378 293.3426</span></span>
-<span><span class="co">## 86     0.190 -0.3378378   0.0000</span></span>
-<span><span class="co">## 87     0.195 -0.3378378   0.0000</span></span>
-<span><span class="co">## 88     0.200 -0.3378378   0.0000</span></span>
-<span><span class="co">## 89     0.150 -0.3289474   0.0000</span></span>
-<span><span class="co">## 90     0.155 -0.3289474   0.0000</span></span>
-<span><span class="co">## 91     0.160 -0.3289474   0.0000</span></span>
-<span><span class="co">## 92     0.165 -0.3289474   0.0000</span></span>
-<span><span class="co">## 93     0.170 -0.3289474   0.0000</span></span>
-<span><span class="co">## 94     0.175 -0.3289474   0.0000</span></span>
-<span><span class="co">## 95     0.180 -0.3289474   0.0000</span></span>
-<span><span class="co">## 96     0.185 -0.3289474   0.0000</span></span>
-<span><span class="co">## 97     0.190 -0.3289474 278.8560</span></span>
-<span><span class="co">## 98     0.195 -0.3289474   0.0000</span></span>
-<span><span class="co">## 99     0.200 -0.3289474   0.0000</span></span>
-<span><span class="co">## 100    0.150 -0.3205128   0.0000</span></span>
-<span><span class="co">## 101    0.155 -0.3205128   0.0000</span></span>
-<span><span class="co">## 102    0.160 -0.3205128   0.0000</span></span>
-<span><span class="co">## 103    0.165 -0.3205128   0.0000</span></span>
-<span><span class="co">## 104    0.170 -0.3205128   0.0000</span></span>
-<span><span class="co">## 105    0.175 -0.3205128   0.0000</span></span>
-<span><span class="co">## 106    0.180 -0.3205128   0.0000</span></span>
-<span><span class="co">## 107    0.185 -0.3205128   0.0000</span></span>
-<span><span class="co">## 108    0.190 -0.3205128   0.0000</span></span>
-<span><span class="co">## 109    0.195 -0.3205128 265.4087</span></span>
-<span><span class="co">## 110    0.200 -0.3205128   0.0000</span></span>
-<span><span class="co">## 111    0.150 -0.3125000   0.0000</span></span>
-<span><span class="co">## 112    0.155 -0.3125000   0.0000</span></span>
-<span><span class="co">## 113    0.160 -0.3125000   0.0000</span></span>
-<span><span class="co">## 114    0.165 -0.3125000   0.0000</span></span>
-<span><span class="co">## 115    0.170 -0.3125000   0.0000</span></span>
-<span><span class="co">## 116    0.175 -0.3125000   0.0000</span></span>
-<span><span class="co">## 117    0.180 -0.3125000   0.0000</span></span>
-<span><span class="co">## 118    0.185 -0.3125000   0.0000</span></span>
-<span><span class="co">## 119    0.190 -0.3125000   0.0000</span></span>
-<span><span class="co">## 120    0.195 -0.3125000   0.0000</span></span>
-<span><span class="co">## 121    0.200 -0.3125000 253.3799</span></span></code></pre>
+<pre><code><span><span class="co">##    r.x1x2.y estimate</span></span>
+<span><span class="co">## 1     0.150 440.7966</span></span>
+<span><span class="co">## 2     0.155 412.6445</span></span>
+<span><span class="co">## 3     0.160 387.7582</span></span>
+<span><span class="co">## 4     0.165 365.0462</span></span>
+<span><span class="co">## 5     0.170 344.5132</span></span>
+<span><span class="co">## 6     0.175 325.8309</span></span>
+<span><span class="co">## 7     0.180 308.7349</span></span>
+<span><span class="co">## 8     0.185 293.3426</span></span>
+<span><span class="co">## 9     0.190 278.8560</span></span>
+<span><span class="co">## 10    0.195 265.4087</span></span>
+<span><span class="co">## 11    0.200 253.3799</span></span></code></pre>
 <p>From this we’ve learned that, depending on exactly what effect size
 we’re aiming for, we’ll need an <code>N</code> between 260 and 450.</p>
 </div>
@@ -797,8 +693,8 @@ fewer discrete values.</p>
 <span>                  r.x2.y <span class="op">=</span> <span class="fl">.1</span>,                    <span class="co"># correlation between x2 and y</span></span>
 <span>                  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                   <span class="co"># correlation between x1 and x2</span></span>
 <span>                  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,                 <span class="co"># correlation between x1x2 and y</span></span>
-<span>                  k.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">10</span>,<span class="fl">2</span><span class="op">)</span>,             <span class="co"># x1 has 2-10 discrete values</span></span>
-<span>                  adjust.correlations <span class="op">=</span> <span class="cn">FALSE</span>,cl<span class="op">=</span><span class="fl">2</span><span class="op">)</span>     <span class="co"># Adjust correlations?  </span></span>
+<span>                  k.x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">8</span><span class="op">)</span>,             <span class="co"># x1 has 2-10 discrete values</span></span>
+<span>                  adjust.correlations <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>    <span class="co"># Adjust correlations?  </span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">power_test</span>,power_target <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></span></code></pre></div>
 <p><img src="InteractionPoweRvignette_files/figure-html/fig9-1.png" width="576" style="display: block; margin: auto;"></p>
@@ -832,45 +728,44 @@ on average.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">power_test</span> <span class="op">=</span> <span class="fu"><a href="../reference/power_interaction.html">power_interaction</a></span><span class="op">(</span>n.iter <span class="op">=</span> <span class="fl">1000</span>,    <span class="co"># number of simulations</span></span>
 <span>                  alpha <span class="op">=</span> <span class="fl">0.05</span>,                  <span class="co"># p-value</span></span>
-<span>                  N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">200</span>,<span class="fl">50</span><span class="op">)</span>  ,       <span class="co"># sample size</span></span>
+<span>                  N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">200</span>,<span class="fl">50</span><span class="op">)</span>  ,          <span class="co"># sample size</span></span>
 <span>                  r.x1.y <span class="op">=</span> <span class="fl">.2</span>,                   <span class="co"># correlation between x1 and y</span></span>
 <span>                  r.x2.y <span class="op">=</span>  <span class="fl">.1</span>,                  <span class="co"># correlation between x2 and y</span></span>
 <span>                  r.x1.x2 <span class="op">=</span> <span class="fl">.2</span>,                  <span class="co"># correlation between x1 and x2</span></span>
 <span>                  r.x1x2.y <span class="op">=</span> <span class="fl">.4</span>,                 <span class="co"># correlation between x1x2 and y</span></span>
-<span>                  cl <span class="op">=</span> <span class="fl">2</span>,                        <span class="co"># number of clusters for parallel analyses</span></span>
 <span>                  detailed_results <span class="op">=</span> <span class="cn">TRUE</span>        <span class="co"># return detailed results       </span></span>
 <span>                   <span class="op">)</span></span>
 <span><span class="va">power_test</span></span></code></pre></div>
 <pre><code><span><span class="co">##     N   pwr x1_pwr x2_pwr x1x2_est_mean x1x2_r2_mean crossover_mean shape_mean</span></span>
-<span><span class="co">## 1  50 0.747  0.742  0.919     0.4445248    0.1750082     -0.1496198 -0.1634209</span></span>
-<span><span class="co">## 2 100 0.971  0.506  0.901     0.4010355    0.1555543     -0.1534595  2.3115220</span></span>
-<span><span class="co">## 3 150 0.998  0.294  0.856     0.3899704    0.1531613     -0.1692279  2.5912118</span></span>
-<span><span class="co">## 4 200 1.000  0.170  0.828     0.3930959    0.1548409     -0.1695012  2.9501953</span></span>
+<span><span class="co">## 1  50 0.780  0.277  0.079     0.4426144    0.1763593     -0.1539197   3.210472</span></span>
+<span><span class="co">## 2 100 0.979  0.509  0.100     0.3955305    0.1523973     -0.1629060   2.961055</span></span>
+<span><span class="co">## 3 150 0.998  0.695  0.135     0.3910607    0.1526577     -0.1656292   3.206382</span></span>
+<span><span class="co">## 4 200 0.998  0.823  0.155     0.3936075    0.1546993     -0.1607875   2.736218</span></span>
 <span><span class="co">##   shape_q_2.5 shape_q_97.5 crossover_q_2.5 crossover_q_97.5    min.lwr</span></span>
-<span><span class="co">## 1 -26.2184430    15.064478      -0.8087554        0.5188378 -0.5691004</span></span>
-<span><span class="co">## 2  -6.9567838    12.145444      -0.6978077        0.3564125 -0.4200951</span></span>
-<span><span class="co">## 3   0.8990504     9.722734      -0.6535459        0.2246683 -0.3558325</span></span>
-<span><span class="co">## 4   1.0880196     6.701658      -0.5160844        0.1578775 -0.3403106</span></span>
-<span><span class="co">##      min.upr   max.lwr   max.upr x1x2_95_CI_2.5_mean x1x2_95_CI_97.5_mean</span></span>
-<span><span class="co">## 1 0.21949601 0.1476491 0.9499982           0.1718335            0.7172161</span></span>
-<span><span class="co">## 2 0.16095799 0.2116577 0.8022999           0.2162135            0.5858574</span></span>
-<span><span class="co">## 3 0.11389835 0.2669059 0.7603907           0.2433531            0.5365877</span></span>
-<span><span class="co">## 4 0.07792157 0.3096403 0.7198286           0.2669720            0.5192199</span></span>
+<span><span class="co">## 1 -20.6471929    20.103591      -0.8424624        0.4985743 -0.5779247</span></span>
+<span><span class="co">## 2   0.6913046    11.439831      -0.7250498        0.3597690 -0.4340121</span></span>
+<span><span class="co">## 3   0.9342058     7.868203      -0.6388662        0.2561451 -0.3734257</span></span>
+<span><span class="co">## 4   1.0795667     6.020076      -0.5102325        0.1646625 -0.3482832</span></span>
+<span><span class="co">##     min.upr   max.lwr   max.upr x1x2_95_CI_2.5_mean x1x2_95_CI_97.5_mean</span></span>
+<span><span class="co">## 1 0.2391543 0.1499189 0.9550447           0.1730314            0.7121974</span></span>
+<span><span class="co">## 2 0.1677606 0.2346053 0.7952463           0.2112746            0.5797864</span></span>
+<span><span class="co">## 3 0.1279905 0.2774962 0.7592573           0.2442872            0.5378341</span></span>
+<span><span class="co">## 4 0.1071991 0.3042969 0.7259304           0.2672668            0.5199481</span></span>
 <span><span class="co">##   x1x2_95_CI_width_mean r_y_x1x2_q_2.5 r_y_x1x2_q_50.0 r_y_x1x2_q_97.5</span></span>
-<span><span class="co">## 1             0.5453826      0.2567429       0.4352485       0.6401074</span></span>
-<span><span class="co">## 2             0.3696439      0.2179649       0.4037331       0.5904050</span></span>
-<span><span class="co">## 3             0.2932345      0.2299490       0.3997240       0.5491401</span></span>
-<span><span class="co">## 4             0.2522479      0.2583865       0.3987171       0.5227168</span></span>
+<span><span class="co">## 1             0.5391660      0.2404203       0.4415142       0.6305032</span></span>
+<span><span class="co">## 2             0.3685118      0.2190781       0.4014453       0.5758182</span></span>
+<span><span class="co">## 3             0.2935468      0.2375604       0.3996108       0.5472230</span></span>
+<span><span class="co">## 4             0.2526813      0.2658015       0.3986438       0.5217490</span></span>
 <span><span class="co">##   x1_est_mean x2_est_mean r_x1_y_mean r_x2_y_mean r_x1_x2_mean r_y_x1x2_mean</span></span>
-<span><span class="co">## 1   0.1818910  0.06393361   0.1892655  0.09924325    0.2018000     0.4361419</span></span>
-<span><span class="co">## 2   0.1833217  0.05834363   0.1926363  0.09425159    0.1996605     0.4007791</span></span>
-<span><span class="co">## 3   0.1918130  0.06363146   0.2034368  0.10010702    0.1993906     0.3957637</span></span>
-<span><span class="co">## 4   0.1884890  0.06496795   0.2002625  0.10286990    0.1992295     0.3966287</span></span>
+<span><span class="co">## 1   0.1922320  0.06429109   0.1969611  0.10240447    0.2083746     0.4360222</span></span>
+<span><span class="co">## 2   0.1877368  0.06183341   0.1938392  0.09652172    0.1993411     0.3960011</span></span>
+<span><span class="co">## 3   0.1915144  0.06219301   0.2028635  0.10097609    0.1989817     0.3964685</span></span>
+<span><span class="co">## 4   0.1909169  0.06193294   0.2005727  0.09768533    0.1993219     0.3961706</span></span>
 <span><span class="co">##   r_x1_x1x2_mean r_x2_x1x2_mean</span></span>
-<span><span class="co">## 1  -0.0012675684   0.0008173995</span></span>
-<span><span class="co">## 2  -0.0023242407   0.0001606623</span></span>
-<span><span class="co">## 3  -0.0002648047  -0.0008069301</span></span>
-<span><span class="co">## 4  -0.0010532570   0.0021328971</span></span></code></pre>
+<span><span class="co">## 1  -1.058919e-02   -0.002177245</span></span>
+<span><span class="co">## 2  -8.850879e-03   -0.002288713</span></span>
+<span><span class="co">## 3   7.677160e-06    0.003463617</span></span>
+<span><span class="co">## 4  -4.323312e-03   -0.003413765</span></span></code></pre>
 <p>What is all this?</p>
 <p>The first two columns are our standard output, the setting that was
 varied across simulations, and the power. Next we have
