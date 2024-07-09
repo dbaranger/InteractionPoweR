@@ -58,7 +58,7 @@ github with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("dbaranger/InteractionPoweR/")
+devtools::install_github("dbaranger/InteractionPoweR")
 ```
 
 If you get an error about a corrupt .rdb file, try restarting your R
