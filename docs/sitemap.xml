@@ -31,6 +31,9 @@
     <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweRvignette.html</loc>
   </url>
   <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/articles/InteractionPoweR_Stability.html</loc>
+  </url>
+  <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/authors.html</loc>
   </url>
   <url>
@@ -98,6 +101,9 @@
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/power_interaction_r2_covs.html</loc>
+  </url>
+  <url>
+    <loc>https://dbaranger.github.io/InteractionPoweR/reference/run_pos_power_search.html</loc>
   </url>
   <url>
     <loc>https://dbaranger.github.io/InteractionPoweR/reference/simple.slopes.3way.html</loc>

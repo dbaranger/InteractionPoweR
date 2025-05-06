@@ -23,6 +23,7 @@ articles:
   - articles/InteractionPoweRvignette
   - articles/InteractionPower2waycovsvignette
   - articles/InteractionPoweR3wayvignette
+  - articles/InteractionPoweR_Stability
   - articles/CommonQuestions
 
 reference:
@@ -48,6 +49,11 @@ reference:
   - plot_simple_slope
   - cor.mat.3way
   - simple.slopes.3way
+- title: "2-way stability analysis"
+  desc: >
+    Run a stability analysis for a 2-way interaction
+- contents:
+  - run_pos_power_search
 - title: "A single data set"
   desc: >
     Simulate and plot a single data set

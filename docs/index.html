@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,7 @@
     <a class="dropdown-item" href="articles/InteractionPoweRvignette.html">The InteractionPoweR Package</a>
     <a class="dropdown-item" href="articles/InteractionPower2waycovsvignette.html">Interaction Power: Power analyses for 2-way interactions with covariates</a>
     <a class="dropdown-item" href="articles/InteractionPoweR3wayvignette.html">Interaction Power: Power analyses for 3-way interactions</a>
+    <a class="dropdown-item" href="articles/InteractionPoweR_Stability.html">InteractionPoweR Stability Update</a>
     <a class="dropdown-item" href="articles/CommonQuestions.html">Questions &amp; Errors</a>
   </div>
 </li>
@@ -94,9 +95,15 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The <a href="https://dbaranger.github.io/InteractionPoweR/">InteractionPoweR</a> package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two or three variables, also known as ‘moderation’ analyses. The package includes functions for simulating data sets, conducting power analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson’s correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can have anywhere from 2 (i.e., binary) to 20 discrete values, and (5) analyses can incorporate the effects of reliability, both of the interacting variables, as well as of the outcome variable.</p>
+<p>The <a href="https://dbaranger.github.io/InteractionPoweR/">InteractionPoweR</a> package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two or three variables, also known as ‘moderation’ analyses. The package includes functions for simulating data sets, conducting power analyses, conducting stability analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson’s correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can have anywhere from 2 (i.e., binary) to 20 discrete values, and (5) analyses can incorporate the effects of reliability, both of the interacting variables, as well as of the outcome variable.</p>
+<p>Stability analyses for two-way interactions between continuous variables have been recently added. These include a new search function which returns the sample size or interaction effect size at which results stabilize.</p>
 <p><strong>For more information see our <a href="https://doi.org/10.1177/25152459231187531" class="external-link">tutorial paper</a>, the package <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html">vignette</a>, and the <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html">FAQ</a>.</strong></p>
-<p>We have a <a href="https://mfinsaas.shinyapps.io/InteractionPoweR/" class="external-link"><strong>Shiny app</strong></a> which implements the major functions for simulation-based power analyses in a user-friendly point-and-click interface. We also have a <a href="https://david-baranger.shinyapps.io/InteractionPoweR_analytic/" class="external-link"><strong>simpler Shiny app</strong></a> for computing analytic power. We recommend this app particularly for beginners and users who are new to power analyses. We have also recently added <a href="https://david-baranger.shinyapps.io/InteractionPoweR_3way_analytic/" class="external-link"><strong>a new shiny app for three-way interactions</strong></a>.</p>
+<p><strong>Web apps:</strong></p>
+<ul>
+<li>Simulation-based power 2-way: We have a <a href="https://mfinsaas.shinyapps.io/InteractionPoweR/" class="external-link"><strong>Shiny app</strong></a> which implements the major functions for simulation-based power analyses in a user-friendly point-and-click interface.</li>
+<li>Analytic power 2-way: We also have a <a href="https://david-baranger.shinyapps.io/InteractionPoweR_analytic/" class="external-link"><strong>simpler Shiny app</strong></a> for computing analytic power. We recommend this app particularly for beginners and users who are new to power analyses.</li>
+<li>Analytic power 3-way: We have also recently added <a href="https://david-baranger.shinyapps.io/InteractionPoweR_3way_analytic/" class="external-link"><strong>a new shiny app for three-way interactions</strong></a>.</li>
+</ul>
 <p>Please report bugs, issues, or questions as an <a href="https://github.com/dbaranger/InteractionPoweR/issues/" class="external-link">Issue on Github</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -188,6 +195,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>David Baranger <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-6659-357X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Andrew Castillo <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -206,7 +214,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by David Baranger.</p>
+<p>Developed by David Baranger, Andrew Castillo.</p>
 </div>
 
 <div class="pkgdown-footer-right">

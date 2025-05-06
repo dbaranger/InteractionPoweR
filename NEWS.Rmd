@@ -1,9 +1,13 @@
 ---
 title: "NEWS"
 author: "David AA Baranger"
-date: "10/24/2023"
+date: "05/06/2025"
 output: md_document
 ---
+
+# InteractionPoweR 0.2.3
+
+* Adds two-way interaction stability function - `run_pos_power_search()`.
 
 # InteractionPoweR 0.2.2
 

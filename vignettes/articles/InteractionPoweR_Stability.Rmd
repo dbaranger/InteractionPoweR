@@ -1,0 +1,261 @@
+---
+title: "InteractionPoweR Stability Update"
+author: "David AA. Baranger, Andrew J. Castillo"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+description: >
+  This article describes how to use the run_pos_power_search() function in InteractionPoweR
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+In addition to standard power estimation, InteractionPoweR provides an option to evaluate the precision of interaction estimates through the function run_pos_power_search(). This function performs a simulation-based search to identify the minimum sample size at which estimates of an interaction term become sufficiently stable, as defined by a user-specified proportion of estimates falling within a specified range (the "corridor of stability," or COS) around the expected population value. This vignette describes how to use the run_pos_power_search() for two-way interactions.
+
+# Introduction
+
+Standard power analysis tells us whether we are likely to detect an effect, but it does not provide easily accessible benchmarks for how reflective the sample estimate will be of the true effect across repeated samples. There is a high risk for small interaction effects to be highly variable estimates across samples. Stability analysis addresses this issue by asking a different question:
+
+“At what sample size can we trust that the estimate will consistently approximate the true interaction effect?”
+
+Stability is operationalized using two key concepts:
+**Corridor of Stability (COS):** A symmetric interval around the expected interaction effect. Estimates falling inside the COS are regarded as stable.
+**Point of Stability (POS):** The sample size at which a desired proportion of estimates (e.g., 80%, 90%, or 95%) fall within the COS.
+
+By identifying the POS, researchers can plan not just for detection of an effect, but for accurate, reliable estimation.
+
+This vignette describes how to use run_pos_power_search() to evaluate the stability of two-way interaction terms of the form:
+
+$$
+Y \sim \beta_0 + X_1\beta_1 + X_2\beta_2 + (X_1X_2)\beta_3 + \epsilon
+$$
+
+where $X_1$ and $X_2$ are independent variables, and $X_1X_2$ represents their interaction.
+
+# Stability Criteria
+
+The COS and POS are defined as follows:
+
+$cos.width$: the width of the Corridor of Stability (COS), expressed as a proportion of the expected population interaction effect size ($r_{x1x2,y}$). For example, `cos.width` = 0.5 means the COS spans $\pm 50\%$ of the expected effect.
+
+$pos.percent$: the minimum proportion of simulated estimates required to fall within the COS for a sample size to be considered stable. Typical choices are 0.80, 0.90, or 0.95.
+
+# Key Parameters
+
+Use of the run_pos_power_search() function requires at minimum 5 input variables:
+
+1.  `r.x1.y`: the Pearson's correlation ($r$) between $X_1$ and $Y$
+2.  `r.x2.y`: the Pearson's correlation ($r$) between $X_2$ and $Y$
+3.  `r.x1.x2`: the Pearson's correlation ($r$) between $X_1$ and $X_2$
+4.  `rel.x1`:  Reliability of x1 (e.g. test-retest reliability, ICC, Cronbach's alpha).
+5.  `rel.x2`:  Reliability of x2 (e.g. test-retest reliability, ICC, Cronbach's alpha).
+
+There are multiple optional inputs which will change the output of the function to perform specific tasks, depending on the goal of the user.
+
+1.  `r.x1x2.y`: the Pearson's correlation ($r$) between $X_1X_2$ and $Y$ - this is the interaction effect.
+2.  `rel.y`:  reliability of xy (e.g. test-retest reliability, ICC, Cronbach's alpha). 
+3.  `single.N` a single sample size at which the stability of the estimate is calculated.
+4.  `step`: the amount of rounding applied during the search for the sample size estimate of the POS. 
+5.  `start.power`: the statistical power which is used to determine the starting sample size during the search for the POS. 
+6.  `n.datasets` the number of simulations conducted at each sample size identified by the search process.
+7.  `lower.bound` the smallest sample size the search will progress to if a POS is not located.
+8.  `upper.bound` the largest sample size the search will progress to if a POS is not located.
+9.  `cos.width` the width of the corridor of stability (COS)
+10. `pos.percent` the percentage of estimates required to fall within the COS to qualify estimates as stable
+11.  `n.cores` optional parallel processing.
+
+# Use Cases
+
+There are two main use cases:
+*Evaluating stability at a specific sample size (single.N)*
+The function returns the percentage of estimates falling inside the COS, the sign error rate, the necessary effect size for stability, and associated power.
+
+*Searching for the minimum stable sample size (POS)*
+If single.N is NULL, the function conducts a binary search to find the smallest sample size satisfying the stability criterion.
+
+Internally, the function simulates multiple datasets at each tested sample size, fits the interaction model, and assesses whether the estimated $\beta_3$ falls inside the COS.
+
+# Interpreting the Results
+
+The output from run_pos_power_search() is structured to help researchers assess both the precision and sign consistency of interaction estimates:
+
+`COS_interval`: The range around the expected interaction effect defined by cos.width. If 80% or more estimates fall inside this interval, the sample size is considered to produce stable estimates.
+
+`within_COS_interval`: the proportion of estimates within the inputted COS at the sample size single.N.
+
+`POS_determined_COS`: The COS width needed to enclose the specified proportion (pos.percent) of estimates given an input for single.N.
+
+`within_POS_determined_COS`: the percentage of estimates within the COS at this sample size. As it was user specified, it is the same as pos.percent.
+
+`POS_determined_COS.percent`: the percentage of deviation from the expected effect reflected in `POS_determined_COS`.
+
+`r.x1x2.y_to_be_stable_at_single.N`: The minimum interaction effect size that would need to exist to achieve the desired stability at a given sample size.
+
+`sign_error_rate`: Proportion of estimates whose sign differs from the expected sign. High sign error rate indicates instability, even if power is adequate.
+
+`power`: The statistical power to detect the interaction effect at this sample size.
+
+`power_to_be_stable`: The power that would be required to meet stability criteria under current parameters.
+
+In general:
+
+If `within_COS_interval` is low and `sign_error_rate` is high, the estimate is unreliable at the given sample size.
+
+If the `r.x1x2.y_to_be_stable_at_single.N` is much larger than the input effect, the chosen `single.N` is insufficient for stable estimation.
+
+The lower the `POS_samplesize`, the more replicable the interaction estimate is likely to be as the signal is stronger and/or the noise obscuring that signal is weaker.
+
+# When to Modify Each Parameter
+
+Below are common parameters used in `run_pos_power_search()` and guidance on when to change them.
+
+- `r.x1.y`, `r.x2.y`: Correlations of X1 and X2 with Y.  
+  *Use when you have prior estimates or pilot data. These are required.*
+
+- `r.x1.x2`: Correlation between predictors X1 and X2.  
+  *Adjust to reflect multicollinearity. High values increase required sample size.*
+
+- `rel.x1`, `rel.x2`: Reliability of predictors.  
+  *Use test-retest or internal consistency estimates (e.g., Cronbach’s alpha). Required.*
+
+- `rel.y`: Reliability of the outcome variable.  
+  *Usually 1 for simulated data; lower values when modeling real outcomes.*
+
+- `r.x1x2.y`: Correlation of the interaction term with Y.  
+  *Use literature estimates or pilot data. If not provided, it is imputed.*
+
+- `single.N`: Sample size to evaluate stability at a fixed N.  
+  *Use when evaluating a specific study design or planning a pilot.*
+
+- `start.power`: Desired starting power (e.g., 0.80).  
+  *Used to find a power-equivalent sample size before stability analysis.*
+
+- `step`: Rounding increment for the sample size search.  
+  *Larger steps make the search faster but less precise.*
+
+- `n.datasets`: Number of simulations per step.  
+  *Use 1000+ for precise estimates; reduce for faster exploratory runs.*
+
+- `lower.bound`, `upper.bound`: Range of sample sizes to search.  
+  *Set to control search bounds manually, or let the function define them.*
+
+- `cos.width`: Width of the Corridor of Stability.  
+  *Smaller values demand tighter estimates. Try 0.25, 0.5, or 1.0.*
+
+- `pos.percent`: Target proportion of estimates within the COS.  
+  *Typically set to 0.8, 0.9, or 0.95 depending on tolerance for estimate noise.*
+
+- `n.cores`: Number of parallel processing cores.  
+  *Use multiple cores to speed up simulation. E.g., 4 or 6.*
+
+
+# Example: Evaluating Stability at N = 100.
+
+To demonstrate use, we evaluate stability at a sample size of N = 100 first.
+
+
+```{r}
+set.seed(1)
+library(InteractionPoweR)
+run_pos_power_search(
+  r.x1.y = 0.2,
+  r.x2.y = 0.2,
+  r.x1x2.y = 0.15,
+  r.x1.x2 = 0.1,
+  rel.x1 = 0.8,
+  rel.x2 = 0.8,
+  rel.y = 1,
+  single.N = 100,
+  n.datasets = 1000,
+  cos.width = 0.5,
+  pos.percent = 0.8,
+  n.cores = 1
+)
+```
+
+This output indicates that at N = 100, only ~47.3% of estimates fall within the specified COS of 50% around the expected interaction effect (0.1203, 0.15 before attenuation), suggesting the sample size is insufficient for stable estimation. The COS required to achieve the desired 80% stability rate spans a much wider range ([-0.007, 0.2477]). The minimum effect size required for stability at N = 100 is 0.314 after attenuation, over twice the observed interaction, and the associated power needed for that level of stability is approximately 0.72. A sign error rate of 11.9% is observed at this single.N (100).
+
+# Interpreting the Results
+
+The output from run_pos_power_search() is structured to help researchers assess both the precision and sign consistency of interaction estimates:
+
+`COS_interval`: The range around the expected interaction effect defined by cos.width. If 80% or more estimates fall inside this interval, the sample size is considered to produce stable estimates.
+
+`within_COS_interval`: the proportion of estimates within the inputted COS at the sample size single.N.
+
+`POS_determined_COS`: the COS width required for pos.percent of the estimates to be in the COS at the sample size single.N.
+`within_POS_determined_COS`: the percentage of estimates within the COS at this sample size. As it was user specified, it is the same as pos.percent.
+`POS_determined_COS.percent`: the percentage of deviation from the expected effect reflected in `POS_determined_COS`.
+`sign_error_rate`: the number of estimates signed incorrectly at the sample size single.N (100).
+`power`: the statistical power to detect the interaction effect at this sample size
+`r.x1x2.y_to_be_stable_at_single.N`: the minimum interaction effect size required for stability at the sample size single.N (100).
+`power_to_be_stable`: the statistical power required for the interaction, as inputted, to be stable.
+
+#Interpreting the Results
+
+The output from run_pos_power_search() is structured to help researchers assess both the precision and sign consistency of interaction estimates:
+
+COS_interval: The range around the expected interaction effect defined by cos.width. If 80% or more estimates fall inside this interval, the estimate is considered stable.
+
+within_COS_interval: Proportion of estimates falling within the predefined COS.
+
+sign_error_rate: Proportion of estimates whose sign differs from the expected sign. High sign error rate indicates instability, even if power is adequate.
+
+POS_determined_COS: The COS width needed to enclose the specified proportion (pos.percent) of estimates.
+
+r.x1x2.y_to_be_stable_at_single.N: The minimum interaction effect size that would need to exist to achieve the desired stability at a given sample size.
+
+power: Probability of detecting a non-zero interaction given current inputs.
+
+power_to_be_stable: The power that would be required to meet stability criteria under current parameters.
+
+In general:
+
+If within_COS_interval is low and sign_error_rate is high, the estimate is unreliable at the given sample size.
+
+If the r.x1x2.y_to_be_stable_at_single.N is much larger than the input effect, the chosen N is insufficient for stable estimation.
+
+The lower the POS_samplesize, the more efficient the design—but only if the reliability and correlations justify it.
+
+
+
+# Example: Finding the Minimum Stable Sample Size (POS)
+
+```{r}
+set.seed(1)
+x <- run_pos_power_search(
+  r.x1.y = 0.2,
+  r.x2.y = 0.2,
+  r.x1x2.y = 0.15,
+  r.x1.x2 = 0.1,
+  rel.x1 = 0.8,
+  rel.x2 = 0.8,
+  rel.y = 1,
+  start.power = 0.7,
+  n.datasets = 1000,
+  cos.width = 0.5,
+  pos.percent = 0.8,
+  n.cores = 6
+)
+x
+```
+
+This run performs a binary search to find the smallest N at which 80% of estimates fall within $\pm 50\%$ of the expected interaction effect size.
+
+This output shows that a sample size of approximately 435 is required for 80% of the simulated estimates to fall within 50% of the expected interaction effect (0.1203, 0.15 before attenuation). At this sample size, the COS interval ranges from 0.0602 to 0.1805, and the power to detect the interaction effect is approximately 0.73. This suggests that while the interaction is small, it can be estimated with acceptable stability at N = 435.
+
+# Notes
+
+The function handles automatic assignment of `r.x1x2.y` if not specified, using the average of the main effects (adjusted for reliability)
+
+Simulations can be conducted in parallel using *foreach* and *doParallel*
+
+Results include estimated power, COS bounds, observed estimate variability, and the stability threshold, and can change depending on user input.
+
+This function is particularly helpful for identifying realistic sample size requirements not just for detection but for reliable estimation, especially in the context of small or unreliable effects.
+
+Refer to our paper ([link]) for theoretical background and empirical justification for stability-based approaches.
