@@ -9,6 +9,8 @@ Updates package to 0.2.4
 -   checking for future file timestamps … NOTE unable to verify current
     time
 
+Prior Note on Author field differing has been corrected.
+
 ## Downstream dependencies
 
 There is one downstream dependency. No conflict between this update and

@@ -333,13 +333,13 @@ first.</p>
 <pre><code><span><span class="co">##   single.N rel.x1 rel.x2  rel.x1x2 rel.y r.x1x2.y r.x1.y r.x2.y r.x1.x2</span></span>
 <span><span class="co">## 1      100    0.8    0.8 0.6435644     1     0.15    0.2    0.2     0.1</span></span>
 <span><span class="co">##   obs.r.x1x2.y COS_pos.percents     COS_interval within_COS_interval</span></span>
-<span><span class="co">## 1    0.1203337         (50, 80) [0.0602, 0.1805]               0.447</span></span>
+<span><span class="co">## 1    0.1203337         (50, 80) [0.0602, 0.1805]               0.468</span></span>
 <span><span class="co">##   POS_determined_COS within_POS_determined_COS POS_determined_COS.percent</span></span>
-<span><span class="co">## 1  [-0.0094, 0.2501]                       0.8                     107.83</span></span>
+<span><span class="co">## 1  [-0.0046, 0.2453]                       0.8                     103.84</span></span>
 <span><span class="co">##   sign_error_rate     power r.x1x2.y_to_be_stable_at_single.N</span></span>
-<span><span class="co">## 1           0.122 0.2273492                         0.2966025</span></span>
+<span><span class="co">## 1           0.113 0.2273492                         0.3063584</span></span>
 <span><span class="co">##   power_to_be_stable</span></span>
-<span><span class="co">## 1          0.6672075</span></span></code></pre>
+<span><span class="co">## 1          0.6952847</span></span></code></pre>
 <p>This output indicates that at N = 100, only ~47.3% of estimates fall
 within the specified COS of 50% around the expected interaction effect
 (0.1203, 0.15 before attenuation), suggesting the sample size is
@@ -427,7 +427,7 @@ if the reliability and correlations justify it.</p>
 <pre><code><span><span class="co">##   rel.x1 rel.x2  rel.x1x2 rel.y r.x1x2.y r.x1.y r.x2.y r.x1.x2 obs.r.x1x2.y</span></span>
 <span><span class="co">## 1    0.8    0.8 0.6435644     1     0.15    0.2    0.2     0.1    0.1203337</span></span>
 <span><span class="co">##   COS_pos.percents     COS_interval POS_samplesize POS_power</span></span>
-<span><span class="co">## 1         (50, 80) [0.0602, 0.1805]            423 0.7179701</span></span></code></pre>
+<span><span class="co">## 1         (50, 80) [0.0602, 0.1805]            422 0.7169438</span></span></code></pre>
 <p>This run performs a binary search to find the smallest N at which 80%
 of estimates fall within <span class="math inline">\(\pm 50\%\)</span>
 of the expected interaction effect size.</p>
