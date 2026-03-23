@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="index.html">InteractionPoweR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
 <!-- badges: end -->
 <p>The <a href="https://dbaranger.github.io/InteractionPoweR/">InteractionPoweR</a> package conducts power analyses for regression models in cross-sectional data sets where the term of interest is an interaction between two or three variables, also known as ‘moderation’ analyses. The package includes functions for simulating data sets, conducting power analyses, conducting stability analyses, and plotting and interpreting results. Notable package features include (1) the ability to compute power for interactions between two continuous variables, (2) effect sizes are all specified as the cross-sectional Pearson’s correlation, (3) simulations do not assume that the interacting variables are independent, (4) any variable in the model, including the outcome, can have anywhere from 2 (i.e., binary) to 20 discrete values, and (5) analyses can incorporate the effects of reliability, both of the interacting variables, as well as of the outcome variable.</p>
 <p>Stability analyses for two-way interactions between continuous variables have been recently added. These include a new search function which returns the sample size or interaction effect size at which results stabilize.</p>
-<p><strong>For more information see our <a href="https://doi.org/10.1177/25152459231187531" class="external-link">tutorial paper</a>, the package <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html">vignette</a>, and the <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html">FAQ</a>.</strong></p>
+<p><strong>For more information see our <a href="https://doi.org/10.1177/25152459231187531" class="external-link">tutorial paper</a>, the package <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html">vignette</a>, and the <a href="https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html">FAQ</a>. Information on stability analyses can be found in our <a href="https://doi.org/10.1177/25152459251407860" class="external-link">new paper</a></strong></p>
 <p><strong>Web apps:</strong></p>
 <ul>
 <li>Simulation-based power 2-way: We have a <a href="https://mfinsaas.shinyapps.io/InteractionPoweR/" class="external-link"><strong>Shiny app</strong></a> which implements the major functions for simulation-based power analyses in a user-friendly point-and-click interface.</li>
@@ -143,7 +143,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2022</span><span class="op">)</span></span>
 <span><span class="va">test_power</span><span class="op">&lt;-</span><span class="fu"><a href="reference/power_interaction.html">power_interaction</a></span><span class="op">(</span></span>
-<span>  n.iter <span class="op">=</span> <span class="fl">10000</span>,            <span class="co"># number of simulations per unique combination of input parameters</span></span>
+<span>  n.iter <span class="op">=</span> <span class="fl">1000</span>,            <span class="co"># number of simulations per unique combination of input parameters</span></span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,             <span class="co"># alpha, for the power analysis</span></span>
 <span>  N <span class="op">=</span> <span class="fl">350</span>,                  <span class="co"># sample size</span></span>
 <span>  r.x1x2.y <span class="op">=</span> <span class="fl">.15</span>,           <span class="co"># interaction effect to test (correlation between x1*x2 and y)</span></span>
@@ -155,15 +155,17 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">test_power</span></span>
-<span><span class="co">#&gt;     N    pwr</span></span>
-<span><span class="co">#&gt; 1 350 0.8086</span></span></code></pre></div>
+<span><span class="co">#&gt;     N   pwr</span></span>
+<span><span class="co">#&gt; 1 350 0.815</span></span></code></pre></div>
 <p>The simulation’s accuracy will increase with more iterations.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>If you use <a href="https://dbaranger.github.io/InteractionPoweR/">InteractionPoweR</a> in a publication, please cite our <a href="https://doi.org/10.1177/25152459231187531" class="external-link">tutorial paper</a>:</p>
-<p>Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM (2023). “Tutorial: Power analyses for interaction effects in cross-sectional regressions.” <em>Advances in Methods and Practices in Psychological Science</em>. 6(3). doi: <a href="https://doi.org/10.1177/25152459231187531" class="external-link">10.1177/25152459231187531</a></p>
+<p>Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM. “Tutorial: Power analyses for interaction effects in cross-sectional regressions.” <em>Advances in Methods and Practices in Psychological Science</em>. 2023; 6(3). doi: <a href="https://doi.org/10.1177/25152459231187531" class="external-link">10.1177/25152459231187531</a></p>
+<p>If you use our stability analyses for interactions in a paper, please cite our <a href="https://doi.org/10.1177/25152459251407860" class="external-link">paper on stability</a>:</p>
+<p>Castillo A, Miller JD, Vize C, Baranger DAA, Lynam DR. “When Do Interaction/Moderation Effects Stabilize in Linear Regression?” <em>Advances in Methods and Practices in Psychological Science</em>. 2026; 9(1). doi: <a href="https://doi.org/10.1177/25152459251407860" class="external-link">10.1177/25152459251407860</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

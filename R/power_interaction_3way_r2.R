@@ -1,9 +1,9 @@
 #' Analytic power analysis for 3-way interactions
 #'
-#' Power analysis for 3-way interaction models, computed via change in R2. Valid for interactions with continuous, normally distributed, variables. Either `b.x1x2x3` or `f2` can be used to specify the magnitude of the interaction effect size.
+#' Power analysis for 3-way interaction models, computed via change in R2. Valid for interactions with continuous, normally distributed, variables. `b.x1x2x3` is used to specify the magnitude of the interaction effect size.
 #'
 #' @param N Sample size. Must be a positive integer. Has no default value. Can be a single value or a vector of values.
-#' @param b.x1x2x3 Regression coefficient of the 3-way interaction term x1x2x3. Should not be specified if `f2` is specified. Must be between -1 and 1. Default is NULL. Can be a single value or a vector of values.
+#' @param b.x1x2x3 Regression coefficient of the 3-way interaction term x1x2x3.Must be between -1 and 1. Default is NULL. Can be a single value or a vector of values.
 #' @param r.x1.y Pearson's correlation between x1 and y. Must be between -1 and 1. Has no default value. Can be a single value or a vector of values.
 #' @param r.x2.y Pearson's correlation between x2 and y. Must be between -1 and 1. Assumed to be the 'moderator' in some functions. Has no default value. Can be a single value or a vector of values.
 #' @param r.x3.y Pearson's correlation between x3 and y. Must be between -1 and 1. Assumed to be the 'moderator' in some functions. Has no default value. Can be a single value or a vector of values.

@@ -1,3 +1,8 @@
+# InteractionPoweR 0.2.4
+
+-   Adds citation information and minor bug fixes.
+
+
 # InteractionPoweR 0.2.3
 
 -   Adds two-way interaction stability function -

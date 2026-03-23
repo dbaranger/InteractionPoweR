@@ -2,6 +2,9 @@
 #’
 #’ This function conducts a simulation-based binary search to find the minimum sample size (POS) at which a proportion of estimates for the interaction coefficient in (y ~ x1 + x2 + x1*x2) falls within a specified interval (COS) around the expected value.
 #’
+#’ If you use this function, please additionally cite: Castillo A, Miller JD, Vize C, Baranger DAA, Lynam DR. When Do Interaction/Moderation Effects Stabilize in Linear Regression? Advances in Methods and Practices in Psychological Science. 2026;9(1). doi:10.1177/25152459251407860.
+#’
+#’
 
 #' @param r.x1.y Pearson's correlation between x1 and y. Must be between -1 and 1. Has no default value.
 #' @param r.x2.y Pearson's correlation between x2 and y. Must be between -1 and 1. Assumed to be the 'moderator' in some functions. Has no default value.
@@ -42,9 +45,9 @@
 #' @export
 #'
 #' @examples
-#' run_pos_power_search(r.x1.y = 0.2, r.x2.y = 0.2, r.x1x2.y = 0.15, r.x1.x2 = 0.1,
+#' \dontrun{run_pos_power_search(r.x1.y = 0.2, r.x2.y = 0.2, r.x1x2.y = 0.15, r.x1.x2 = 0.1,
 #' rel.x1 = 0.8, rel.x2 = 0.8,start.power = 0.8, step = NULL, n.datasets = 1000,
-#' lower.bound = NULL, upper.bound = 500, cos.width = 0.5, pos.percent = 0.8)
+#' lower.bound = NULL, upper.bound = 500, cos.width = 0.5, pos.percent = 0.8)}
 
 run_pos_power_search <- function(r.x1.y,
                                  r.x2.y,

@@ -36,7 +36,9 @@ stabilize.
 paper](https://doi.org/10.1177/25152459231187531), the package
 [vignette](https://dbaranger.github.io/InteractionPoweR/articles/articles/InteractionPoweRvignette.html),
 and the
-[FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).**
+[FAQ](https://dbaranger.github.io/InteractionPoweR/articles/articles/CommonQuestions.html).
+Information on stability analyses can be found in our [new
+paper](https://doi.org/10.1177/25152459251407860)**
 
 **Web apps:**
 
@@ -117,7 +119,7 @@ simulations (`n.iter = 10000`).
 ``` r
 set.seed(2022)
 test_power<-power_interaction(
-  n.iter = 10000,            # number of simulations per unique combination of input parameters
+  n.iter = 1000,            # number of simulations per unique combination of input parameters
   alpha = 0.05,             # alpha, for the power analysis
   N = 350,                  # sample size
   r.x1x2.y = .15,           # interaction effect to test (correlation between x1*x2 and y)
@@ -129,8 +131,8 @@ test_power<-power_interaction(
 )
 
 test_power
-#>     N    pwr
-#> 1 350 0.8086
+#>     N   pwr
+#> 1 350 0.815
 ```
 
 The simulation’s accuracy will increase with more iterations.
@@ -140,8 +142,18 @@ The simulation’s accuracy will increase with more iterations.
 If you use `{InteractionPoweR}` in a publication, please cite our
 [tutorial paper](https://doi.org/10.1177/25152459231187531):
 
-Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM
-(2023). “Tutorial: Power analyses for interaction effects in
-cross-sectional regressions.” *Advances in Methods and Practices in
-Psychological Science*. 6(3). doi:
+Baranger DAA, Finsaas MC, Goldstein BL, Vize CE, Lynam DR, Olino TM.
+“Tutorial: Power analyses for interaction effects in cross-sectional
+regressions.” *Advances in Methods and Practices in Psychological
+Science*. 2023; 6(3). doi:
 [10.1177/25152459231187531](https://doi.org/10.1177/25152459231187531)
+
+If you use our stability analyses for interactions in a paper, please
+cite our [paper on
+stability](https://doi.org/10.1177/25152459251407860):
+
+Castillo A, Miller JD, Vize C, Baranger DAA, Lynam DR. “When Do
+Interaction/Moderation Effects Stabilize in Linear Regression?”
+*Advances in Methods and Practices in Psychological Science*. 2026;
+9(1). doi:
+[10.1177/25152459251407860](https://doi.org/10.1177/25152459251407860)

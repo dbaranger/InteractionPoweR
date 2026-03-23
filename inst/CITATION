@@ -1,5 +1,6 @@
-bibentry(header = "To cite InteractionPoweR in publications use:",
-              bibtype = "Article",
+citHeader("To cite InteractionPoweR in publications, please cite Baranget et al. Please additionally cite Castillo et al. in publications that use the stability function.")
+
+bibentry(    bibtype = "Article",
               author="David A. A. Baranger and Megan C. Finsaas and Brandon L. Goldstein and Colin E. Vize and Donald R. Lynam and Thomas M. Olino",
               doi = "10.1177/25152459231187531",
               journal = "Advances in Methods and Practices in Psychological Science",
@@ -7,4 +8,14 @@ bibentry(header = "To cite InteractionPoweR in publications use:",
               volume = "6",
               number = "3",
               year = "2023"
+               )
+
+bibentry(     bibtype = "Article",
+              author="Andrew Castillo and Joshua D. Miller and Colin E. Vize and David A. A. Baranger and Donald R. Lynam",
+              doi = "10.1177/25152459251407860",
+              journal = "Advances in Methods and Practices in Psychological Science",
+              title = "When Do Interaction/Moderation Effects Stabilize in Linear Regression?",
+              volume = "9",
+              number = "1",
+              year = "2026"
                )

@@ -28,7 +28,7 @@ power_interaction_3way_r2(
 \arguments{
 \item{N}{Sample size. Must be a positive integer. Has no default value. Can be a single value or a vector of values.}
 
-\item{b.x1x2x3}{Regression coefficient of the 3-way interaction term x1x2x3. Should not be specified if \code{f2} is specified. Must be between -1 and 1. Default is NULL. Can be a single value or a vector of values.}
+\item{b.x1x2x3}{Regression coefficient of the 3-way interaction term x1x2x3.Must be between -1 and 1. Default is NULL. Can be a single value or a vector of values.}
 
 \item{r.x1.y}{Pearson's correlation between x1 and y. Must be between -1 and 1. Has no default value. Can be a single value or a vector of values.}
 
@@ -66,7 +66,7 @@ power_interaction_3way_r2(
 A data frame containing the power for each unique setting combination.
 }
 \description{
-Power analysis for 3-way interaction models, computed via change in R2. Valid for interactions with continuous, normally distributed, variables. Either \code{b.x1x2x3} or \code{f2} can be used to specify the magnitude of the interaction effect size.
+Power analysis for 3-way interaction models, computed via change in R2. Valid for interactions with continuous, normally distributed, variables. \code{b.x1x2x3} is used to specify the magnitude of the interaction effect size.
 }
 \examples{
 power_interaction_3way_r2(N=1000,r.x1.y = .1,r.x2.y = .2,r.x3.y = .3,

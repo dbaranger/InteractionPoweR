@@ -1,9 +1,13 @@
 ---
 title: "NEWS"
 author: "David AA Baranger"
-date: "05/06/2025"
+date: "03/19/2026"
 output: md_document
 ---
+
+# InteractionPoweR 0.2.4
+
+* Minor fixes
 
 # InteractionPoweR 0.2.3
 

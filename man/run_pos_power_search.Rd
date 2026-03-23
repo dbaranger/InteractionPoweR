@@ -77,7 +77,7 @@ If the user inputs single.N as a numeric whole number greater than 3, the second
 Calculate the point of stability for a two-way interaction estimate
 }
 \examples{
-run_pos_power_search(r.x1.y = 0.2, r.x2.y = 0.2, r.x1x2.y = 0.15, r.x1.x2 = 0.1,
+\dontrun{run_pos_power_search(r.x1.y = 0.2, r.x2.y = 0.2, r.x1x2.y = 0.15, r.x1.x2 = 0.1,
 rel.x1 = 0.8, rel.x2 = 0.8,start.power = 0.8, step = NULL, n.datasets = 1000,
-lower.bound = NULL, upper.bound = 500, cos.width = 0.5, pos.percent = 0.8)
+lower.bound = NULL, upper.bound = 500, cos.width = 0.5, pos.percent = 0.8)}
 }
